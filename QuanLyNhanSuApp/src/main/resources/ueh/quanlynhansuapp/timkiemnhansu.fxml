@@ -26,27 +26,27 @@
         </columns>
       </TableView>
       <Label layoutX="25.0" layoutY="105.0" text="Họ và Tên" />
-      <Label layoutX="24.0" layoutY="38.0" text="Nhập mã nhân viên cần tìm:">
+      <Label layoutX="24.0" layoutY="38.0" text="Nhập mã số nhân viên cần tìm:">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
       <Label layoutX="24.0" layoutY="136.0" prefHeight="18.0" prefWidth="54.0" text="Giới tính" />
-      <TextField fx:id="timkiemnhansu_txma" layoutX="192.0" layoutY="33.0" prefHeight="26.0" prefWidth="164.0" />
+      <TextField fx:id="timkiemnhansu_txma" layoutX="203.0" layoutY="33.0" prefHeight="26.0" prefWidth="164.0" />
       <TextField fx:id="timkiemnhansu_txten" layoutX="103.0" layoutY="100.0" prefHeight="26.0" prefWidth="164.0" />
-      <Label layoutX="321.0" layoutY="140.0" prefHeight="18.0" prefWidth="45.0" text="SĐT" />
-      <Label layoutX="321.0" layoutY="108.0" text="Email" />
-      <Label layoutX="321.0" layoutY="171.0" prefHeight="20.0" prefWidth="120.0" text="Mã phòng ban" />
-      <TextField fx:id="timkiemnhansu_txemail" layoutX="407.0" layoutY="104.0" prefHeight="26.0" prefWidth="164.0" />
-      <TextField fx:id="timkiemnhansu_txsdt" layoutX="407.0" layoutY="136.0" prefHeight="26.0" prefWidth="164.0" />
-      <Button fx:id="timkiemnhansu_bttimkiem" layoutX="387.0" layoutY="33.0" mnemonicParsing="false" onAction="#timkiemnhansu_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
+      <Label layoutX="341.0" layoutY="140.0" prefHeight="18.0" prefWidth="45.0" text="SĐT" />
+      <Label layoutX="341.0" layoutY="108.0" text="Email" />
+      <Label layoutX="341.0" layoutY="171.0" prefHeight="20.0" prefWidth="120.0" text="Mã phòng ban" />
+      <TextField fx:id="timkiemnhansu_txemail" layoutX="427.0" layoutY="104.0" prefHeight="26.0" prefWidth="164.0" />
+      <TextField fx:id="timkiemnhansu_txsdt" layoutX="427.0" layoutY="136.0" prefHeight="26.0" prefWidth="164.0" />
+      <Button fx:id="timkiemnhansu_bttimkiem" layoutX="395.0" layoutY="33.0" mnemonicParsing="false" onAction="#timkiemnhansu_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
       <Button fx:id="timkiemnhansu_bttrolai" layoutX="500.0" layoutY="33.0" mnemonicParsing="false" onAction="#timkiemnhansu_trolaiAction" prefHeight="26.0" prefWidth="91.0" text="Trở lại" />
       <ChoiceBox fx:id="timkiemnhansu_cbgioitinh" layoutX="102.0" layoutY="132.0" prefHeight="26.0" prefWidth="164.0" />
       <Label layoutX="24.0" layoutY="169.0" text="Ngày sinh" />
       <DatePicker fx:id="timkiemnhansu_datengaysinh" layoutX="103.0" layoutY="165.0" prefHeight="26.0" prefWidth="164.0" />
       <Label layoutX="24.0" layoutY="203.0" text="CCCD" />
       <TextField fx:id="timkiemnhansu_txcccd" layoutX="102.0" layoutY="198.0" prefHeight="26.0" prefWidth="164.0" />
-      <Label layoutX="321.0" layoutY="203.0" prefHeight="20.0" prefWidth="120.0" text="Chức vụ" />
-      <ChoiceBox fx:id="timkiemnhansu_cbchucvu" layoutX="407.0" layoutY="200.0" prefHeight="26.0" prefWidth="164.0" />
-      <ChoiceBox fx:id="timkiemnhansu_cbmaPB" layoutX="407.0" layoutY="168.0" prefHeight="26.0" prefWidth="164.0" />
+      <Label layoutX="341.0" layoutY="203.0" prefHeight="20.0" prefWidth="120.0" text="Chức vụ" />
+      <ChoiceBox fx:id="timkiemnhansu_cbchucvu" layoutX="427.0" layoutY="200.0" prefHeight="26.0" prefWidth="164.0" />
+      <ChoiceBox fx:id="timkiemnhansu_cbmaPB" layoutX="427.0" layoutY="168.0" prefHeight="26.0" prefWidth="164.0" />
    </children>
 </AnchorPane>

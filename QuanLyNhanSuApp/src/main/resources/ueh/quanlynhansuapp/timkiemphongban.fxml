@@ -21,7 +21,7 @@
         </columns>
       </TableView>
       <Label layoutX="285.0" layoutY="33.0" text="Tên phòng ban" />
-      <Label layoutX="57.0" layoutY="67.0" prefHeight="18.0" prefWidth="171.0" text="Nhập mã phòng ban cần tìm ">
+      <Label layoutX="57.0" layoutY="67.0" prefHeight="18.0" prefWidth="171.0" text="Nhập mã phòng ban cần tìm: ">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
