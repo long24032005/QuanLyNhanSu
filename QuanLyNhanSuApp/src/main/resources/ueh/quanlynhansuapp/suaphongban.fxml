@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.PrimaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="326.0" prefWidth="347.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Primary View" />
-      <Button fx:id="primaryButton" text="Switch to Secondary View" onAction="#switchToSecondary"/>
+      <Label layoutX="33.0" layoutY="92.0" text="Tên phòng ban" />
+      <Label layoutX="32.0" layoutY="58.0" text="Mã phòng ban" />
+      <Label layoutX="34.0" layoutY="126.0" text="Mã trưởng phòng" />
+      <TextField fx:id="suaphongban_txma" layoutX="139.0" layoutY="55.0" prefHeight="26.0" prefWidth="168.0" />
+      <TextField fx:id="suaphongban_txten" layoutX="139.0" layoutY="89.0" prefHeight="26.0" prefWidth="168.0" />
+      <TextField fx:id="suaphongban_txmaTP" layoutX="139.0" layoutY="123.0" prefHeight="26.0" prefWidth="168.0" />
+      <Label layoutX="34.0" layoutY="194.0" text="Email phòng ban" />
+      <Label layoutX="34.0" layoutY="160.0" text="SĐT phòng ban" />
+      <Label layoutX="34.0" layoutY="228.0" prefHeight="20.0" prefWidth="120.0" text="Tổng số nhân viên" />
+      <TextField fx:id="suaphongban_txsdt" layoutX="140.0" layoutY="157.0" prefHeight="26.0" prefWidth="168.0" />
+      <TextField fx:id="suaphongban_txemail" layoutX="140.0" layoutY="191.0" prefHeight="26.0" prefWidth="168.0" />
+      <TextField fx:id="suaphongban_txtong" layoutX="140.0" layoutY="225.0" prefHeight="26.0" prefWidth="168.0" />
+      <Button fx:id="suaphongban_bttrolai" layoutX="190.0" layoutY="278.0" mnemonicParsing="false" onAction="#phongban_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Trở lại" />
+      <Button fx:id="suaphongban_btsua" layoutX="64.0" layoutY="278.0" mnemonicParsing="false" onAction="#phongban_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
+      <Label layoutX="80.0" layoutY="22.0" text="Nhập các thông tin cần chỉnh sửa">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
    </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-</VBox>
+</AnchorPane>
