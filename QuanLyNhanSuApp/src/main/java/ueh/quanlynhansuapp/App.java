@@ -17,12 +17,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        // Tải giao diện ban đầu là "Main.fxml"
+        // Scene sẽ tự động lấy kích thước từ file FXML
+        scene = new Scene(loadFXML("Main"));
+        stage.setTitle("Phần mềm Quản lý Nhân sự - Nhóm 5");
         stage.setScene(scene);
         stage.show();
     }
-
-    static void setRoot(String fxml) throws IOException {
+    
+    public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 
@@ -34,5 +37,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

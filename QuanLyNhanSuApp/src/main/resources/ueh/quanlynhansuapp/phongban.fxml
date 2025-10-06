@@ -7,16 +7,16 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="452.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="473.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="phongban_tbphongban" layoutX="18.0" layoutY="180.0" prefHeight="256.0" prefWidth="606.0">
+      <TableView fx:id="phongban_tbphongban" layoutX="18.0" layoutY="180.0" prefHeight="256.0" prefWidth="655.0">
         <columns>
           <TableColumn fx:id="phongban_colma" prefWidth="104.0" text="Mã phòng ban" />
           <TableColumn fx:id="phongban_colten" minWidth="6.40008544921875" prefWidth="92.800048828125" text="Tên phòng ban" />
             <TableColumn fx:id="phongban_colmaTP" prefWidth="117.60002136230469" text="Mã trưởng phòng" />
             <TableColumn fx:id="phongban_colsdt" prefWidth="108.79998779296875" text="SĐT phòng ban" />
-            <TableColumn fx:id="phongban_colemail" prefWidth="113.5999755859375" text="Email phòng ban" />
-            <TableColumn fx:id="phongban_coltong" prefWidth="70.4000244140625" text="Tổng số nhân viên" />
+            <TableColumn fx:id="phongban_colemail" prefWidth="125.11325073242188" text="Email phòng ban" />
+            <TableColumn fx:id="phongban_coltong" prefWidth="104.88677978515625" text="Tổng số nhân viên" />
         </columns>
       </TableView>
       <Label layoutX="31.0" layoutY="62.0" text="Tên phòng ban" />

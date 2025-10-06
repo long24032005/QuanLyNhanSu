@@ -9,9 +9,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="642.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="nhansu_tbnhansu" layoutX="13.0" layoutY="272.0" prefHeight="211.0" prefWidth="616.0">
+      <TableView fx:id="nhansu_tbnhansu" layoutX="13.0" layoutY="272.0" prefHeight="211.0" prefWidth="645.0">
         <columns>
           <TableColumn fx:id="nhansu_colma" prefWidth="74.39996147155762" text="Mã nhân viên" />
           <TableColumn fx:id="nhansu_colten" minWidth="6.40008544921875" prefWidth="96.00000762939453" text="Họ và tên" />
@@ -20,8 +20,8 @@
             <TableColumn fx:id="nhansu_colcccd" prefWidth="58.4000244140625" text="CCCD" />
             <TableColumn fx:id="nhansu_colemail" minWidth="0.0" prefWidth="74.39996337890625" text="Email" />
             <TableColumn fx:id="nhansu_colsdt" minWidth="0.0" prefWidth="65.5999755859375" text="SĐT" />
-            <TableColumn fx:id="nhansu_colmaPB" minWidth="0.0" prefWidth="78.39996337890625" text="Mã phòng ban" />
-            <TableColumn fx:id="nhansu_colchucvu" minWidth="0.0" prefWidth="61.60003662109375" text="Chức vụ" />
+            <TableColumn fx:id="nhansu_colmaPB" minWidth="0.0" prefWidth="99.3685302734375" text="Mã phòng ban" />
+            <TableColumn fx:id="nhansu_colchucvu" minWidth="0.0" prefWidth="68.6314697265625" text="Chức vụ" />
         </columns>
       </TableView>
       <Label layoutX="25.0" layoutY="72.0" text="Họ và Tên" />
