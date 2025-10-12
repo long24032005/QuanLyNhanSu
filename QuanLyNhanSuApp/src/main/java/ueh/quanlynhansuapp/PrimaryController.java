@@ -225,7 +225,6 @@ public class PrimaryController {
         hienThongBaoThanhCong("Thanh cong", "Da xoa phong ban và di chuyen nhan vien.");
     }
 }
-
     
     
     
