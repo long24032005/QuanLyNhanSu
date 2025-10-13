@@ -7,13 +7,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 /**
- *S
+ *
  * @author lagia
  */
 public class canhbao {
-    public static void thongbao(String header, String noidung){
-        Alert a = new Alert(Alert.AlertType.ERROR,noidung,ButtonType.OK);
-        a.setTitle(header);
+    public static void canhbao(String title, String message) {
+        Alert a = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
+        a.setTitle(title);
+        a.showAndWait();
+    }
+
+    public static void thongbao(String title, String message) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        a.setTitle(title);
         a.showAndWait();
     }
 }

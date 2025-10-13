@@ -2,6 +2,7 @@ package ueh.quanlynhansuapp;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import javafx.scene.control.Alert;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -253,8 +254,28 @@ public class PrimaryController {
 
     @FXML
     private void phongban_suaAction() throws IOException {
-        canhbao.thongbao("Thông báo", "bạn đang vào chức năng sửa");
-        App.setRoot("suaphongban");
+        phongBan selected = phongban_tbphongban.getSelectionModel().getSelectedItem();
+        index = phongban_tbphongban.getItems().indexOf(selected);
+        if(selected == null){
+            Alert a = new Alert(Alert.AlertType.INFORMATION,"Chon 1 hang de sua", ButtonType.YES);
+            a.setTitle("Thong Tin");
+            a.showAndWait();
+            return;
+        }
+         // Tạo FXMLLoader để tải file suaphongban.fxml
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("suaphongban.fxml"));
+        Parent root = fxmlLoader.load();
+
+        // Lấy controller của giao diện sửa phòng ban
+        SuaPhongBan controller = fxmlLoader.getController();
+        controller.setData(selected); // Truyền dữ liệu phòng ban được chọn qua màn hình sửa
+
+        // Lấy Stage hiện tại và chuyển scene
+        Stage stage = (Stage) phongban_tbphongban.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Sửa Phòng Ban");
+        stage.show();
     }
 
     // ================== TIỆN ÍCH DÙNG CHUNG ==================
