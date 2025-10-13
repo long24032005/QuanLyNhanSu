@@ -9,9 +9,13 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class PrimaryController {
 
@@ -131,8 +135,8 @@ public class PrimaryController {
                     phongban_txma.setText(newValue.getMaPhong());
                     phongban_txten.setText(newValue.getTenPhong());
                     phongban_txmaTP.setText(newValue.getMaTruongPhong());
-                    phongban_txsdt.setText(newValue.getSdt());
-                    phongban_txemail.setText(newValue.getEmail());
+                    phongban_txsdt.setText(newValue.getSdtPhong());
+                    phongban_txemail.setText(newValue.getEmailPhong());
                     phongban_txtong.setText("" + newValue.getTongSoNhanVien());
                 }
             }
@@ -154,7 +158,7 @@ public class PrimaryController {
         // Bước 2: Kiểm tra xem nhân viên này có phải là trưởng phòng không
         PhongBan phongBanCuaNhanVien = null; // Biến để lưu phòng ban mà nhân viên này làm trưởng phòng
         for (PhongBan pb : dsPhongBan) {
-            if (pb.getTruongPhong() != null && pb.getTruongPhong().equals(selectedNhanSu.getMaNV())) {
+            if (pb.getMaTruongPhong() != null && pb.getMaTruongPhong().equals(selectedNhanSu.getMaNV())) {
                 phongBanCuaNhanVien = pb; // Tìm thấy rồi, lưu lại và thoát khỏi vòng lặp
                 break;
             }
@@ -184,7 +188,7 @@ public class PrimaryController {
                     // c. Thực hiện hành động
                     String tenPhongBan = phongBanCuaNhanVien.getTenPhong();
 
-                    phongBanCuaNhanVien.setTruongPhong(null); // Cập nhật phòng ban
+                    phongBanCuaNhanVien.setMaTruongPhong(null); // Cập nhật phòng ban
                     dsNhanSu.remove(selectedNhanSu); // Xóa nhân viên
 
                     // Hiển thị thông báo KẾT QUẢ
@@ -235,9 +239,9 @@ public class PrimaryController {
             // b. Quét qua danh sách nhân viên để tìm và cập nhật
             for (NhanSu ns : dsNhanSu) {
                 // Nếu tìm thấy nhân viên thuộc phòng ban sắp bị xóa...
-                if (ns.getMaPhong() != null && ns.getMaPhong().equals(maPhongCanXoa)) {
+                if (ns.getMaPhongBan() != null && ns.getMaPhongBan().equals(maPhongCanXoa)) {
                     // ...thì chuyển họ sang phòng ban mặc định "P00"
-                    ns.setMaPhong("P00");
+                    ns.setMaPhongBan("P00");
                 }
             }
 
@@ -254,8 +258,8 @@ public class PrimaryController {
 
     @FXML
     private void phongban_suaAction() throws IOException {
-        phongBan selected = phongban_tbphongban.getSelectionModel().getSelectedItem();
-        index = phongban_tbphongban.getItems().indexOf(selected);
+        PhongBan selected = phongban_tbphongban.getSelectionModel().getSelectedItem();
+        int index = phongban_tbphongban.getItems().indexOf(selected);
         if(selected == null){
             Alert a = new Alert(Alert.AlertType.INFORMATION,"Chon 1 hang de sua", ButtonType.YES);
             a.setTitle("Thong Tin");

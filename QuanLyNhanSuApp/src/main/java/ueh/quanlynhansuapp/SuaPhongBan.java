@@ -2,34 +2,35 @@ package ueh.quanlynhansuapp;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
-
+import javafx.scene.control.*;
 public class SuaPhongBan {
     @FXML
-    Textfield suaphongban_txma;
+    TextField suaphongban_txma;
     @FXML
-    Textfield suaphongban_txten;
+    TextField suaphongban_txten;
     @FXML
-    Textfield suaphongban_txmaTP;
+    TextField suaphongban_txmaTP;
     @FXML
-    Textfield suaphongban_txsdt;
+    TextField suaphongban_txsdt;
     @FXML
-    Textfield suaphongban_txemail;
+    TextField suaphongban_txemail;
     @FXML
-    Textfield suaphongban_txtong;
+    TextField suaphongban_txtong;
     @FXML
     Button suaphongban_btsua;
     @FXML
     Button suaphongban_bttrolai;
+    private PhongBan pBan;
     
     
-    public void setData(PhongBan phongBan) {
-        this.phongBan = pb;
-        suaphongban_txma.setText(pb.getMaPhong());
-        suaphongban_txten.setText(pb.getTenPhong());
-        suaphongban_txmaTP.setText(pb.getMaTP());
-        suaphongban_txsdt.setText(pb.getSdt());
-        suaphongban_txemail.setText(pb.getEmail());
-        suaphongban_txtong.setText(String.valueOf(pb.getTongNhanVien()));
+    public void setData(PhongBan pBan) {
+        this.pBan = pBan;
+        suaphongban_txma.setText(pBan.getMaPhong());
+        suaphongban_txten.setText(pBan.getTenPhong());
+        suaphongban_txmaTP.setText(pBan.getMaTruongPhong());
+        suaphongban_txsdt.setText(pBan.getSdtPhong());
+        suaphongban_txemail.setText(pBan.getEmailPhong());
+        suaphongban_txtong.setText(String.valueOf(pBan.getTongSoNhanVien()));
     }
     
      @FXML
@@ -52,15 +53,15 @@ public class SuaPhongBan {
             int tongNV = Integer.parseInt(tong);
 
             // Cập nhật lại thông tin phòng ban
-            phongBan.setMaPhong(ma);
-            phongBan.setTenPhong(ten);
-            phongBan.setMaTP(maTP);
-            phongBan.setSdt(sdt);
-            phongBan.setEmail(email);
-            phongBan.setTongNhanVien(tongNV);
+            pBan.setMaPhong(ma);
+            pBan.setTenPhong(ten);
+            pBan.setMaTruongPhong(maTP);
+            pBan.setSdtPhong(sdt);
+            pBan.setEmailPhong(email);
+            pBan.setTongSoNhanVien(tongNV);
 
             // Gọi Database để cập nhật 
-            Database.updatePhongBan(phongBan);
+            Database.updatePhongBan(pBan);
 
             // Thông báo thành công
             canhbao.thongbao("Thành công", "Đã cập nhật thông tin phòng ban!");

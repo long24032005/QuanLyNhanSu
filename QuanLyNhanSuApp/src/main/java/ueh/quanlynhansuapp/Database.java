@@ -4,10 +4,20 @@
  */
 package ueh.quanlynhansuapp;
 
+import java.sql.Connection;
+
 /**
  *
  * @author philo
  */
 public class Database {
+
+    static Connection getConnection() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    static void updatePhongBan(PhongBan pBan) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
