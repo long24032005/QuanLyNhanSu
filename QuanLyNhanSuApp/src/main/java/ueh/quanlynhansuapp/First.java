@@ -12,19 +12,19 @@ import javafx.scene.control.Button;
  *
  * @author lagia
  */
-public class main {
+public class First {
     @FXML
     Button main_btnhansu;
     @FXML
     Button main_btphongban;
     
     @FXML
-    private void main_nhansuAction() throws IOException {
+    public void main_nhansuAction() throws IOException {
         canhbao.thongbao("Thông báo", "bạn đang vào bảng nhân sự");
         App.setRoot("nhansu");
     } 
     @FXML
-    private void main_phongbanAction() throws IOException {
+    public void main_phongbanAction() throws IOException {
         canhbao.thongbao("Thông báo", "bạn đang vào bảng phòng ban");
         App.setRoot("phongban");
     } 
