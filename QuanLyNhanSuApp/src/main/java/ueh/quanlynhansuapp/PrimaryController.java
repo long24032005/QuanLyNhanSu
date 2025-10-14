@@ -316,9 +316,9 @@ public class PrimaryController {
     
     @FXML
     private void phongban_suaAction() throws IOException {
-        PhongBan selected = phongban_tbphongban.getSelectionModel().getSelectedItem();
-        int index = phongban_tbphongban.getItems().indexOf(selected);
-        if(selected == null){
+        PhongBan pbselected = phongban_tbphongban.getSelectionModel().getSelectedItem();
+        int index = phongban_tbphongban.getItems().indexOf(pbselected);
+        if(pbselected == null){
             Alert a = new Alert(Alert.AlertType.INFORMATION,"Chon 1 hang de sua", ButtonType.YES);
             a.setTitle("Thong Tin");
             a.showAndWait();
@@ -330,7 +330,7 @@ public class PrimaryController {
 
         // Lấy controller của giao diện sửa phòng ban
         SuaPhongBan controller = fxmlLoader.getController();
-        controller.setData(selected); // Truyền dữ liệu phòng ban được chọn qua màn hình sửa
+        controller.setData(pbselected); // Truyền dữ liệu phòng ban được chọn qua màn hình sửa
 
         // Lấy Stage hiện tại và chuyển scene
         Stage stage = (Stage) phongban_tbphongban.getScene().getWindow();
@@ -531,6 +531,32 @@ public class PrimaryController {
 
         thongBao(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm phòng ban \"" + tenPhong + "\".");
     }
+    
+    @FXML
+    private void nhansu_suaAction() throws IOException {
+        NhanSu nsselected = nhansu_tbnhansu.getSelectionModel().getSelectedItem();
+        int index = nhansu_tbnhansu.getItems().indexOf(nsselected);
+        if(nsselected == null){
+            Alert a = new Alert(Alert.AlertType.INFORMATION,"Chon 1 hang de sua", ButtonType.YES);
+            a.setTitle("Thong Tin");
+            a.showAndWait();
+            return;
+        }
+         // Tạo FXMLLoader để tải file suaphongban.fxml
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("suanhansu.fxml"));
+        Parent root = fxmlLoader.load();
+
+        // Lấy controller của giao diện sửa phòng ban
+        SuaNhanSu controller = fxmlLoader.getController();
+        controller.setData(nsselected); // Truyền dữ liệu nhân sự được chọn qua màn hình sửa
+
+        // Lấy Stage hiện tại và chuyển scene
+        Stage stage = (Stage) nhansu_tbnhansu.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Sửa Nhân sự");
+        stage.show();
+        }
 
 }
 
