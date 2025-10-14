@@ -21,8 +21,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class PrimaryController {
     
@@ -82,7 +86,7 @@ public class PrimaryController {
     // ================== NHÂN SỰ – DATA MODELS ==================
     private final ObservableList<NhanSu> dsNhanSu = FXCollections.observableArrayList();
     private final ObservableList<String> dsMaPhongForCombo = FXCollections.observableArrayList();
-
+    private final ObservableList<PhongBan> dsPhongBan = FXCollections.observableArrayList(); 
     @FXML
     public void initialize() {  // phần initialize() này tự động chạy khi giao diện được tải lên
                                 // và nhiệm vụ của nó là chuẩn bị và cài đặt mọi thứ sẵn sàng
@@ -160,8 +164,8 @@ public class PrimaryController {
                 phongban_txma.setText(newValue.getMaPhong());
                 phongban_txten.setText(newValue.getTenPhong());
                 phongban_txmaTP.setText(newValue.getMaTruongPhong());
-                phongban_txsdt.setText(newValue.getSdt());
-                phongban_txemail.setText(newValue.getEmail());
+                phongban_txsdt.setText(newValue.getSdtPhong());
+                phongban_txemail.setText(newValue.getEmailPhong());
                 // Chuyển số thành chữ để hiển thị. Dấu "" + ... là một mẹo đơn giản.
                 phongban_txtong.setText("" + newValue.getTongSoNhanVien()); 
             }
@@ -170,7 +174,14 @@ public class PrimaryController {
 
 } //Dấu ngoặc nhọn này là kết thúc của phần initialize()
 
-    
+    private void hienThongBaoLoi(String title, String content) {
+        thongBao(Alert.AlertType.ERROR, title, content);
+    }
+
+    private void hienThongBaoThanhCong(String title, String content) {
+        thongBao(Alert.AlertType.INFORMATION, title, content);
+    }
+
   
 
  // Cách hoạt động của  nút Xóa ở bảng Nhân sự
@@ -190,14 +201,14 @@ public class PrimaryController {
 
     // Kiểm tra xem đã chọn ai chưa
     if (selectedNhanSu == null) {
-        hienThongBaoLoi("Chua chon nhan vien", "Vui long chon mot nhan vien đe xoa.");
+        canhbao.canhbao("Chua chon nhan vien", "Vui long chon mot nhan vien đe xoa.");
         return;
     }
 
     // Bước 2: Kiểm tra xem nhân viên này có phải là trưởng phòng không
     PhongBan phongBanCuaNhanVien = null; // Biến để lưu phòng ban mà nhân viên này làm trưởng phòng
-    for (PhongBan pb : dsPhongBan) {
-        if (pb.getTruongPhong() != null && pb.getTruongPhong().equals(selectedNhanSu.getMaNV())) {
+    for (PhongBan pb : dsPhongBan ) {
+        if (pb.getMaTruongPhong() != null && pb.getMaTruongPhong().equals(selectedNhanSu.getMaNV())) {
             phongBanCuaNhanVien = pb; // Tìm thấy rồi, lưu lại và thoát khỏi vòng lặp
             break;
         }
@@ -227,7 +238,7 @@ public class PrimaryController {
                 // c. Thực hiện hành động
                 String tenPhongBan = phongBanCuaNhanVien.getTenPhong();
                 
-                phongBanCuaNhanVien.setTruongPhong(null); // Cập nhật phòng ban
+                phongBanCuaNhanVien.setMaTruongPhong(null); // Cập nhật phòng ban
                 dsNhanSu.remove(selectedNhanSu); // Xóa nhân viên
                 
                 // Hiển thị thông báo KẾT QUẢ
@@ -285,9 +296,9 @@ public class PrimaryController {
         // b. Quét qua danh sách nhân viên để tìm và cập nhật
         for (NhanSu ns : dsNhanSu) {
             // Nếu tìm thấy nhân viên thuộc phòng ban sắp bị xóa...
-            if (ns.getMaPhong() != null && ns.getMaPhong().equals(maPhongCanXoa)) {
+            if (ns.getMaPhongBan() != null && ns.getMaPhongBan().equals(maPhongCanXoa)) {
                 // ...thì chuyển họ sang phòng ban mặc định "P00"
-                ns.setMaPhong("P00");
+                ns.setMaPhongBan("P00");
             }
         }
 
@@ -303,12 +314,31 @@ public class PrimaryController {
 }
     
     
-    
     @FXML
     private void phongban_suaAction() throws IOException {
-        canhbao.thongbao("Thông báo", "bạn đang vào chức năng sửa");
-        App.setRoot("suaphongban");
-    }
+        PhongBan selected = phongban_tbphongban.getSelectionModel().getSelectedItem();
+        int index = phongban_tbphongban.getItems().indexOf(selected);
+        if(selected == null){
+            Alert a = new Alert(Alert.AlertType.INFORMATION,"Chon 1 hang de sua", ButtonType.YES);
+            a.setTitle("Thong Tin");
+            a.showAndWait();
+            return;
+        }
+         // Tạo FXMLLoader để tải file suaphongban.fxml
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("suaphongban.fxml"));
+        Parent root = fxmlLoader.load();
+
+        // Lấy controller của giao diện sửa phòng ban
+        SuaPhongBan controller = fxmlLoader.getController();
+        controller.setData(selected); // Truyền dữ liệu phòng ban được chọn qua màn hình sửa
+
+        // Lấy Stage hiện tại và chuyển scene
+        Stage stage = (Stage) phongban_tbphongban.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Sửa Phòng Ban");
+        stage.show();
+        }
     // ================== TIỆN ÍCH DÙNG CHUNG ==================
     private PhongBan timPhongBanTheoMa(String maPhong) {
         if (maPhong == null || maPhong.isBlank()) return null;
@@ -484,8 +514,8 @@ public class PrimaryController {
         pb.setMaPhong(maPhong);
         pb.setTenPhong(tenPhong);
         pb.setMaTruongPhong(maTP.isBlank() ? null : maTP);
-        pb.setSdt(sdtPhong.isBlank() ? null : sdtPhong);       // ← dùng setSdt(...)
-        pb.setEmail(emailPhong.isBlank() ? null : emailPhong); // ← dùng setEmail(...)
+        pb.setSdtPhong(sdtPhong.isBlank() ? null : sdtPhong);       // ← dùng setSdt(...)
+        pb.setEmailPhong(emailPhong.isBlank() ? null : emailPhong); // ← dùng setEmail(...)
         pb.setTongSoNhanVien(tong);
 
         phongban_tbphongban.getItems().add(pb);
