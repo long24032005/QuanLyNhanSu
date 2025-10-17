@@ -4,17 +4,18 @@
  */
 package ueh.quanlynhansuapp;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import java.sql.Connection;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -22,218 +23,208 @@ import java.sql.Connection;
  */
 public class Database {
 // Đường dẫn tới file database. Sẽ tự động tạo trong thư mục gốc của dự án nếu chưa có.
-    private static final String URL = "jdbc:sqlite:quanlynhansu.db";
+    // Tên file dữ liệu của chúng ta
+    private static final String FILE_NAME = "quanlynhansu.xlsx";
+    private static final String SHEET_PHONGBAN = "PhongBan";
+    private static final String SHEET_NHANSU = "NhanSu";
+    // Định dạng ngày tháng để lưu vào Excel cho nhất quán
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    static Connection getConnection() {
-        try {
-            return DriverManager.getConnection(URL);
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Không thể kết nối tới cơ sở dữ liệu: " + e.getMessage());
-            return null;
-        }
-    }
-
+    /**
+     * Khởi tạo file Excel. Nếu file chưa có, sẽ tạo mới với các cột tiêu đề.
+     */
     public static void initializeDatabase() {
-        String sqlPhongBan = "CREATE TABLE IF NOT EXISTS phongban (" +
-                             "maPhong TEXT PRIMARY KEY," +
-                             "tenPhong TEXT NOT NULL," +
-                             "maTruongPhong TEXT," +
-                             "sdtPhong TEXT," +
-                             "emailPhong TEXT," +
-                             "tongSoNhanVien INTEGER NOT NULL DEFAULT 0" +
-                             ");";
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+                // 1. Tạo sheet (trang tính) cho Phòng Ban
+                Sheet phongBanSheet = workbook.createSheet(SHEET_PHONGBAN);
+                Row pbHeader = phongBanSheet.createRow(0);
+                String[] pbColumns = {"maPhong", "tenPhong", "maTruongPhong", "sdtPhong", "emailPhong", "tongSoNhanVien"};
+                for (int i = 0; i < pbColumns.length; i++) {
+                    pbHeader.createCell(i).setCellValue(pbColumns[i]);
+                }
+                // Thêm phòng "P00 - Chờ phân công" làm mặc định
+                Row defaultPbRow = phongBanSheet.createRow(1);
+                defaultPbRow.createCell(0).setCellValue("P00");
+                defaultPbRow.createCell(1).setCellValue("Chờ phân công");
+                defaultPbRow.createCell(5).setCellValue(0);
 
-        String sqlNhanSu = "CREATE TABLE IF NOT EXISTS nhansu (" +
-                           "maNV TEXT PRIMARY KEY," +
-                           "hoTen TEXT NOT NULL," +
-                           "gioiTinh TEXT," +
-                           "ngaySinh TEXT NOT NULL," + // SQLite lưu ngày tháng dưới dạng TEXT "YYYY-MM-DD"
-                           "cccd TEXT UNIQUE," +
-                           "email TEXT," +
-                           "sdt TEXT," +
-                           "maPhongBan TEXT NOT NULL," +
-                           "chucVu TEXT," +
-                           "FOREIGN KEY (maPhongBan) REFERENCES phongban(maPhong) ON UPDATE CASCADE ON DELETE SET DEFAULT" +
-                           ");";
+                // 2. Tạo sheet (trang tính) cho Nhân Sự
+                Sheet nhanSuSheet = workbook.createSheet(SHEET_NHANSU);
+                Row nsHeader = nhanSuSheet.createRow(0);
+                String[] nsColumns = {"maNV", "hoTen", "gioiTinh", "ngaySinh", "cccd", "email", "sdt", "maPhongBan", "chucVu"};
+                for (int i = 0; i < nsColumns.length; i++) {
+                    nsHeader.createCell(i).setCellValue(nsColumns[i]);
+                }
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            if (conn != null) {
-                stmt.execute(sqlPhongBan);
-                stmt.execute(sqlNhanSu);
-                // Thêm phòng "Chờ phân công" làm phòng mặc định nếu chưa tồn tại
-                stmt.execute("INSERT OR IGNORE INTO phongban(maPhong, tenPhong, tongSoNhanVien) VALUES('P00', 'Chờ phân công', 0);");
+                // 3. Lưu file lại
+                try (FileOutputStream fileOut = new FileOutputStream(FILE_NAME)) {
+                    workbook.write(fileOut);
+                }
+            } catch (IOException e) {
+                canhbao.canhbao("Lỗi", "Không thể tạo file Excel: " + e.getMessage());
             }
-        } catch (SQLException e) {
-             canhbao.canhbao("Lỗi Database", "Không thể khởi tạo bảng: " + e.getMessage());
-        }
-        
-        try (Connection conn = getConnection();
-            Statement stmt = conn.createStatement()) {
-            if (conn != null) {
-               stmt.execute(sqlPhongBan);
-                stmt.execute(sqlNhanSu);
-                // Thêm phòng "Chờ phân công" làm phòng mặc định nếu chưa tồn tại
-                stmt.execute("INSERT OR IGNORE INTO phongban(maPhong, tenPhong, tongSoNhanVien) VALUES('P00', 'Chờ phân công', 0);");
-            
-                // GỌI PHƯƠNG THỨC TẢI DỮ LIỆU TỪ FILE CSV
-                DataLoader.loadInitialData(); // <-- THÊM DÒNG NÀY VÀO
-            }
-        } catch (SQLException e) {
-             canhbao.canhbao("Lỗi Database", "Không thể khởi tạo bảng: " + e.getMessage());
         }
     }
 
-    // ================== CÁC PHƯƠNG THỨC CHO PHÒNG BAN ==================
-
+    /**
+     * Đọc toàn bộ danh sách phòng ban từ file Excel.
+     */
     public static List<PhongBan> loadAllPhongBan() {
         List<PhongBan> list = new ArrayList<>();
-        String sql = "SELECT * FROM phongban";
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (FileInputStream fis = new FileInputStream(FILE_NAME);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+            Sheet sheet = workbook.getSheet(SHEET_PHONGBAN);
+            if (sheet == null) return list;
 
-            while (rs.next()) {
+            Iterator<Row> rowIterator = sheet.iterator();
+            if (rowIterator.hasNext()) rowIterator.next(); // Bỏ qua dòng tiêu đề
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                String maPhong = getStringCellValue(row.getCell(0));
+                if (maPhong == null || maPhong.isEmpty()) continue;
+
                 list.add(new PhongBan(
-                    rs.getString("maPhong"),
-                    rs.getString("tenPhong"),
-                    rs.getString("maTruongPhong"),
-                    rs.getString("sdtPhong"),
-                    rs.getString("emailPhong"),
-                    rs.getInt("tongSoNhanVien")
+                        maPhong,
+                        getStringCellValue(row.getCell(1)),
+                        getStringCellValue(row.getCell(2)),
+                        getStringCellValue(row.getCell(3)),
+                        getStringCellValue(row.getCell(4)),
+                        (int) getNumericCellValue(row.getCell(5))
                 ));
             }
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Không thể tải danh sách phòng ban: " + e.getMessage());
+        } catch (IOException e) {
+            canhbao.canhbao("Lỗi", "Không thể đọc dữ liệu Phòng Ban từ Excel: " + e.getMessage());
         }
         return list;
     }
 
-    public static boolean insertPhongBan(PhongBan pb) {
-        String sql = "INSERT INTO phongban(maPhong, tenPhong, maTruongPhong, sdtPhong, emailPhong, tongSoNhanVien) VALUES(?,?,?,?,?,?)";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, pb.getMaPhong());
-            pstmt.setString(2, pb.getTenPhong());
-            pstmt.setString(3, pb.getMaTruongPhong());
-            pstmt.setString(4, pb.getSdtPhong());
-            pstmt.setString(5, pb.getEmailPhong());
-            pstmt.setInt(6, pb.getTongSoNhanVien());
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Thêm phòng ban thất bại: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public static void updatePhongBan(PhongBan pBan) {
-         String sql = "UPDATE phongban SET tenPhong = ?, maTruongPhong = ?, sdtPhong = ?, emailPhong = ?, tongSoNhanVien = ? WHERE maPhong = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, pBan.getTenPhong());
-            pstmt.setString(2, pBan.getMaTruongPhong());
-            pstmt.setString(3, pBan.getSdtPhong());
-            pstmt.setString(4, pBan.getEmailPhong());
-            pstmt.setInt(5, pBan.getTongSoNhanVien());
-            pstmt.setString(6, pBan.getMaPhong());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Cập nhật phòng ban thất bại: " + e.getMessage());
-        }
-    }
-
-    public static boolean deletePhongBan(String maPhong) {
-        String sql = "DELETE FROM phongban WHERE maPhong = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, maPhong);
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Xóa phòng ban thất bại: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // ================== CÁC PHƯƠNG THỨC CHO NHÂN SỰ ==================
-
+    /**
+     * Đọc toàn bộ danh sách nhân sự từ file Excel.
+     */
     public static List<NhanSu> loadAllNhanSu() {
         List<NhanSu> list = new ArrayList<>();
-        String sql = "SELECT * FROM nhansu";
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (FileInputStream fis = new FileInputStream(FILE_NAME);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+            Sheet sheet = workbook.getSheet(SHEET_NHANSU);
+            if (sheet == null) return list;
 
-            while (rs.next()) {
+            Iterator<Row> rowIterator = sheet.iterator();
+            if (rowIterator.hasNext()) rowIterator.next(); // Bỏ qua dòng tiêu đề
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                String maNV = getStringCellValue(row.getCell(0));
+                if (maNV == null || maNV.isEmpty()) continue;
+
+                String ngaySinhStr = getStringCellValue(row.getCell(3));
+                LocalDate ngaySinh = (ngaySinhStr != null && !ngaySinhStr.isEmpty()) ? LocalDate.parse(ngaySinhStr, DATE_FORMATTER) : null;
+
                 list.add(new NhanSu(
-                    rs.getString("maNV"),
-                    rs.getString("hoTen"),
-                    rs.getString("gioiTinh"),
-                    LocalDate.parse(rs.getString("ngaySinh")), // Chuyển từ text "YYYY-MM-DD" sang LocalDate
-                    rs.getString("cccd"),
-                    rs.getString("email"),
-                    rs.getString("sdt"),
-                    rs.getString("maPhongBan"),
-                    rs.getString("chucVu")
+                        maNV,
+                        getStringCellValue(row.getCell(1)),
+                        getStringCellValue(row.getCell(2)),
+                        ngaySinh,
+                        getStringCellValue(row.getCell(4)),
+                        getStringCellValue(row.getCell(5)),
+                        getStringCellValue(row.getCell(6)),
+                        getStringCellValue(row.getCell(7)),
+                        getStringCellValue(row.getCell(8))
                 ));
             }
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Không thể tải danh sách nhân sự: " + e.getMessage());
+        } catch (IOException e) {
+            canhbao.canhbao("Lỗi", "Không thể đọc dữ liệu Nhân Sự từ Excel: " + e.getMessage());
         }
         return list;
     }
 
-    public static boolean insertNhanSu(NhanSu ns) {
-        String sql = "INSERT INTO nhansu(maNV, hoTen, gioiTinh, ngaySinh, cccd, email, sdt, maPhongBan, chucVu) VALUES(?,?,?,?,?,?,?,?,?)";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, ns.getMaNV());
-            pstmt.setString(2, ns.getHoTen());
-            pstmt.setString(3, ns.getGioiTinh());
-            pstmt.setString(4, ns.getNgaySinh().toString()); // Chuyển LocalDate thành text "YYYY-MM-DD"
-            pstmt.setString(5, ns.getCccd());
-            pstmt.setString(6, ns.getEmail());
-            pstmt.setString(7, ns.getSdt());
-            pstmt.setString(8, ns.getMaPhongBan());
-            pstmt.setString(9, ns.getChucVu());
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Thêm nhân sự thất bại: " + e.getMessage());
-            return false;
+    /**
+     * Ghi toàn bộ danh sách phòng ban vào Excel (ghi đè lên dữ liệu cũ).
+     */
+    public static void writeAllPhongBan(List<PhongBan> list) {
+        try (FileInputStream fis = new FileInputStream(FILE_NAME);
+             XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
+            Sheet sheet = workbook.getSheet(SHEET_PHONGBAN);
+
+            // Xóa hết các dòng dữ liệu cũ để chuẩn bị ghi mới
+            for (int i = sheet.getLastRowNum(); i > 0; i--) {
+                sheet.removeRow(sheet.getRow(i));
+            }
+
+            // Bắt đầu ghi từ dòng thứ 2 (dòng 1 là tiêu đề)
+            int rowNum = 1;
+            for (PhongBan pb : list) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(pb.getMaPhong());
+                row.createCell(1).setCellValue(pb.getTenPhong());
+                row.createCell(2).setCellValue(pb.getMaTruongPhong());
+                row.createCell(3).setCellValue(pb.getSdtPhong());
+                row.createCell(4).setCellValue(pb.getEmailPhong());
+                row.createCell(5).setCellValue(pb.getTongSoNhanVien());
+            }
+
+            // Lưu những thay đổi vào file
+            try (FileOutputStream fos = new FileOutputStream(FILE_NAME)) {
+                workbook.write(fos);
+            }
+        } catch (IOException e) {
+            canhbao.canhbao("Lỗi", "Không thể ghi dữ liệu Phòng Ban vào Excel: " + e.getMessage());
         }
     }
 
-     public static void updateNhanSu(NhanSu ns) {
-        String sql = "UPDATE nhansu SET hoTen = ?, gioiTinh = ?, ngaySinh = ?, cccd = ?, email = ?, sdt = ?, maPhongBan = ?, chucVu = ? WHERE maNV = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, ns.getHoTen());
-            pstmt.setString(2, ns.getGioiTinh());
-            pstmt.setString(3, ns.getNgaySinh().toString());
-            pstmt.setString(4, ns.getCccd());
-            pstmt.setString(5, ns.getEmail());
-            pstmt.setString(6, ns.getSdt());
-            pstmt.setString(7, ns.getMaPhongBan());
-            pstmt.setString(8, ns.getChucVu());
-            pstmt.setString(9, ns.getMaNV());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Cập nhật nhân sự thất bại: " + e.getMessage());
+    /**
+     * Ghi toàn bộ danh sách nhân sự vào Excel (ghi đè lên dữ liệu cũ).
+     */
+    public static void writeAllNhanSu(List<NhanSu> list) {
+        try (FileInputStream fis = new FileInputStream(FILE_NAME);
+             XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
+            Sheet sheet = workbook.getSheet(SHEET_NHANSU);
+
+            for (int i = sheet.getLastRowNum(); i > 0; i--) {
+                sheet.removeRow(sheet.getRow(i));
+            }
+            
+            int rowNum = 1;
+            for (NhanSu ns : list) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(ns.getMaNV());
+                row.createCell(1).setCellValue(ns.getHoTen());
+                row.createCell(2).setCellValue(ns.getGioiTinh());
+                if (ns.getNgaySinh() != null) {
+                   row.createCell(3).setCellValue(ns.getNgaySinh().format(DATE_FORMATTER));
+                }
+                row.createCell(4).setCellValue(ns.getCccd());
+                row.createCell(5).setCellValue(ns.getEmail());
+                row.createCell(6).setCellValue(ns.getSdt());
+                row.createCell(7).setCellValue(ns.getMaPhongBan());
+                row.createCell(8).setCellValue(ns.getChucVu());
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(FILE_NAME)) {
+                workbook.write(fos);
+            }
+        } catch (IOException e) {
+            canhbao.canhbao("Lỗi", "Không thể ghi dữ liệu Nhân Sự vào Excel: " + e.getMessage());
         }
     }
 
-    public static boolean deleteNhanSu(String maNV) {
-         String sql = "DELETE FROM nhansu WHERE maNV = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, maNV);
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            canhbao.canhbao("Lỗi Database", "Xóa nhân sự thất bại: " + e.getMessage());
-            return false;
+    // --- Các hàm hỗ trợ đọc dữ liệu từ các ô trong Excel một cách an toàn ---
+    private static String getStringCellValue(Cell cell) {
+        if (cell == null) return null;
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return new DataFormatter().formatCellValue(cell);
+            default:
+                return null;
         }
+    }
+
+    private static double getNumericCellValue(Cell cell) {
+        if (cell == null || cell.getCellType() != CellType.NUMERIC) return 0;
+        return cell.getNumericCellValue();
     }
 }

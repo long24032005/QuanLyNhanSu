@@ -1,11 +1,10 @@
 package ueh.quanlynhansuapp;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 
 public class SuaNhanSu {
@@ -14,7 +13,7 @@ public class SuaNhanSu {
     @FXML
     private TextField suanhansu_txten;
     @FXML
-    private ChoiceBox suanhansu_cbgioitinh;
+    private ComboBox<String> suanhansu_cbgioitinh;
     @FXML
     private DatePicker suanhansu_datengaysinh;
     @FXML
@@ -24,77 +23,72 @@ public class SuaNhanSu {
     @FXML
     private TextField suanhansu_txsdt;
     @FXML
-    private ChoiceBox suanhansu_cbmaPB;
+    private ComboBox<String> suanhansu_cbmaPB;
     @FXML
-    private ChoiceBox suanhansu_cbchucvu;
+    private ComboBox<String> suanhansu_cbchucvu;
     @FXML
     private Button suanhansu_btsua;
     @FXML
     private Button suanhansu_bttrolai;
     
     private NhanSu ns;
+    private String maPhongBanCu;
     
     public void setData(NhanSu ns) {
         this.ns = ns;
+        this.maPhongBanCu = ns.getMaPhongBan();
+
         suanhansu_txma.setText(ns.getMaNV());
         suanhansu_txten.setText(ns.getHoTen());
-        suanhansu_cbgioitinh.setValue(ns.getGioiTinh());
         suanhansu_datengaysinh.setValue(ns.getNgaySinh());
         suanhansu_txcccd.setText(ns.getCccd());
         suanhansu_txemail.setText(ns.getEmail());
         suanhansu_txsdt.setText(ns.getSdt());
+
+        // Cài đặt cho các ComboBox
+        suanhansu_cbgioitinh.setItems(FXCollections.observableArrayList("Nam", "Nữ", "Khác"));
+        suanhansu_cbchucvu.setItems(FXCollections.observableArrayList("Nhân viên", "Trưởng phòng", "Phó phòng", "Thực tập"));
+        
+        ObservableList<String> dsMaPhong = FXCollections.observableArrayList();
+        DataService.getInstance().getDsPhongBan().forEach(pb -> dsMaPhong.add(pb.getMaPhong()));
+        suanhansu_cbmaPB.setItems(dsMaPhong);
+
+        // Đặt giá trị hiện tại
+        suanhansu_cbgioitinh.setValue(ns.getGioiTinh());
         suanhansu_cbmaPB.setValue(ns.getMaPhongBan());
         suanhansu_cbchucvu.setValue(ns.getChucVu());
+        
+        suanhansu_txma.setDisable(true);
     }
     
     @FXML
     private void suanhansu_suaAction() throws IOException {
-        String ma = suanhansu_txma.getText().trim();
-        String ten = suanhansu_txten.getText().trim();
-        String gioitinh = (String) suanhansu_cbgioitinh.getValue();
+        String hoTen = suanhansu_txten.getText().trim();
+        String gioiTinh = suanhansu_cbgioitinh.getValue();
+        LocalDate ngaySinh = suanhansu_datengaysinh.getValue();
         String cccd = suanhansu_txcccd.getText().trim();
         String email = suanhansu_txemail.getText().trim();
         String sdt = suanhansu_txsdt.getText().trim();
-        String maPB = (String) suanhansu_cbmaPB.getValue();
-        String chucvu = (String) suanhansu_cbchucvu.getValue();
+        String maPhongBanMoi = suanhansu_cbmaPB.getValue();
+        String chucVu = suanhansu_cbchucvu.getValue();
 
-        if (ma.isEmpty() || ten.isEmpty() || gioitinh == null || cccd.isEmpty() || email.isEmpty() || sdt.isEmpty()
-                || maPB == null || chucvu == null || suanhansu_datengaysinh.getValue() == null) {
-            canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập đầy đủ tất cả các trường.");
-            return;
+        if (hoTen.isEmpty() || ngaySinh == null || maPhongBanMoi == null) {
+            canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập Họ tên, Ngày sinh và chọn Phòng ban.");
+            return; // Dừng lại nếu thiếu
         }
 
         // Cập nhật DB
-        try (Connection conn = Database.getConnection()) {
-            if (conn == null) {
-                canhbao.canhbao("Lỗi", "Không thể kết nối cơ sở dữ liệu.");
-                return;
-            }
-
-            String sql = "UPDATE nhansu SET ten=?, gioitinh=?, ngaysinh=?, cccd=?, email=?, sdt=?, maPB=?, chucvu=? WHERE ma=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, ten);
-            ps.setString(2, gioitinh);
-            ps.setDate(3, java.sql.Date.valueOf(suanhansu_datengaysinh.getValue()));
-            ps.setString(4, cccd);
-            ps.setString(5, email);
-            ps.setString(6, sdt);
-            ps.setString(7, maPB);
-            ps.setString(8, chucvu);
-            ps.setString(9, ma);
-
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!");
-                App.setRoot("nhansu");
-            } else {
-                canhbao.canhbao("Thất bại", "Không tìm thấy nhân sự để cập nhật!");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            canhbao.canhbao("Lỗi SQL", "Không thể cập nhật dữ liệu: " + e.getMessage());
-        }
+        ns.setHoTen(hoTen);
+        ns.setGioiTinh(gioiTinh);
+        ns.setNgaySinh(ngaySinh);
+        ns.setCccd(cccd);
+        ns.setEmail(email);
+        ns.setSdt(sdt);
+        ns.setMaPhongBan(maPhongBanMoi);
+        ns.setChucVu(chucVu);
+        
+        DataService.getInstance().updateNhanSu(ns, this.maPhongBanCu);
+        canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!");
     }
     
     @FXML

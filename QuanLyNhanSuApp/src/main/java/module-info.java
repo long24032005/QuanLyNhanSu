@@ -4,4 +4,6 @@ module ueh.quanlynhansuapp {
         requires java.sql;
     opens ueh.quanlynhansuapp to javafx.fxml;
     exports ueh.quanlynhansuapp;
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml;
 }

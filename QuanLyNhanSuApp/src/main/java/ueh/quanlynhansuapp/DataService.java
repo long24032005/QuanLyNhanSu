@@ -6,13 +6,14 @@ package ueh.quanlynhansuapp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author lagia
  */
 public class DataService {
-    // --- Singleton Pattern: Đảm bảo chỉ có một instance duy nhất của DataService ---
     private static DataService instance;
     public static DataService getInstance() {
         if (instance == null) {
@@ -21,25 +22,23 @@ public class DataService {
         return instance;
     }
 
-    // --- Các danh sách Observable để UI tự động cập nhật ---
     private final ObservableList<NhanSu> dsNhanSu = FXCollections.observableArrayList();
     private final ObservableList<PhongBan> dsPhongBan = FXCollections.observableArrayList();
 
-    /**
-     * Constructor private để ngăn việc tạo instance từ bên ngoài.
-     * Khi được gọi lần đầu, nó sẽ khởi tạo và tải toàn bộ dữ liệu từ database.
-     */
     private DataService() {
-        Database.initializeDatabase(); // Tạo bảng nếu chưa tồn tại
+        // Thay vì khởi tạo bảng SQL, giờ ta khởi tạo file Excel
+        Database.initializeDatabase(); 
+        // Tải dữ liệu từ Excel lên khi chương trình bắt đầu
         dsPhongBan.setAll(Database.loadAllPhongBan());
         dsNhanSu.setAll(Database.loadAllNhanSu());
+        
+        // Sau khi tải xong, tính lại tổng số nhân viên cho chắc chắn
+        recalculateAndUpdateTongNhanVien();
     }
 
-    // --- Cung cấp quyền truy cập (chỉ đọc) vào danh sách cho các Controller ---
+    // Các hàm get và tìm kiếm không thay đổi
     public ObservableList<NhanSu> getDsNhanSu() { return dsNhanSu; }
     public ObservableList<PhongBan> getDsPhongBan() { return dsPhongBan; }
-
-    // ================== LOGIC NGHIỆP VỤ VÀ TƯƠNG TÁC DATABASE ==================
 
     public PhongBan timPhongBanTheoMa(String maPhong) {
         return dsPhongBan.stream()
@@ -55,87 +54,76 @@ public class DataService {
                        .orElse(null);
     }
 
+    // --- Các hàm thêm, xóa, sửa sẽ gọi đến Database để ghi lại file Excel ---
+
     public boolean addPhongBan(PhongBan pb) {
-        if (Database.insertPhongBan(pb)) {
-            dsPhongBan.add(pb); // Cập nhật danh sách trên UI
-            return true;
-        }
-        return false;
+        dsPhongBan.add(pb);
+        // Sau khi thêm, ghi lại toàn bộ danh sách vào Excel
+        Database.writeAllPhongBan(dsPhongBan); 
+        return true;
     }
 
     public void deletePhongBan(PhongBan selectedPhongBan) {
         String maPhongCanXoa = selectedPhongBan.getMaPhong();
-
-        // Cập nhật tất cả nhân viên thuộc phòng bị xóa sang phòng "Chờ phân công"
         dsNhanSu.forEach(ns -> {
             if (ns.getMaPhongBan() != null && ns.getMaPhongBan().equals(maPhongCanXoa)) {
-                ns.setMaPhongBan("P00"); // Mã phòng mặc định
-                Database.updateNhanSu(ns); // Cập nhật thay đổi trong database
+                ns.setMaPhongBan("P00");
             }
         });
 
-        // Tăng số lượng nhân viên cho phòng "P00"
-        PhongBan phongCho = timPhongBanTheoMa("P00");
-        if (phongCho != null) {
-            long soNhanVienChuyenDen = dsNhanSu.stream().filter(ns -> ns.getMaPhongBan().equals("P00")).count();
-            // Cần tính lại chính xác hơn, ở đây ta chỉ cần update lại sau khi xóa
-            // Logic tính toán lại số lượng nhân viên cho mỗi phòng nên được thực hiện lại
-        }
+        dsPhongBan.remove(selectedPhongBan);
         
-        // Xóa phòng ban khỏi database
-        if (Database.deletePhongBan(maPhongCanXoa)) {
-            dsPhongBan.remove(selectedPhongBan); // Cập nhật danh sách trên UI
-            // Cần refresh lại bảng nhân sự để hiển thị mã phòng ban mới
-        }
+        // Tính lại số nhân viên và ghi lại cả 2 file
+        recalculateAndUpdateTongNhanVien(); 
+        Database.writeAllNhanSu(dsNhanSu);
     }
 
     public boolean addNhanSu(NhanSu ns) {
-        if (Database.insertNhanSu(ns)) {
-            dsNhanSu.add(ns); // Cập nhật UI
-            // Tăng tổng số nhân viên của phòng ban tương ứng
-            PhongBan pb = timPhongBanTheoMa(ns.getMaPhongBan());
-            if (pb != null) {
-                pb.setTongSoNhanVien(pb.getTongSoNhanVien() + 1);
-                Database.updatePhongBan(pb); // Cập nhật lại trong DB
-            }
-            return true;
-        }
-        return false;
+        dsNhanSu.add(ns);
+        recalculateAndUpdateTongNhanVien();
+        Database.writeAllNhanSu(dsNhanSu);
+        return true;
     }
 
     public void deleteNhanSu(NhanSu ns) {
-        if (Database.deleteNhanSu(ns.getMaNV())) {
-            dsNhanSu.remove(ns); // Cập nhật UI
-            // Giảm số lượng nhân viên của phòng ban cũ
-            PhongBan pb = timPhongBanTheoMa(ns.getMaPhongBan());
-            if (pb != null) {
-                pb.setTongSoNhanVien(pb.getTongSoNhanVien() - 1);
-                Database.updatePhongBan(pb);
+        dsNhanSu.remove(ns);
+        recalculateAndUpdateTongNhanVien();
+        Database.writeAllNhanSu(dsNhanSu);
+    }
+
+    public void updateNhanSu(NhanSu nsDaSua, String maPhongBanCu) {
+        for (int i = 0; i < dsNhanSu.size(); i++) {
+            if (dsNhanSu.get(i).getMaNV().equals(nsDaSua.getMaNV())) {
+                dsNhanSu.set(i, nsDaSua);
+                break;
             }
         }
-    }
-    public void updateNhanSu(NhanSu nsDaSua) {
-    Database.updateNhanSu(nsDaSua); // 1. Cập nhật vào DB
-
-    // 2. Tìm và cập nhật đối tượng trong danh sách ObservableList
-    // Điều này sẽ tự động kích hoạt cập nhật trên TableView
-    for (int i = 0; i < dsNhanSu.size(); i++) {
-        if (dsNhanSu.get(i).getMaNV().equals(nsDaSua.getMaNV())) {
-            dsNhanSu.set(i, nsDaSua);
-            break;
+        if (!maPhongBanCu.equals(nsDaSua.getMaPhongBan())) {
+            recalculateAndUpdateTongNhanVien();
         }
+        Database.writeAllNhanSu(dsNhanSu);
     }
-}
-
-    public void updatePhongBan(PhongBan pbDaSua) {
-        Database.updatePhongBan(pbDaSua); // 1. Cập nhật vào DB
     
-        // 2. Cập nhật đối tượng trong danh sách
+    public void updatePhongBan(PhongBan pbDaSua) {
         for (int i = 0; i < dsPhongBan.size(); i++) {
             if (dsPhongBan.get(i).getMaPhong().equals(pbDaSua.getMaPhong())) {
                 dsPhongBan.set(i, pbDaSua);
                 break;
-           }
+            }
         }
+        Database.writeAllPhongBan(dsPhongBan);
+    }
+
+    // Hàm này rất quan trọng: nó đếm lại số nhân viên mỗi phòng rồi ghi vào Excel
+    private void recalculateAndUpdateTongNhanVien() {
+        Map<String, Long> counts = dsNhanSu.stream()
+                .collect(Collectors.groupingBy(NhanSu::getMaPhongBan, Collectors.counting()));
+
+        for (PhongBan pb : dsPhongBan) {
+            long count = counts.getOrDefault(pb.getMaPhong(), 0L);
+            pb.setTongSoNhanVien((int) count);
+        }
+
+        Database.writeAllPhongBan(dsPhongBan);
     }
 }
