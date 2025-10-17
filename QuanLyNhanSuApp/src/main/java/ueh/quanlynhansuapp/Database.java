@@ -24,10 +24,6 @@ public class Database {
 // Đường dẫn tới file database. Sẽ tự động tạo trong thư mục gốc của dự án nếu chưa có.
     private static final String URL = "jdbc:sqlite:quanlynhansu.db";
 
-    /**
-     * Lấy kết nối tới SQLite database.
-     * @return Đối tượng Connection hoặc null nếu có lỗi.
-     */
     static Connection getConnection() {
         try {
             return DriverManager.getConnection(URL);
@@ -37,9 +33,6 @@ public class Database {
         }
     }
 
-    /**
-     * Khởi tạo database, tạo các bảng cần thiết nếu chúng chưa tồn tại.
-     */
     public static void initializeDatabase() {
         String sqlPhongBan = "CREATE TABLE IF NOT EXISTS phongban (" +
                              "maPhong TEXT PRIMARY KEY," +
@@ -70,6 +63,21 @@ public class Database {
                 stmt.execute(sqlNhanSu);
                 // Thêm phòng "Chờ phân công" làm phòng mặc định nếu chưa tồn tại
                 stmt.execute("INSERT OR IGNORE INTO phongban(maPhong, tenPhong, tongSoNhanVien) VALUES('P00', 'Chờ phân công', 0);");
+            }
+        } catch (SQLException e) {
+             canhbao.canhbao("Lỗi Database", "Không thể khởi tạo bảng: " + e.getMessage());
+        }
+        
+        try (Connection conn = getConnection();
+            Statement stmt = conn.createStatement()) {
+            if (conn != null) {
+               stmt.execute(sqlPhongBan);
+                stmt.execute(sqlNhanSu);
+                // Thêm phòng "Chờ phân công" làm phòng mặc định nếu chưa tồn tại
+                stmt.execute("INSERT OR IGNORE INTO phongban(maPhong, tenPhong, tongSoNhanVien) VALUES('P00', 'Chờ phân công', 0);");
+            
+                // GỌI PHƯƠNG THỨC TẢI DỮ LIỆU TỪ FILE CSV
+                DataLoader.loadInitialData(); // <-- THÊM DÒNG NÀY VÀO
             }
         } catch (SQLException e) {
              canhbao.canhbao("Lỗi Database", "Không thể khởi tạo bảng: " + e.getMessage());
