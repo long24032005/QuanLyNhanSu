@@ -5,21 +5,22 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 public class SuaPhongBan {
     @FXML
-    TextField suaphongban_txma;
+    private TextField suaphongban_txma;
     @FXML
-    TextField suaphongban_txten;
+    private TextField suaphongban_txten;
     @FXML
-    TextField suaphongban_txmaTP;
+    private TextField suaphongban_txmaTP;
     @FXML
-    TextField suaphongban_txsdt;
+    private TextField suaphongban_txsdt;
     @FXML
-    TextField suaphongban_txemail;
+    private TextField suaphongban_txemail;
     @FXML
-    TextField suaphongban_txtong;
+    private TextField suaphongban_txtong;
     @FXML
-    Button suaphongban_btsua;
+    private Button suaphongban_btsua;
     @FXML
-    Button suaphongban_bttrolai;
+    private Button suaphongban_bttrolai;
+    
     private PhongBan pBan;
     
     
@@ -31,9 +32,11 @@ public class SuaPhongBan {
         suaphongban_txsdt.setText(pBan.getSdtPhong());
         suaphongban_txemail.setText(pBan.getEmailPhong());
         suaphongban_txtong.setText(String.valueOf(pBan.getTongSoNhanVien()));
+        suaphongban_txma.setDisable(true); // Không cho sửa mã
+        suaphongban_txtong.setDisable(true); // Không cho sửa tổng nhân viên
     }
     
-     @FXML
+    @FXML
     private void suaphongban_suaAction() throws IOException {
         // Lấy dữ liệu mới
         String ma = suaphongban_txma.getText().trim();
@@ -73,7 +76,6 @@ public class SuaPhongBan {
             canhbao.canhbao("Lỗi", "Tổng nhân viên phải là số!");
         }
     }
-    
     
     @FXML
     private void suaphongban_trolaiAction() throws IOException {

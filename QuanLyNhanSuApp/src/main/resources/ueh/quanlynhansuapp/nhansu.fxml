@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -9,7 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.NhanSuController">
    <children>
       <TableView fx:id="nhansu_tbnhansu" layoutX="13.0" layoutY="272.0" prefHeight="211.0" prefWidth="645.0">
         <columns>
@@ -38,13 +38,13 @@
       <Button fx:id="nhansu_btthem" layoutX="59.0" layoutY="222.0" mnemonicParsing="false" onAction="#nhansu_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
       <Button fx:id="nhansu_btxoa" layoutX="201.0" layoutY="222.0" mnemonicParsing="false" onAction="#nhansu_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
       <Button fx:id="nhansu_btsua" layoutX="342.0" layoutY="222.0" mnemonicParsing="false" onAction="#nhansu_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
-      <ChoiceBox fx:id="nhansu_cbgioitinh" layoutX="102.0" layoutY="99.0" prefHeight="26.0" prefWidth="164.0" />
       <Label layoutX="24.0" layoutY="136.0" text="Ngày sinh" />
       <DatePicker fx:id="nhansu_datengaysinh" layoutX="103.0" layoutY="132.0" prefHeight="26.0" prefWidth="164.0" />
       <Label layoutX="24.0" layoutY="170.0" text="CCCD" />
       <TextField fx:id="nhansu_txcccd" layoutX="102.0" layoutY="165.0" prefHeight="26.0" prefWidth="164.0" />
       <Label layoutX="317.0" layoutY="134.0" prefHeight="20.0" prefWidth="120.0" text="Chức vụ" />
-      <ChoiceBox fx:id="nhansu_cbchucvu" layoutX="403.0" layoutY="131.0" prefHeight="26.0" prefWidth="164.0" />
-      <ChoiceBox fx:id="nhansu_cbmaPB" layoutX="403.0" layoutY="99.0" prefHeight="26.0" prefWidth="164.0" />
+      <ComboBox fx:id="nhansu_cbogioitinh" layoutX="102.0" layoutY="100.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Giới Tính -- " />
+      <ComboBox fx:id="nhansu_cbmaPB" layoutX="403.0" layoutY="100.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Mã Phòng Ban -- " />
+      <ComboBox fx:id="nhansu_cbchucvu" layoutX="401.0" layoutY="132.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Chức vụ -- " />
    </children>
 </AnchorPane>

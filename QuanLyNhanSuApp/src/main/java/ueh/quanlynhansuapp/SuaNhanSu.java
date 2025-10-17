@@ -10,27 +10,28 @@ import javafx.scene.control.*;
 
 public class SuaNhanSu {
     @FXML
-    TextField suanhansu_txma;
+    private TextField suanhansu_txma;
     @FXML
-    TextField suanhansu_txten;
+    private TextField suanhansu_txten;
     @FXML
-    ChoiceBox suanhansu_cbgioitinh;
+    private ChoiceBox suanhansu_cbgioitinh;
     @FXML
-    DatePicker suanhansu_datengaysinh;
+    private DatePicker suanhansu_datengaysinh;
     @FXML
-    TextField suanhansu_txcccd;
+    private TextField suanhansu_txcccd;
     @FXML
-    TextField suanhansu_txemail;
+    private TextField suanhansu_txemail;
     @FXML
-    TextField suanhansu_txsdt;
+    private TextField suanhansu_txsdt;
     @FXML
-    ChoiceBox suanhansu_cbmaPB;
+    private ChoiceBox suanhansu_cbmaPB;
     @FXML
-    ChoiceBox suanhansu_cbchucvu;
+    private ChoiceBox suanhansu_cbchucvu;
     @FXML
-    Button suanhansu_btsua;
+    private Button suanhansu_btsua;
     @FXML
-    Button suanhansu_bttrolai;
+    private Button suanhansu_bttrolai;
+    
     private NhanSu ns;
     
     public void setData(NhanSu ns) {
@@ -95,6 +96,7 @@ public class SuaNhanSu {
             canhbao.canhbao("Lỗi SQL", "Không thể cập nhật dữ liệu: " + e.getMessage());
         }
     }
+    
     @FXML
     private void suanhansu_trolaiAction() throws IOException {
         canhbao.thongbao("Thông báo", "bạn đang thoát chức năng sửa");
