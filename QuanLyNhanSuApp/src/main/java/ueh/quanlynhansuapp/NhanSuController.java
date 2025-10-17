@@ -12,10 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 /**
  *
@@ -167,13 +165,40 @@ public class NhanSuController {
         }
          
         canhbao.thongbao("Thông báo", "bạn đang vào chức năng sửa nhân sự");
-        App.setRoot("suanhansu");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("suanhansu.fxml"));
+            Parent root = loader.load();
+
+            SuaNhanSu controller = loader.getController();
+            controller.setData(nsselected);
+
+            nhansu_btsua.getScene().setRoot(root);
+
+        } catch (IOException e) {
+            // In chi tiết lỗi ra Console để bạn xem
+            e.printStackTrace(); 
+        
+            // Hiển thị một cảnh báo trực tiếp trên giao diện
+            canhbao.canhbao("Lỗi Tải Giao Diện", 
+                "Không thể tải file suanhansu.fxml.\n" +
+                "Vui lòng kiểm tra cửa sổ Output/Console để xem chi tiết lỗi.");
+        }
     }
     
     @FXML 
     private void nhansu_timkiemAction() throws IOException { 
-        canhbao.thongbao("Thông báo", "bạn đang vào chức năng tìm kiếm nhân sự");
-        App.setRoot("timkiemnhansu");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("timkiemnhansu.fxml"));
+        Parent root = loader.load();
+    
+        // Lấy controller của màn hình "timkiemnhansu"
+        TimKiemNhanSu controller = loader.getController();
+    
+        // Lấy danh sách mã phòng ban từ dsMaPhongForCombo đã có sẵn
+        // Và truyền toàn bộ danh sách nhân sự từ dataService
+        controller.setData(dataService.getDsNhanSu(), dsMaPhongForCombo);
+    
+        // Lấy Scene hiện tại và set root mới
+        nhansu_bttimkiem.getScene().setRoot(root);
     }
     
     private void reloadPhongBanToCombo() {
