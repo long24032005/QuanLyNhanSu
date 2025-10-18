@@ -20,12 +20,10 @@ public class First {
     
     @FXML
     public void main_nhansuAction() throws IOException {
-        canhbao.thongbao("Thông báo", "bạn đang vào bảng nhân sự");
         App.setRoot("nhansu");
     } 
     @FXML
     public void main_phongbanAction() throws IOException {
-        canhbao.thongbao("Thông báo", "bạn đang vào bảng phòng ban");
         App.setRoot("phongban");
     } 
 }
