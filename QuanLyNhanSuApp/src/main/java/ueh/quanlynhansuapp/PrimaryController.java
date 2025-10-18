@@ -26,6 +26,7 @@ public class PrimaryController {
     @FXML private Button phongban_btxoa;
     @FXML private Button phongban_btsua;
     @FXML private Button phongban_bttimkiem;
+    @FXML private Button nhansu_btquaylai;
 
     @FXML private TableView<PhongBan> phongban_tbphongban;
     @FXML private TableColumn<PhongBan, String> phongban_colma;
@@ -156,6 +157,11 @@ public class PrimaryController {
     
         // Lấy Scene hiện tại và set root mới
         phongban_bttimkiem.getScene().setRoot(root);
+    }
+    
+    @FXML
+    private void phongban_quaylaiAction() throws IOException {
+        App.setRoot("main");
     }
 }
 

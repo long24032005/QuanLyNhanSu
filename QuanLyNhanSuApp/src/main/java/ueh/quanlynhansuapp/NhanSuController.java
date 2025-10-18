@@ -46,7 +46,7 @@ public class NhanSuController {
     @FXML private Button nhansu_btxoa;
     @FXML private Button nhansu_btsua;
     @FXML private Button nhansu_bttimkiem;
-
+    @FXML private Button nhansu_btquaylai;
     // Lấy instance của DataService để truy cập dữ liệu chung
     private final DataService dataService = DataService.getInstance();
     
@@ -198,6 +198,11 @@ public class NhanSuController {
     
         // Lấy Scene hiện tại và set root mới
         nhansu_bttimkiem.getScene().setRoot(root);
+    }
+    
+    @FXML
+    private void nhansu_quaylaiAction() throws IOException {
+        App.setRoot("main");
     }
     
     private void reloadPhongBanToCombo() {
