@@ -164,7 +164,6 @@ public class NhanSuController {
             return;
         }
          
-        canhbao.thongbao("Thông báo", "bạn đang vào chức năng sửa nhân sự");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("suanhansu.fxml"));
             Parent root = loader.load();

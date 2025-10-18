@@ -132,7 +132,6 @@ public class PrimaryController {
             return;
         }
         
-        canhbao.thongbao("Thông báo", "bạn đang vào chức năng sửa phòng ban");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("suaphongban.fxml"));
         Parent root = loader.load();
     
