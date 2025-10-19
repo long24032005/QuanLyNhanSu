@@ -13,7 +13,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 /**
  *
@@ -53,6 +52,20 @@ public class TimKiemPhongBan {
         timkiemphongban_colsdt.setCellValueFactory(new PropertyValueFactory<>("sdtPhong"));
         timkiemphongban_colemail.setCellValueFactory(new PropertyValueFactory<>("emailPhong"));
         timkiemphongban_coltong.setCellValueFactory(new PropertyValueFactory<>("tongSoNhanVien"));
+        
+        timkiemphongban_tbphongban.getSelectionModel().selectedItemProperty().addListener((obs, oldV, pb) -> {
+            if (pb != null) {
+                // Hiển thị dữ liệu của phòng ban (pb) lên các ô tìm kiếm
+                timkiemphongban_txma.setText(pb.getMaPhong());
+                timkiemphongban_txten.setText(pb.getTenPhong());
+                timkiemphongban_txmaTP.setText(pb.getMaTruongPhong());
+                timkiemphongban_txsdt.setText(pb.getSdtPhong());
+                timkiemphongban_txemail.setText(pb.getEmailPhong());
+                timkiemphongban_txtong.setText(String.valueOf(pb.getTongSoNhanVien()));
+            }
+        });
+        timkiemphongban_txtong.setEditable(false);
+
     }
     
     public void setData(ObservableList<PhongBan> allPhongBan) {
@@ -63,27 +76,51 @@ public class TimKiemPhongBan {
     @FXML
     private void timkiemphongban_timkiemAction() {
         // Lấy các giá trị tìm kiếm từ các ô TextField
-        String ma = timkiemphongban_txma.getText().trim();
+        String maPB_input = timkiemphongban_txma.getText().trim();
         String ten = timkiemphongban_txten.getText().trim();
         String maTP = timkiemphongban_txmaTP.getText().trim();
         String sdt = timkiemphongban_txsdt.getText().trim();
         String email = timkiemphongban_txemail.getText().trim();
-        String tong = timkiemphongban_txtong.getText().trim(); // <-- THÊM MỚI
+        String tong = timkiemphongban_txtong.getText().trim(); //
+        
+        // 1. Kiểm tra Bỏ trống mnv => warning
+        if (maPB_input.isEmpty()) {
+            // Sửa "mssv" thành "Mã nhân viên" cho chính xác
+            canhbao.canhbao("Thiếu thông tin", "Mã Phòng Ban không được để trống!");
+            return; // Dừng hàm, không tìm kiếm nữa
+        }
+        
+        String maPB = maPB_input.toLowerCase();
 
+        // 2. Kiểm tra Nhập mnv không tồn tại => thông báo
+        // Ta duyệt trước qua masterData để xem mã này có tồn tại không
+        boolean tonTai = false;
+        for (PhongBan pb : masterData) {
+            // Dùng 'contains' để khớp với logic lọc bên dưới
+            if (pb.getMaPhong().toLowerCase().contains(maPB)) {
+                tonTai = true;
+                break; // Tìm thấy 1 người khớp là đủ
+            }
+        }
+        
+        if (!tonTai) {
+            // Nếu không tìm thấy ai, thông báo và dừng lại
+            canhbao.thongbao("Không tồn tại", "Không tồn tại Phòng Ban hợp lệ.");
+            return; //không tìm kiếm nữa
+        }
+        
         // Tạo một danh sách mới để chứa kết quả tìm kiếm
         ObservableList<PhongBan> ketQuaTimKiem = FXCollections.observableArrayList();
 
         // Dùng vòng lặp "for-each" để duyệt qua từng phòng ban trong danh sách gốc (masterData)
         for (PhongBan pb : masterData) {
             boolean khopTatCa = true; // Bắt đầu bằng việc giả định phòng ban này khớp
-
             // 1. Kiểm tra Mã phòng
-            if (khopTatCa && !ma.isEmpty()) {
-                if (!pb.getMaPhong().toLowerCase().contains(ma.toLowerCase())) {
+            if (khopTatCa && !maPB.isEmpty()) {
+                if (!pb.getMaPhong().toLowerCase().contains(maPB.toLowerCase())) {
                     khopTatCa = false;
                 }
             }
-
             // 2. Kiểm tra Tên phòng
             if (khopTatCa && !ten.isEmpty()) {
                 if (!pb.getTenPhong().toLowerCase().contains(ten.toLowerCase())) {
@@ -97,14 +134,12 @@ public class TimKiemPhongBan {
                     khopTatCa = false;
                 }
             }
-
             // 4. Kiểm tra Số điện thoại
             if (khopTatCa && !sdt.isEmpty()) {
                 if (pb.getSdtPhong() == null || !pb.getSdtPhong().toLowerCase().contains(sdt.toLowerCase())) {
                     khopTatCa = false;
                 }
             }
-
             // 5. Kiểm tra Email
             if (khopTatCa && !email.isEmpty()) {
                 if (pb.getEmailPhong() == null || !pb.getEmailPhong().toLowerCase().contains(email.toLowerCase())) {
@@ -136,6 +171,19 @@ public class TimKiemPhongBan {
         
         // Cập nhật lại bảng để chỉ hiển thị danh sách kết quả đã lọc được
         timkiemphongban_tbphongban.setItems(ketQuaTimKiem);
+        timkiemphongban_txten.setEditable(false);
+        timkiemphongban_txmaTP.setEditable(false);
+        timkiemphongban_txsdt.setEditable(false);
+        timkiemphongban_txemail.setEditable(false);
+
+        if (ketQuaTimKiem.size() == 1) {
+            // Nếu chỉ có 1 kết quả, tự động chọn hàng đó
+            timkiemphongban_tbphongban.getSelectionModel().selectFirst();
+            // Listener trong initialize() sẽ tự động được gọi và điền thông tin
+        } else {
+            // Nếu 0 hoặc nhiều hơn 1 kết quả, xóa lựa chọn
+            timkiemphongban_tbphongban.getSelectionModel().clearSelection();
+        }
     }
 
     @FXML

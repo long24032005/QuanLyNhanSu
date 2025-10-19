@@ -68,10 +68,25 @@ public class TimKiemNhanSu {
 
         // 2. Cài đặt các giá trị cố định cho các ComboBox
         timkiemnhansu_cbogioitinh.setItems(FXCollections.observableArrayList("Nam", "Nữ", "Khác"));
-        timkiemnhansu_cbchucvu.setItems(FXCollections.observableArrayList("Nhân viên", "Trưởng phòng", "Phó phòng", "Thực tập"));
+
+        timkiemnhansu_tbnhansu.getSelectionModel().selectedItemProperty().addListener((obs, oldV, ns) -> {
+            if (ns != null) {
+                // Hiển thị dữ liệu của nhân sự (ns) lên các ô tìm kiếm
+                timkiemnhansu_txma.setText(ns.getMaNV());
+                timkiemnhansu_txten.setText(ns.getHoTen());
+                timkiemnhansu_txcccd.setText(ns.getCccd());
+                timkiemnhansu_txemail.setText(ns.getEmail());
+                timkiemnhansu_txsdt.setText(ns.getSdt());
+                timkiemnhansu_cbogioitinh.setValue(ns.getGioiTinh());
+                timkiemnhansu_datengaysinh.setValue(ns.getNgaySinh());
+                timkiemnhansu_cbmaPB.setValue(ns.getMaPhongBan());
+                timkiemnhansu_cbchucvu.setValue(ns.getChucVu());
+            }
+        });
+       
     }
 
-    public void setData(ObservableList<NhanSu> allNhanSu, ObservableList<String> dsMaPhong) {
+    public void setData(ObservableList<NhanSu> allNhanSu, ObservableList<String> dsMaPhong, ObservableList<String> allChucVu) {
         // Sao chép dữ liệu vào danh sách gốc của màn hình này
         this.masterData.setAll(allNhanSu);
         
@@ -80,12 +95,14 @@ public class TimKiemNhanSu {
         
         // Nạp danh sách mã phòng ban vào ComboBox
         timkiemnhansu_cbmaPB.setItems(dsMaPhong);
+        
+        timkiemnhansu_cbchucvu.setItems(allChucVu);
     }
 
     @FXML
     private void timkiemnhansu_timkiemAction() {
         // Lấy tất cả các tiêu chí tìm kiếm từ người dùng
-        String maNV = timkiemnhansu_txma.getText().trim().toLowerCase();
+        String maNV_input = timkiemnhansu_txma.getText().trim().toLowerCase();
         String hoTen = timkiemnhansu_txten.getText().trim().toLowerCase();
         String cccd = timkiemnhansu_txcccd.getText().trim().toLowerCase();
         String email = timkiemnhansu_txemail.getText().trim().toLowerCase();
@@ -95,37 +112,84 @@ public class TimKiemNhanSu {
         String maPB = timkiemnhansu_cbmaPB.getValue();
         String chucVu = timkiemnhansu_cbchucvu.getValue();
         
+        // 1. Kiểm tra Bỏ trống mnv => warning
+        if (maNV_input.isEmpty()) {
+            // Sửa "mssv" thành "Mã nhân viên" cho chính xác
+            canhbao.canhbao("Thiếu thông tin", "Mã nhân viên không được để trống!");
+            return; // Dừng hàm, không tìm kiếm nữa
+        }
+        
+        String maNV = maNV_input.toLowerCase();
+
+        // 2. Kiểm tra Nhập mnv không tồn tại => thông báo
+        // Ta duyệt trước qua masterData để xem mã này có tồn tại không
+        boolean tonTai = false;
+        for (NhanSu ns : masterData) {
+            // Dùng 'contains' để khớp với logic lọc bên dưới
+            if (ns.getMaNV().toLowerCase().contains(maNV)) {
+                tonTai = true;
+                break; // Tìm thấy 1 người khớp là đủ
+            }
+        }
+        
+        if (!tonTai) {
+            // Nếu không tìm thấy ai, thông báo và dừng lại
+            canhbao.thongbao("Không tồn tại", "Không tồn tại nhân viên hợp lệ.");
+            return; //không tìm kiếm nữa
+        }
+        
         // Tạo một danh sách rỗng để lưu kết quả
         ObservableList<NhanSu> ketQuaTimKiem = FXCollections.observableArrayList();
 
         // Duyệt qua từng nhân sự trong danh sách gốc
         for (NhanSu ns : masterData) {
             boolean khop = true;
-
             if (!maNV.isEmpty() && !ns.getMaNV().toLowerCase().contains(maNV)) khop = false;
-            
             if (khop && !hoTen.isEmpty() && !ns.getHoTen().toLowerCase().contains(hoTen)) khop = false;
-
-            if (khop && ns.getCccd() != null && !cccd.isEmpty() && !ns.getCccd().toLowerCase().contains(cccd)) khop = false;
-            
-            if (khop && ns.getEmail() != null && !email.isEmpty() && !ns.getEmail().toLowerCase().contains(email)) khop = false;
-            
-            if (khop && ns.getSdt() != null && !sdt.isEmpty() && !ns.getSdt().toLowerCase().contains(sdt)) khop = false;
-            
-            if (khop && gioiTinh != null && !gioiTinh.isEmpty() && !gioiTinh.equals(ns.getGioiTinh())) khop = false;
-            
+            if (khop && ns.getCccd() != null && !cccd.isEmpty() && !ns.getCccd().toLowerCase().contains(cccd)) khop = false;           
+            if (khop && ns.getEmail() != null && !email.isEmpty() && !ns.getEmail().toLowerCase().contains(email)) khop = false;            
+            if (khop && ns.getSdt() != null && !sdt.isEmpty() && !ns.getSdt().toLowerCase().contains(sdt)) khop = false;            
+            if (khop && gioiTinh != null && !gioiTinh.isEmpty() && !gioiTinh.equals(ns.getGioiTinh())) khop = false;          
             if (khop && ngaySinh != null && !ngaySinh.equals(ns.getNgaySinh())) khop = false;
-
-            if (khop && maPB != null && !maPB.isEmpty() && !maPB.equals(ns.getMaPhongBan())) khop = false;
-            
-            if (khop && chucVu != null && !chucVu.isEmpty() && !chucVu.equals(ns.getChucVu())) khop = false;
-            
+            if (khop && maPB != null && !maPB.isEmpty() && !maPB.equals(ns.getMaPhongBan())) khop = false;           
+            if (khop && chucVu != null && !chucVu.isEmpty() && !chucVu.equals(ns.getChucVu())) khop = false;           
             if (khop) {
                 ketQuaTimKiem.add(ns); 
             }
         }
-
         timkiemnhansu_tbnhansu.setItems(ketQuaTimKiem);
+        
+        // Khóa các ô lại SAU KHI tìm kiếm
+        timkiemnhansu_txma.setEditable(false);
+        timkiemnhansu_txten.setEditable(false);
+        timkiemnhansu_txcccd.setEditable(false);
+        timkiemnhansu_txemail.setEditable(false);
+        timkiemnhansu_txsdt.setEditable(false);
+        
+        // Khóa ComboBox và DatePicker (theo yêu cầu: không mờ)
+        timkiemnhansu_cbogioitinh.setMouseTransparent(true);
+        timkiemnhansu_cbogioitinh.setFocusTraversable(false);
+
+        timkiemnhansu_datengaysinh.setMouseTransparent(true);
+        timkiemnhansu_datengaysinh.setFocusTraversable(false);
+        
+        timkiemnhansu_cbmaPB.setMouseTransparent(true);
+        timkiemnhansu_cbmaPB.setFocusTraversable(false);
+
+        timkiemnhansu_cbchucvu.setMouseTransparent(true);
+        timkiemnhansu_cbchucvu.setFocusTraversable(false);
+
+        // Vô hiệu hóa nút "Tìm kiếm" (vì đã tìm xong)
+        timkiemnhansu_bttimkiem.setDisable(true);
+        
+        if (ketQuaTimKiem.size() == 1) {
+            // Nếu chỉ có 1 kết quả, tự động chọn hàng đó
+            timkiemnhansu_tbnhansu.getSelectionModel().selectFirst();
+            // Listener trong initialize() sẽ tự động được gọi và điền thông tin
+        } else {
+            // Nếu 0 hoặc nhiều hơn 1 kết quả, xóa lựa chọn
+            timkiemnhansu_tbnhansu.getSelectionModel().clearSelection();
+        }
     }
 
     @FXML

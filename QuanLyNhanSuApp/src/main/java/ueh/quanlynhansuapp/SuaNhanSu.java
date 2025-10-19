@@ -88,7 +88,9 @@ public class SuaNhanSu {
         ns.setChucVu(chucVu);
         
         DataService.getInstance().updateNhanSu(ns, this.maPhongBanCu);
-        canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!");
+        canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công! Nhấn OK để thoát");
+        App.setRoot("nhansu");
+        
     }
     
     @FXML

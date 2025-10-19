@@ -84,7 +84,7 @@ public class SuaPhongBan {
         
         DataService.getInstance().updatePhongBan(pBan);
 
-        canhbao.thongbao("Thành công", "Đã cập nhật thông tin phòng ban!");
+        canhbao.thongbao("Thành công", "Đã cập nhật thông tin phòng ban!, nhất OK để thoát");
         App.setRoot("phongban");
     }
     

@@ -63,6 +63,7 @@ public class PrimaryController {
                 phongban_txtong.setText(String.valueOf(pb.getTongSoNhanVien()));
             }
         });
+        phongban_txtong.setEditable(false);
     }
 
     @FXML
