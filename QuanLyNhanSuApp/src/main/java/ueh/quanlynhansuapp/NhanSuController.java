@@ -7,7 +7,6 @@ package ueh.quanlynhansuapp;
 import java.io.IOException;
 import java.time.LocalDate;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +28,7 @@ public class NhanSuController {
     @FXML private TextField nhansu_txcccd;
     @FXML private TextField nhansu_txemail;
     @FXML private TextField nhansu_txsdt;
-    @FXML private ComboBox<String> nhansu_cbmaPB;
+    @FXML private ComboBox<PhongBan> nhansu_cbmaPB;
     @FXML private ComboBox<String> nhansu_cbchucvu;
 
     @FXML private TableView<NhanSu> nhansu_tbnhansu;
@@ -90,10 +89,31 @@ public class NhanSuController {
         nhansu_cbchucvu.setItems(allChucVuList);
         
         // Tải danh sách mã phòng ban vào ComboBox lần đầu
-        reloadPhongBanToCombo();
-        // Tự động cập nhật ComboBox khi danh sách phòng ban trong DataService thay đổi
-        dataService.getDsPhongBan().addListener((ListChangeListener<PhongBan>) c -> reloadPhongBanToCombo());
-
+        nhansu_cbmaPB.setItems(dataService.getDsPhongBan());
+        nhansu_cbmaPB.setCellFactory(param -> new ListCell<PhongBan>() {
+            @Override
+            protected void updateItem(PhongBan pb, boolean empty) {
+                super.updateItem(pb, empty);
+                if (empty || pb == null) {
+                    setText(null);
+                } else {
+                    setText(pb.getMaPhong() + " - " + pb.getTenPhong()); 
+                }
+            }
+        });
+        nhansu_cbmaPB.setButtonCell(new ListCell<PhongBan>() {
+            @Override
+            protected void updateItem(PhongBan pb, boolean empty) {
+                super.updateItem(pb, empty);
+                if (empty || pb == null) {
+                    setText(null);
+                } else {
+                    // Định dạng này phải giống hệt ở trên
+                    setText(pb.getMaPhong() + " - " + pb.getTenPhong()); 
+                }
+            }
+        });
+        
         // --- KHI CHỌN MỘT DÒNG TRONG BẢNG ---
         nhansu_tbnhansu.getSelectionModel().selectedItemProperty().addListener((obs, oldV, ns) -> {
             if (ns != null) {
@@ -107,7 +127,7 @@ public class NhanSuController {
                 nhansu_txemail.setText(ns.getEmail());
                 nhansu_txsdt.setText(ns.getSdt());
                 // Đặt giá trị phòng ban TRƯỚC
-                nhansu_cbmaPB.setValue(ns.getMaPhongBan());
+                nhansu_cbmaPB.setValue(dataService.timPhongBanTheoMa(ns.getMaPhongBan()));
                 // tự động lọc danh sách chức vụ sau đó đặt giá trị chức vụ
                 nhansu_cbchucvu.setValue(ns.getChucVu());
                 
@@ -117,12 +137,12 @@ public class NhanSuController {
         nhansu_cbmaPB.valueProperty().addListener((obs, oldMaPhong, newMaPhong) -> {
             String currentChucVu = nhansu_cbchucvu.getValue();
            
-            if (newMaPhong == null || newMaPhong.isEmpty()) {
+            if (newMaPhong == null) {
                 // Nếu không chọn phòng ban, hiển thị TẤT CẢ chức vụ
                 nhansu_cbchucvu.setItems(allChucVuList);
             } else {
                 // Lấy TÊN phòng ban từ MÃ phòng ban
-                PhongBan pb = dataService.timPhongBanTheoMa(newMaPhong);
+                PhongBan pb = newMaPhong;
                 if (pb != null) {
                     String tenPhong = pb.getTenPhong();
                     // Lấy danh sách chức vụ tương ứng
@@ -151,7 +171,7 @@ public class NhanSuController {
             if (dangCapNhatTuDong) return; // Nếu đang set tự động thì bỏ qua
 
             // Chỉ tự động cập nhật phòng ban NẾU phòng ban đang trống
-            String currentMaPhong = nhansu_cbmaPB.getValue();
+           PhongBan currentPhongBan = nhansu_cbmaPB.getValue();
             if (newChucVu != null && !newChucVu.isEmpty() && !newChucVu.contains("Chưa có chức vụ")) {
                 
                 // Tìm TÊN phòng từ chức vụ
@@ -170,7 +190,7 @@ public class NhanSuController {
                     if (maPhongCanSet != null) {
                         //để listener của cbmaPB không xóa lựa chọn chức vụ
                         dangCapNhatTuDong = true; 
-                        nhansu_cbmaPB.setValue(maPhongCanSet);
+                        nhansu_cbmaPB.setValue(dataService.timPhongBanTheoMa(maPhongCanSet));
                         dangCapNhatTuDong = false;
                     }
                 }
@@ -207,6 +227,10 @@ public class NhanSuController {
         // Sắp xếp danh sách tổng cho dễ nhìn
         Collections.sort(allChucVuList);
     }
+    private boolean isNumeric(String str) {
+        if (str == null) return false;
+            return str.matches("\\d+");
+    }
     
     @FXML
     private void nhansu_themAction() {
@@ -217,9 +241,41 @@ public class NhanSuController {
         String cccd = nhansu_txcccd.getText().trim();
         String email = nhansu_txemail.getText().trim();
         String sdt = nhansu_txsdt.getText().trim();
-        String maPhongBan = nhansu_cbmaPB.getValue();
+        PhongBan selectedPB = nhansu_cbmaPB.getValue();
+        if (selectedPB == null) { // Kiểm tra nếu chưa chọn
+             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng chọn Phòng ban.");
+            return;
+        }
+        String maPhongBan = selectedPB.getMaPhong(); // Lấy mã từ đối tượng
         String chucVu = nhansu_cbchucvu.getValue();
 
+        if (maNV.isEmpty() || hoTen.isEmpty() || ngaySinh == null || maPhongBan == null) {
+            // Cập nhật lại thông báo lỗi một chút cho rõ ràng
+            canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng nhập đầy đủ Mã NV, Họ tên, Ngày sinh và Phòng ban.");
+            return;
+        }
+
+        if (maNV.length() != 5) {
+            canhbao.canhbao("Sai định dạng", "Mã nhân viên phải có đúng 5 ký tự.");
+            return;
+        }
+
+        // Kiểm tra CCCD (nếu người dùng có nhập)
+        if (!cccd.isEmpty()) {
+            if (!isNumeric(cccd) || cccd.length() != 12) {
+                canhbao.canhbao("Sai định dạng", "CCCD (nếu nhập) phải là 12 ký tự số.");
+                return;
+            }
+        }
+
+        // Kiểm tra SĐT (nếu người dùng có nhập)
+        if (!sdt.isEmpty()) {
+            if (!isNumeric(sdt) || sdt.length() != 10) {
+                canhbao.canhbao("Sai định dạng", "Số điện thoại (nếu nhập) phải là 10 ký tự số.");
+                return;
+            }
+    }
+        
         if (maNV.isEmpty() || hoTen.isEmpty() || ngaySinh == null || maPhongBan == null) {
             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng nhập đầy đủ thông tin");
             return;
@@ -232,7 +288,7 @@ public class NhanSuController {
         }
         
         String tenPhongTuChucVu = chucVuToPhongBanMap.get(chucVu);
-        PhongBan pbDaChon = dataService.timPhongBanTheoMa(maPhongBan);
+        PhongBan pbDaChon = selectedPB;
         
         if (pbDaChon == null || !pbDaChon.getTenPhong().equals(tenPhongTuChucVu)) {
              canhbao.canhbao("Dữ liệu không khớp", "Chức vụ \"" + chucVu + "\" không thuộc phòng \"" + (pbDaChon != null ? pbDaChon.getTenPhong() : "N/A") + "\".");
@@ -323,7 +379,7 @@ public class NhanSuController {
     
         // Lấy danh sách mã phòng ban từ dsMaPhongForCombo đã có sẵn
         // Và truyền toàn bộ danh sách nhân sự từ dataService
-        controller.setData(dataService.getDsNhanSu(), dsMaPhongForCombo, allChucVuList);
+        controller.setData(dataService.getDsNhanSu(), dataService.getDsPhongBan(), allChucVuList);
     
         // Lấy Scene hiện tại và set root mới
         nhansu_bttimkiem.getScene().setRoot(root);
@@ -332,13 +388,5 @@ public class NhanSuController {
     @FXML
     private void nhansu_quaylaiAction() throws IOException {
         App.setRoot("main");
-    }
-    
-    private void reloadPhongBanToCombo() {
-        dsMaPhongForCombo.clear();
-        for (PhongBan pb : dataService.getDsPhongBan()) {
-            dsMaPhongForCombo.add(pb.getMaPhong());
-        }
-        nhansu_cbmaPB.setItems(dsMaPhongForCombo);
     }
 }

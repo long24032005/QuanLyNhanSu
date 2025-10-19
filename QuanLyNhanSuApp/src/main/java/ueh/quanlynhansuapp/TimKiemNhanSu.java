@@ -15,6 +15,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
@@ -31,7 +32,7 @@ public class TimKiemNhanSu {
     // Các hộp lựa chọn và ngày tháng
     @FXML private ComboBox<String> timkiemnhansu_cbogioitinh;
     @FXML private DatePicker timkiemnhansu_datengaysinh;
-    @FXML private ComboBox<String> timkiemnhansu_cbmaPB;
+    @FXML private ComboBox<PhongBan> timkiemnhansu_cbmaPB;
     @FXML private ComboBox<String> timkiemnhansu_cbchucvu;
 
     // Các nút bấm
@@ -68,7 +69,30 @@ public class TimKiemNhanSu {
 
         // 2. Cài đặt các giá trị cố định cho các ComboBox
         timkiemnhansu_cbogioitinh.setItems(FXCollections.observableArrayList("Nam", "Nữ", "Khác"));
+        timkiemnhansu_cbmaPB.setCellFactory(param -> new ListCell<PhongBan>() {
+            @Override
+            protected void updateItem(PhongBan pb, boolean empty) {
+                super.updateItem(pb, empty);
+                if (empty || pb == null) {
+                    setText(null);
+                } else {
+                    setText(pb.getMaPhong() + " - " + pb.getTenPhong());
+                }
+            }
+        });
 
+        timkiemnhansu_cbmaPB.setButtonCell(new ListCell<PhongBan>() {
+            @Override
+            protected void updateItem(PhongBan pb, boolean empty) {
+                super.updateItem(pb, empty);
+                if (empty || pb == null) {
+                    setText(null);
+                } else {
+                    setText(pb.getMaPhong() + " - " + pb.getTenPhong());
+                }
+            }
+        });
+        
         timkiemnhansu_tbnhansu.getSelectionModel().selectedItemProperty().addListener((obs, oldV, ns) -> {
             if (ns != null) {
                 // Hiển thị dữ liệu của nhân sự (ns) lên các ô tìm kiếm
@@ -79,14 +103,14 @@ public class TimKiemNhanSu {
                 timkiemnhansu_txsdt.setText(ns.getSdt());
                 timkiemnhansu_cbogioitinh.setValue(ns.getGioiTinh());
                 timkiemnhansu_datengaysinh.setValue(ns.getNgaySinh());
-                timkiemnhansu_cbmaPB.setValue(ns.getMaPhongBan());
+                timkiemnhansu_cbmaPB.setValue(DataService.getInstance().timPhongBanTheoMa(ns.getMaPhongBan()));
                 timkiemnhansu_cbchucvu.setValue(ns.getChucVu());
             }
         });
        
     }
 
-    public void setData(ObservableList<NhanSu> allNhanSu, ObservableList<String> dsMaPhong, ObservableList<String> allChucVu) {
+    public void setData(ObservableList<NhanSu> allNhanSu, ObservableList<PhongBan> dsPhongBan, ObservableList<String> allChucVu) {
         // Sao chép dữ liệu vào danh sách gốc của màn hình này
         this.masterData.setAll(allNhanSu);
         
@@ -94,7 +118,7 @@ public class TimKiemNhanSu {
         timkiemnhansu_tbnhansu.setItems(masterData);
         
         // Nạp danh sách mã phòng ban vào ComboBox
-        timkiemnhansu_cbmaPB.setItems(dsMaPhong);
+        timkiemnhansu_cbmaPB.setItems(dsPhongBan); // THAY ĐỔI
         
         timkiemnhansu_cbchucvu.setItems(allChucVu);
     }
@@ -109,7 +133,8 @@ public class TimKiemNhanSu {
         String sdt = timkiemnhansu_txsdt.getText().trim().toLowerCase();
         String gioiTinh = timkiemnhansu_cbogioitinh.getValue();
         LocalDate ngaySinh = timkiemnhansu_datengaysinh.getValue();
-        String maPB = timkiemnhansu_cbmaPB.getValue();
+        PhongBan selectedPB = timkiemnhansu_cbmaPB.getValue();
+        String maPB = (selectedPB != null) ? selectedPB.getMaPhong() : null; // Lấy mã
         String chucVu = timkiemnhansu_cbchucvu.getValue();
         
         // 1. Kiểm tra Bỏ trống mnv => warning

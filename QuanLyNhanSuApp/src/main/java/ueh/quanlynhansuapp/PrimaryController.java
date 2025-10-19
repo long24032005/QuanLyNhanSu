@@ -65,6 +65,12 @@ public class PrimaryController {
         });
         phongban_txtong.setEditable(false);
     }
+    private boolean isNumeric(String str) {
+        if (str == null) 
+            return false;
+    // Sử dụng regex để kiểm tra chuỗi có chứa TOÀN BỘ là số hay không
+        return str.matches("\\d+");
+    }
 
     @FXML
     private void phongban_themAction() {
@@ -79,13 +85,17 @@ public class PrimaryController {
             return;
         }
 
-        if (dataService.timPhongBanTheoMa(maPhong) != null) {
-            canhbao.canhbao("Trùng mã", "Mã phòng \"" + maPhong + "\" đã tồn tại.");
+        if (maPhong.length() != 4) {
+            canhbao.canhbao("Sai định dạng", "Mã phòng ban phải có đúng 4 ký tự.");
             return;
         }
-        if (!maTP.isEmpty() && dataService.timNhanSuTheoMa(maTP) == null) {
-            canhbao.canhbao("Trưởng phòng không tồn tại", "Mã nhân sự \"" + maTP + "\" không có trong hệ thống.");
+    
+        // Kiểm tra sdtPhong (nếu người dùng có nhập)
+        if (!sdtPhong.isEmpty()) {
+            if (!isNumeric(sdtPhong) || sdtPhong.length() != 10) {
+                canhbao.canhbao("Sai định dạng", "Số điện thoại phòng ban (nếu nhập) phải là 10 ký tự số.");
             return;
+            }
         }
 
         PhongBan pb = new PhongBan(maPhong, tenPhong, maTP.isEmpty() ? null : maTP, sdtPhong, emailPhong, 0);
@@ -164,5 +174,7 @@ public class PrimaryController {
     private void phongban_quaylaiAction() throws IOException {
         App.setRoot("main");
     }
+    
+    
 }
 
