@@ -107,6 +107,26 @@ public class TimKiemNhanSu {
                 timkiemnhansu_cbchucvu.setValue(ns.getChucVu());
             }
         });
+        
+        // Khóa các ô lại SAU KHI tìm kiếm
+        timkiemnhansu_txten.setEditable(false);
+        timkiemnhansu_txcccd.setEditable(false);
+        timkiemnhansu_txemail.setEditable(false);
+        timkiemnhansu_txsdt.setEditable(false);
+        
+        // Khóa ComboBox và DatePicker (theo yêu cầu: không mờ)
+        timkiemnhansu_cbogioitinh.setMouseTransparent(true);
+        timkiemnhansu_cbogioitinh.setFocusTraversable(false);
+
+        timkiemnhansu_datengaysinh.setMouseTransparent(true);
+        timkiemnhansu_datengaysinh.setFocusTraversable(false);
+        
+        timkiemnhansu_cbmaPB.setMouseTransparent(true);
+        timkiemnhansu_cbmaPB.setFocusTraversable(false);
+
+        timkiemnhansu_cbchucvu.setMouseTransparent(true);
+        timkiemnhansu_cbchucvu.setFocusTraversable(false);
+
        
     }
 
@@ -183,29 +203,7 @@ public class TimKiemNhanSu {
             }
         }
         timkiemnhansu_tbnhansu.setItems(ketQuaTimKiem);
-        
-        // Khóa các ô lại SAU KHI tìm kiếm
-        timkiemnhansu_txma.setEditable(false);
-        timkiemnhansu_txten.setEditable(false);
-        timkiemnhansu_txcccd.setEditable(false);
-        timkiemnhansu_txemail.setEditable(false);
-        timkiemnhansu_txsdt.setEditable(false);
-        
-        // Khóa ComboBox và DatePicker (theo yêu cầu: không mờ)
-        timkiemnhansu_cbogioitinh.setMouseTransparent(true);
-        timkiemnhansu_cbogioitinh.setFocusTraversable(false);
 
-        timkiemnhansu_datengaysinh.setMouseTransparent(true);
-        timkiemnhansu_datengaysinh.setFocusTraversable(false);
-        
-        timkiemnhansu_cbmaPB.setMouseTransparent(true);
-        timkiemnhansu_cbmaPB.setFocusTraversable(false);
-
-        timkiemnhansu_cbchucvu.setMouseTransparent(true);
-        timkiemnhansu_cbchucvu.setFocusTraversable(false);
-
-        // Vô hiệu hóa nút "Tìm kiếm" (vì đã tìm xong)
-        timkiemnhansu_bttimkiem.setDisable(true);
         
         if (ketQuaTimKiem.size() == 1) {
             // Nếu chỉ có 1 kết quả, tự động chọn hàng đó

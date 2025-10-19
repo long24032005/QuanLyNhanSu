@@ -65,7 +65,10 @@ public class TimKiemPhongBan {
             }
         });
         timkiemphongban_txtong.setEditable(false);
-
+        timkiemphongban_txten.setEditable(false);
+        timkiemphongban_txmaTP.setEditable(false);
+        timkiemphongban_txsdt.setEditable(false);
+        timkiemphongban_txemail.setEditable(false);
     }
     
     public void setData(ObservableList<PhongBan> allPhongBan) {
@@ -171,10 +174,7 @@ public class TimKiemPhongBan {
         
         // Cập nhật lại bảng để chỉ hiển thị danh sách kết quả đã lọc được
         timkiemphongban_tbphongban.setItems(ketQuaTimKiem);
-        timkiemphongban_txten.setEditable(false);
-        timkiemphongban_txmaTP.setEditable(false);
-        timkiemphongban_txsdt.setEditable(false);
-        timkiemphongban_txemail.setEditable(false);
+
 
         if (ketQuaTimKiem.size() == 1) {
             // Nếu chỉ có 1 kết quả, tự động chọn hàng đó
