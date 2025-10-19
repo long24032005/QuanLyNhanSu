@@ -60,6 +60,11 @@ public class SuaPhongBan {
         suaphongban_txtong.setDisable(true); 
     }
     
+    private boolean isNumeric(String str) {
+        if (str == null) return false;
+        return str.matches("\\d+");
+    }
+    
     @FXML
     private void suaphongban_suaAction() throws IOException {
         String ten = suaphongban_txten.getText().trim();
@@ -73,8 +78,16 @@ public class SuaPhongBan {
         String email = suaphongban_txemail.getText().trim();
 
         if (ten.isEmpty()) {
-            canhbao.canhbao("Lỗi", "Tên phòng ban không được để trống!");
-            return;
+        canhbao.canhbao("Lỗi", "Tên phòng ban không được để trống!");
+        return;
+    }
+
+        // Kiểm tra SĐT (nếu người dùng có nhập)
+        if (!sdt.isEmpty()) {
+            if (!isNumeric(sdt) || sdt.length() != 10) {
+                canhbao.canhbao("Sai định dạng", "Số điện thoại (nếu nhập) phải là 10 ký tự số.");
+                return;
+            }
         }
 
         pBan.setTenPhong(ten);
@@ -84,7 +97,7 @@ public class SuaPhongBan {
         
         DataService.getInstance().updatePhongBan(pBan);
 
-        canhbao.thongbao("Thành công", "Đã cập nhật thông tin phòng ban!");
+        canhbao.thongbao("Thành công", "Đã cập nhật thông tin phòng ban!, nhất OK để thoát");
         App.setRoot("phongban");
     }
     
