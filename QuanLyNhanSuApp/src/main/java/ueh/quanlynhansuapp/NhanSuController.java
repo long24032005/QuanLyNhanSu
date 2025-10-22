@@ -243,7 +243,11 @@ public class NhanSuController {
         String sdt = nhansu_txsdt.getText().trim();
         PhongBan selectedPB = nhansu_cbmaPB.getValue();
         if (selectedPB == null) { // Kiểm tra nếu chưa chọn
+<<<<<<< HEAD
              canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng chọn Phòng ban.");
+=======
+             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng chọn 1 nhân viên.");
+>>>>>>> origin/main
             return;
         }
         String maPhongBan = selectedPB.getMaPhong(); // Lấy mã từ đối tượng
