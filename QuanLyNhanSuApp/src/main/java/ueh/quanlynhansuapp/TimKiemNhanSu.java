@@ -107,8 +107,8 @@ public class TimKiemNhanSu {
                 timkiemnhansu_cbchucvu.setValue(ns.getChucVu());
             }
         });
-<<<<<<< HEAD
-=======
+
+
         
         // Khóa các ô lại SAU KHI tìm kiếm
         timkiemnhansu_txten.setEditable(false);
@@ -129,7 +129,7 @@ public class TimKiemNhanSu {
         timkiemnhansu_cbchucvu.setMouseTransparent(true);
         timkiemnhansu_cbchucvu.setFocusTraversable(false);
 
->>>>>>> origin/main
+
        
     }
 
@@ -206,7 +206,7 @@ public class TimKiemNhanSu {
             }
         }
         timkiemnhansu_tbnhansu.setItems(ketQuaTimKiem);
-<<<<<<< HEAD
+
         
         // Khóa các ô lại SAU KHI tìm kiếm
         timkiemnhansu_txma.setEditable(false);
@@ -230,9 +230,9 @@ public class TimKiemNhanSu {
 
         // Vô hiệu hóa nút "Tìm kiếm" (vì đã tìm xong)
         timkiemnhansu_bttimkiem.setDisable(true);
-=======
 
->>>>>>> origin/main
+
+
         
         if (ketQuaTimKiem.size() == 1) {
             // Nếu chỉ có 1 kết quả, tự động chọn hàng đó
