@@ -137,15 +137,10 @@ public class SuaNhanSu {
         ns.setMaPhongBan(maPhongBanMoi);
         ns.setChucVu(chucVu);
         
-        DataService.getInstance().updateNhanSu(ns, this.maPhongBanCu);
+        DataService.getInstance().updateNhanSu(ns);
         canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công! Nhấn OK để thoát");
         App.setRoot("nhansu");
         
     }
     
-    @FXML
-    private void suanhansu_trolaiAction() throws IOException {
-        canhbao.thongbao("Thông báo", "bạn đang thoát chức năng sửa");
-        App.setRoot("nhansu");
-    }
 }

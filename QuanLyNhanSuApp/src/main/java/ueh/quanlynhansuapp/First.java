@@ -13,10 +13,6 @@ import javafx.scene.control.Button;
  * @author lagia
  */
 public class First {
-    @FXML
-    Button main_btnhansu;
-    @FXML
-    Button main_btphongban;
     
     @FXML
     public void main_nhansuAction() throws IOException {
