@@ -125,7 +125,11 @@ public class PrimaryController {
                 "Xác nhận xóa và di chuyển",
                 "Bạn có chắc chắn muốn xóa phòng ban: " + selectedPhongBan.getTenPhong() + "?",
 
+
                
+
+               
+
 
                 "Tất cả nhân viên trong phòng này sẽ được chuyển sang phòng 'PB00 - Phòng ban Chờ phân công'."
 

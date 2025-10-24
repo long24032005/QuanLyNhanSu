@@ -68,6 +68,13 @@ public class TimKiemPhongBan {
 
 
 
+
+        timkiemphongban_txten.setEditable(false);
+        timkiemphongban_txmaTP.setEditable(false);
+        timkiemphongban_txsdt.setEditable(false);
+        timkiemphongban_txemail.setEditable(false);
+
+
         timkiemphongban_txten.setEditable(false);
         timkiemphongban_txmaTP.setEditable(false);
         timkiemphongban_txsdt.setEditable(false);
@@ -179,10 +186,13 @@ public class TimKiemPhongBan {
         // Cập nhật lại bảng để chỉ hiển thị danh sách kết quả đã lọc được
         timkiemphongban_tbphongban.setItems(ketQuaTimKiem);
 
+
         timkiemphongban_txten.setEditable(false);
         timkiemphongban_txmaTP.setEditable(false);
         timkiemphongban_txsdt.setEditable(false);
         timkiemphongban_txemail.setEditable(false);
+
+
 
 
 

@@ -6,15 +6,11 @@ package ueh.quanlynhansuapp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- *
- * @author lagia
- */
 public class DataService {
     private static DataService instance;
+    private final DatabaseManager dbManager; // Chỉ cần một đối tượng quản lý DB
+
     public static DataService getInstance() {
         if (instance == null) {
             instance = new DataService();
@@ -26,104 +22,75 @@ public class DataService {
     private final ObservableList<PhongBan> dsPhongBan = FXCollections.observableArrayList();
 
     private DataService() {
-        // Thay vì khởi tạo bảng SQL, giờ ta khởi tạo file Excel
-        Database.initializeDatabase(); 
-        // Tải dữ liệu từ Excel lên khi chương trình bắt đầu
-        dsPhongBan.setAll(Database.loadAllPhongBan());
-        dsNhanSu.setAll(Database.loadAllNhanSu());
-        
-        // Sau khi tải xong, tính lại tổng số nhân viên cho chắc chắn
-        recalculateAndUpdateTongNhanVien();
+        dbManager = new DatabaseManager();
+        reloadAllData(); // Tải dữ liệu lần đầu khi khởi động
     }
 
-    // Các hàm get và tìm kiếm không thay đổi
+    // Tải lại toàn bộ dữ liệu từ CSDL và cập nhật lên giao diện
+    public final void reloadAllData() {
+        dsPhongBan.setAll(dbManager.loadAllPhongBan());
+        dsNhanSu.setAll(dbManager.loadAllNhanSu());
+    }
+
+    // Các hàm get và tìm kiếm (không thay đổi)
     public ObservableList<NhanSu> getDsNhanSu() { return dsNhanSu; }
     public ObservableList<PhongBan> getDsPhongBan() { return dsPhongBan; }
 
     public PhongBan timPhongBanTheoMa(String maPhong) {
         return dsPhongBan.stream()
-                         .filter(pb -> pb.getMaPhong().equalsIgnoreCase(maPhong))
-                         .findFirst()
-                         .orElse(null);
+                .filter(pb -> pb.getMaPhong().equalsIgnoreCase(maPhong))
+                .findFirst()
+                .orElse(null);
     }
 
     public NhanSu timNhanSuTheoMa(String maNV) {
         return dsNhanSu.stream()
-                       .filter(ns -> ns.getMaNV().equalsIgnoreCase(maNV))
-                       .findFirst()
-                       .orElse(null);
+                .filter(ns -> ns.getMaNV().equalsIgnoreCase(ns.getMaNV()))
+                .findFirst()
+                .orElse(null);
     }
 
-    // --- Các hàm thêm, xóa, sửa sẽ gọi đến Database để ghi lại file Excel ---
+    // --- Các hàm Thêm, Sửa, Xóa ---
+    // Logic: Gọi DatabaseManager để thay đổi CSDL, sau đó tải lại toàn bộ dữ liệu
 
     public boolean addPhongBan(PhongBan pb) {
-        dsPhongBan.add(pb);
-        // Sau khi thêm, ghi lại toàn bộ danh sách vào Excel
-        Database.writeAllPhongBan(dsPhongBan); 
-        return true;
+        if (dbManager.addPhongBan(pb)) {
+            reloadAllData();
+            return true;
+        }
+        return false;
     }
 
     public void deletePhongBan(PhongBan selectedPhongBan) {
-        String maPhongCanXoa = selectedPhongBan.getMaPhong();
-        dsNhanSu.forEach(ns -> {
-            if (ns.getMaPhongBan() != null && ns.getMaPhongBan().equals(maPhongCanXoa)) {
-                ns.setMaPhongBan("P00");
-            }
-        });
+        // Gọi hàm transaction đã được tối ưu trong DatabaseManager
+        if (dbManager.deletePhongBanAndReassignNhanSu(selectedPhongBan.getMaPhong())) {
+            reloadAllData();
+        }
+    }
 
-        dsPhongBan.remove(selectedPhongBan);
-        
-        // Tính lại số nhân viên và ghi lại cả 2 file
-        recalculateAndUpdateTongNhanVien(); 
-        Database.writeAllNhanSu(dsNhanSu);
+    public void updatePhongBan(PhongBan pbDaSua) {
+        if (dbManager.updatePhongBan(pbDaSua)) {
+            reloadAllData();
+        }
     }
 
     public boolean addNhanSu(NhanSu ns) {
-        dsNhanSu.add(ns);
-        recalculateAndUpdateTongNhanVien();
-        Database.writeAllNhanSu(dsNhanSu);
-        return true;
+        if (dbManager.addNhanSu(ns)) {
+            reloadAllData();
+            return true;
+        }
+        return false;
     }
 
     public void deleteNhanSu(NhanSu ns) {
-        dsNhanSu.remove(ns);
-        recalculateAndUpdateTongNhanVien();
-        Database.writeAllNhanSu(dsNhanSu);
+        if (dbManager.deleteNhanSu(ns.getMaNV())) {
+            reloadAllData();
+        }
     }
 
-    public void updateNhanSu(NhanSu nsDaSua, String maPhongBanCu) {
-        for (int i = 0; i < dsNhanSu.size(); i++) {
-            if (dsNhanSu.get(i).getMaNV().equals(nsDaSua.getMaNV())) {
-                dsNhanSu.set(i, nsDaSua);
-                break;
-            }
+    public void updateNhanSu(NhanSu nsDaSua) {
+        if (dbManager.updateNhanSu(nsDaSua)) {
+            reloadAllData();
         }
-        if (!maPhongBanCu.equals(nsDaSua.getMaPhongBan())) {
-            recalculateAndUpdateTongNhanVien();
-        }
-        Database.writeAllNhanSu(dsNhanSu);
-    }
-    
-    public void updatePhongBan(PhongBan pbDaSua) {
-        for (int i = 0; i < dsPhongBan.size(); i++) {
-            if (dsPhongBan.get(i).getMaPhong().equals(pbDaSua.getMaPhong())) {
-                dsPhongBan.set(i, pbDaSua);
-                break;
-            }
-        }
-        Database.writeAllPhongBan(dsPhongBan);
-    }
-
-    // Hàm này rất quan trọng: nó đếm lại số nhân viên mỗi phòng rồi ghi vào Excel
-    private void recalculateAndUpdateTongNhanVien() {
-        Map<String, Long> counts = dsNhanSu.stream()
-                .collect(Collectors.groupingBy(NhanSu::getMaPhongBan, Collectors.counting()));
-
-        for (PhongBan pb : dsPhongBan) {
-            long count = counts.getOrDefault(pb.getMaPhong(), 0L);
-            pb.setTongSoNhanVien((int) count);
-        }
-
-        Database.writeAllPhongBan(dsPhongBan);
     }
 }
