@@ -34,10 +34,10 @@
       <Label layoutX="424.0" layoutY="106.0" prefHeight="20.0" prefWidth="120.0" text="Mã phòng ban" />
       <TextField fx:id="nhansu_txemail" layoutX="510.0" layoutY="39.0" prefHeight="26.0" prefWidth="164.0" />
       <TextField fx:id="nhansu_txsdt" layoutX="510.0" layoutY="71.0" prefHeight="26.0" prefWidth="164.0" />
-      <Button fx:id="nhansu_bttimkiem" layoutX="463.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
-      <Button fx:id="nhansu_btthem" layoutX="59.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
-      <Button fx:id="nhansu_btxoa" layoutX="185.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
-      <Button fx:id="nhansu_btsua" layoutX="320.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
+      <Button fx:id="nhansu_bttimkiem" layoutX="392.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
+      <Button fx:id="nhansu_btthem" layoutX="14.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
+      <Button fx:id="nhansu_btxoa" layoutX="140.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
+      <Button fx:id="nhansu_btsua" layoutX="275.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
       <Label layoutX="78.0" layoutY="140.0" text="Ngày sinh" />
       <DatePicker fx:id="nhansu_datengaysinh" layoutX="157.0" layoutY="136.0" prefHeight="26.0" prefWidth="164.0" />
       <Label layoutX="78.0" layoutY="174.0" text="CCCD" />
@@ -46,6 +46,7 @@
       <ComboBox fx:id="nhansu_cbogioitinh" layoutX="156.0" layoutY="104.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Giới Tính -- " />
       <ComboBox fx:id="nhansu_cbmaPB" layoutX="510.0" layoutY="104.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Mã Phòng Ban -- " />
       <ComboBox fx:id="nhansu_cbchucvu" layoutX="508.0" layoutY="136.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Chức vụ -- " />
-      <Button fx:id="nhansu_btquaylai" layoutX="590.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_quaylaiAction" prefHeight="26.0" prefWidth="91.0" text="Quay lại" />
+      <Button fx:id="nhansu_btquaylai" layoutX="626.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_quaylaiAction" prefHeight="26.0" prefWidth="91.0" text="Quay lại" />
+      <Button fx:id="nhansu_btxuat" layoutX="499.0" layoutY="219.0" mnemonicParsing="false" onAction="#nhansu_xuatAction" prefHeight="26.0" prefWidth="110.0" text="Xuất thông tin" />
    </children>
 </AnchorPane>
