@@ -95,8 +95,8 @@ public class PrimaryController {
             return;
         }
 
-        if (maPhong.length() != 4) {
-            canhbao.canhbao("Sai định dạng", "Mã phòng ban phải có đúng 4 ký tự.");
+        if (maPhong.length() != 3) {
+            canhbao.canhbao("Sai định dạng", "Mã phòng ban phải có đúng 3 ký tự.");
             return;
         }
     
