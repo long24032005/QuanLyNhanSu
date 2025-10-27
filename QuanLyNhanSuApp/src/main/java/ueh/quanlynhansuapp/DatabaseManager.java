@@ -204,4 +204,103 @@ public class DatabaseManager {
             return false;
         }
     }
+    
+    
+    
+    public List<LuongThuong> loadAllLuongThuong() {
+        List<LuongThuong> list = new ArrayList<>();
+        String sql = "SELECT * FROM luongthuong";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                list.add(new LuongThuong(
+                        rs.getString("maLuong"),
+                        rs.getString("maNV"),          // ✅ Sửa lại đúng tên cột trong DB
+                        rs.getString("thangNam"),
+                        rs.getDouble("luongCoBan"),
+                        rs.getDouble("phuCap"),
+                        rs.getDouble("thuong"),
+                        rs.getDouble("khauTru"),
+                        rs.getString("ngayChiTra")
+                ));
+            }
+
+            System.out.println("Đã load " + list.size() + " bản ghi từ bảng luongthuong.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public boolean addLuongThuong(LuongThuong lt) {
+        // ✅ Đổi tên cột maNhanVien -> maNV cho khớp với DB
+        String sql = "INSERT INTO luongthuong(maLuong, maNV, thangNam, luongCoBan, phuCap, thuong, khauTru, ngayChiTra) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, lt.getMaLuong());
+            pstmt.setString(2, lt.getMaNhanVien());
+            pstmt.setString(3, lt.getThangNam());
+            pstmt.setDouble(4, lt.getLuongCoBan());
+            pstmt.setDouble(5, lt.getPhuCap());
+            pstmt.setDouble(6, lt.getThuong());
+            pstmt.setDouble(7, lt.getKhauTru());
+            pstmt.setString(8, lt.getNgayChiTra());
+
+            int rows = pstmt.executeUpdate();
+            System.out.println("[DEBUG] addLuongThuong() => Rows affected: " + rows);
+            return rows > 0;
+
+        } catch (SQLException e) {
+            System.err.println("[SQL ERROR] addLuongThuong(): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateLuongThuong(LuongThuong lt) {
+        // ✅ Đổi maNhanVien -> maNV
+        String sql = "UPDATE luongthuong "
+                   + "SET maNV = ?, thangNam = ?, luongCoBan = ?, phuCap = ?, thuong = ?, khauTru = ?, ngayChiTra = ? "
+                   + "WHERE maLuong = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, lt.getMaNhanVien());
+            pstmt.setString(2, lt.getThangNam());
+            pstmt.setDouble(3, lt.getLuongCoBan());
+            pstmt.setDouble(4, lt.getPhuCap());
+            pstmt.setDouble(5, lt.getThuong());
+            pstmt.setDouble(6, lt.getKhauTru());
+            pstmt.setString(7, lt.getNgayChiTra());
+            pstmt.setString(8, lt.getMaLuong());
+
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteLuongThuong(String maLuong) {
+        String sql = "DELETE FROM luongthuong WHERE maLuong = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, maLuong);
+            return pstmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

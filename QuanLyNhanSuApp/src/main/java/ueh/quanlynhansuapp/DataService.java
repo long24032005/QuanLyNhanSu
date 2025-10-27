@@ -20,7 +20,8 @@ public class DataService {
 
     private final ObservableList<NhanSu> dsNhanSu = FXCollections.observableArrayList();
     private final ObservableList<PhongBan> dsPhongBan = FXCollections.observableArrayList();
-
+    private final ObservableList<LuongThuong> dsLuongThuong = FXCollections.observableArrayList();
+    
     private DataService() {
         dbManager = new DatabaseManager();
         reloadAllData(); // Tải dữ liệu lần đầu khi khởi động
@@ -30,12 +31,14 @@ public class DataService {
     public final void reloadAllData() {
         dsPhongBan.setAll(dbManager.loadAllPhongBan());
         dsNhanSu.setAll(dbManager.loadAllNhanSu());
+        dsLuongThuong.setAll(dbManager.loadAllLuongThuong());
     }
 
     // Các hàm get và tìm kiếm (không thay đổi)
     public ObservableList<NhanSu> getDsNhanSu() { return dsNhanSu; }
     public ObservableList<PhongBan> getDsPhongBan() { return dsPhongBan; }
-
+    public ObservableList<LuongThuong> getDsLuongThuong() { return dsLuongThuong; }
+    
     public PhongBan timPhongBanTheoMa(String maPhong) {
         return dsPhongBan.stream()
                 .filter(pb -> pb.getMaPhong().equalsIgnoreCase(maPhong))
@@ -45,10 +48,11 @@ public class DataService {
 
     public NhanSu timNhanSuTheoMa(String maNV) {
         return dsNhanSu.stream()
-                .filter(ns -> ns.getMaNV().equalsIgnoreCase(ns.getMaNV()))
+                .filter(ns -> ns.getMaNV().equalsIgnoreCase(maNV))
                 .findFirst()
                 .orElse(null);
     }
+    
 
     // --- Các hàm Thêm, Sửa, Xóa ---
     // Logic: Gọi DatabaseManager để thay đổi CSDL, sau đó tải lại toàn bộ dữ liệu
@@ -93,4 +97,30 @@ public class DataService {
             reloadAllData();
         }
     }
+    
+    
+    public boolean addLuongThuong(LuongThuong lt) {
+        if (dbManager.addLuongThuong(lt)) {
+            reloadAllData();
+            return true;
+        }
+        return false;
+    }
+
+    public void updateLuongThuong(LuongThuong lt) {
+        if (dbManager.updateLuongThuong(lt)) {
+            reloadAllData();
+        }
+    }
+
+    public void deleteLuongThuong(LuongThuong lt) {
+        if (dbManager.deleteLuongThuong(lt.getMaLuong())) {
+            reloadAllData();
+        }
+    }
+
+    
 }
+
+
+

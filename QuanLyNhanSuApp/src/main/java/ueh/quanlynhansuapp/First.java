@@ -22,4 +22,9 @@ public class First {
     public void main_phongbanAction() throws IOException {
         App.setRoot("phongban");
     } 
+    
+    @FXML
+    public void main_luongthuongAction() throws IOException {
+        App.setRoot("luongthuong"); // ✅ Mở giao diện Lương thưởng
+    }
 }

@@ -25,10 +25,23 @@ public class App extends Application {
         stage.show();
     }
     
-    public static void setRoot(String fxml) throws IOException {
+    /*public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
-    }
+    }*/
 
+    public static void setRoot(String fxml) {
+    try {
+        scene.setRoot(loadFXML(fxml));
+        System.out.println("✅ Đã chuyển sang giao diện: " + fxml);
+    } catch (IOException e) {
+        System.err.println("❌ Lỗi khi load FXML: " + fxml);
+        e.printStackTrace();
+    } catch (Exception e) {
+        System.err.println("❌ Lỗi khác khi load FXML:");
+        e.printStackTrace();
+    }
+}
+    
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();

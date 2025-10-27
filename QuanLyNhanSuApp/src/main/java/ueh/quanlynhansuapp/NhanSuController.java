@@ -252,13 +252,7 @@ public class NhanSuController {
         PhongBan selectedPB = nhansu_cbmaPB.getValue();
         if (selectedPB == null) { // Kiểm tra nếu chưa chọn
 
-
-             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng chọn Phòng ban.");
-
-            
-
-
-             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng chọn 1 nhân viên.");
+             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng nhập thông tin nhân viên cần thêm.");
 
             return;
         }
