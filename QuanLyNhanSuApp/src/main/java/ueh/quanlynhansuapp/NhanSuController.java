@@ -14,6 +14,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import javafx.concurrent.Task;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -45,6 +52,7 @@ public class NhanSuController {
     @FXML private Button nhansu_btthem;
     @FXML private Button nhansu_btxoa;
     @FXML private Button nhansu_btsua;
+    @FXML private Button nhansu_btxuat;
     @FXML private Button nhansu_bttimkiem;
     @FXML private Button nhansu_btquaylai;
     // Lấy instance của DataService để truy cập dữ liệu chung
@@ -391,6 +399,111 @@ public class NhanSuController {
     
         // Lấy Scene hiện tại và set root mới
         nhansu_bttimkiem.getScene().setRoot(root);
+    }
+    
+    
+    @FXML
+    private void nhansu_xuatAction() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, 
+            "Bạn có muốn xuất thông tin toàn bộ nhân viên ra file Excel không?", 
+            ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Xác nhận xuất file");
+        confirm.showAndWait();
+
+        if (confirm.getResult() == ButtonType.NO) {
+            return; // Quay lại nếu người dùng bấm Hủy
+        }
+
+        // Chọn nơi lưu file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Chọn nơi lưu file Excel");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Excel File (*.xlsx)", "*.xlsx"));
+        fileChooser.setInitialFileName("ThongTinNhanSu.xlsx");
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file == null) return;
+
+        // Hiện progress bar
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        Alert progressAlert = new Alert(Alert.AlertType.INFORMATION);
+        progressAlert.setTitle("Đang xuất file...");
+        progressAlert.setHeaderText("Vui lòng chờ trong giây lát...");
+        progressAlert.getDialogPane().setContent(progressIndicator);
+        progressAlert.show();
+
+        // Tạo task chạy nền
+        Task<Void> exportTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                exportNhanSuToExcel(file);
+                return null;
+            }
+        };
+
+        exportTask.setOnSucceeded(e -> {
+            progressAlert.close();
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("Xuất thành công!");
+            success.setHeaderText("Đã xuất thông tin thành công!");
+            success.setContentText("File đã lưu tại:\n" + file.getAbsolutePath());
+
+            ButtonType openBtn = new ButtonType("Mở file");
+            ButtonType backBtn = new ButtonType("Quay lại");
+            success.getButtonTypes().setAll(openBtn, backBtn);
+            success.showAndWait();
+
+            if (success.getResult() == openBtn) {
+                try {
+                    java.awt.Desktop.getDesktop().open(file);
+                } catch (IOException ex) {
+                    canhbao.canhbao("Lỗi", "Không thể mở file vừa tạo.");
+                }
+            }
+        });
+
+        exportTask.setOnFailed(e -> {
+            progressAlert.close();
+            canhbao.canhbao("Lỗi", "Không thể xuất file Excel.\nChi tiết: " + exportTask.getException());
+        });
+
+        Thread thread = new Thread(exportTask);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    // === HÀM HỖ TRỢ XUẤT FILE EXCEL ===
+    private void exportNhanSuToExcel(File file) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("NhanSu");
+            Row header = sheet.createRow(0);
+            String[] headers = {"Mã NV", "Họ tên", "Giới tính", "Ngày sinh", "CCCD", "Email", "SĐT", "Phòng ban", "Chức vụ"};
+            for (int i = 0; i < headers.length; i++) {
+                header.createCell(i).setCellValue(headers[i]);
+            }
+
+            ObservableList<NhanSu> list = dataService.getDsNhanSu();
+            int rowNum = 1;
+            for (NhanSu ns : list) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(ns.getMaNV());
+                row.createCell(1).setCellValue(ns.getHoTen());
+                row.createCell(2).setCellValue(ns.getGioiTinh());
+                row.createCell(3).setCellValue(ns.getNgaySinh().toString());
+                row.createCell(4).setCellValue(ns.getCccd());
+                row.createCell(5).setCellValue(ns.getEmail());
+                row.createCell(6).setCellValue(ns.getSdt());
+                row.createCell(7).setCellValue(ns.getMaPhongBan());
+                row.createCell(8).setCellValue(ns.getChucVu());
+            }
+
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                workbook.write(fos);
+            }
+        }
     }
     
     @FXML
