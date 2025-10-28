@@ -36,7 +36,11 @@ public class PrimaryController {
     @FXML private Button phongban_btsua;
     @FXML private Button phongban_bttimkiem;
     @FXML private Button phongban_btxuat;
-    @FXML private Button nhansu_btquaylai;
+    @FXML private Button phongban_btquaylai;
+    
+    @FXML private Button phongban_btluongthuong;
+    @FXML private Button phongban_btphongban;
+    @FXML private Button phonban_btnhansu;
 
     @FXML private TableView<PhongBan> phongban_tbphongban;
     @FXML private TableColumn<PhongBan, String> phongban_colma;
@@ -302,6 +306,16 @@ public class PrimaryController {
     
     @FXML
     private void phongban_quaylaiAction() throws IOException {
+        App.setRoot("main");
+    }
+    
+     @FXML
+    private void phonban_luongthuongAction() throws IOException {
+        App.setRoot("luongthuong");
+    }
+
+     @FXML
+    private void phongban_nhansuAction() throws IOException {
         App.setRoot("main");
     }
     

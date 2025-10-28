@@ -14,12 +14,12 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="NVmain_btnhansu" layoutX="317.0" layoutY="109.0" mnemonicParsing="false" onAction="#NVmain_nhansuAction" prefHeight="38.0" prefWidth="187.0" text="Thông tin nhân viên">
+      <Button fx:id="NVmain_btnhansu" layoutX="313.0" layoutY="110.0" mnemonicParsing="false" onAction="#NVmain_nhansuAction" prefHeight="38.0" prefWidth="187.0" text="Thông tin nhân viên">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="NVmain_btluongthuong" layoutX="317.0" layoutY="176.0" mnemonicParsing="false" onAction="#NVmain_phongbanAction" prefHeight="38.0" prefWidth="187.0" text="Thông tin lương thưởng">
+      <Button fx:id="NVmain_btluongthuong" layoutX="313.0" layoutY="177.0" mnemonicParsing="false" onAction="#NVmain_phongbanAction" prefHeight="38.0" prefWidth="187.0" text="Thông tin lương thưởng">
          <font>
             <Font size="14.0" />
          </font>
@@ -32,6 +32,11 @@
       <Label layoutX="411.0" layoutY="271.0" prefHeight="18.0" prefWidth="151.0" text="Bản quyền thuộc về nhóm 5">
          <font>
             <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="313.0" layoutY="60.0" prefHeight="38.0" prefWidth="187.0" text="Dành cho Nhân viên" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="20.0" />
          </font>
       </Label>
    </children>
