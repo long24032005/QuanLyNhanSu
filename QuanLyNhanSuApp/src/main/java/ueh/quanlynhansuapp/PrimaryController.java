@@ -316,7 +316,7 @@ public class PrimaryController {
 
      @FXML
     private void phongban_nhansuAction() throws IOException {
-        App.setRoot("main");
+        App.setRoot("nhansu");
     }
     
     

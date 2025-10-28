@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/quanlynhansu_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private static final String USER = "root";
-    private static final String PASS = "Nam@2005"; 
+    private static final String PASS = "12345678@LOC@"; 
 
     public static Connection getConnection() {
         try {

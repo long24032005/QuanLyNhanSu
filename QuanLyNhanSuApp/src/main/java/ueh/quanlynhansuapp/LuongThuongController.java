@@ -312,8 +312,7 @@ public class LuongThuongController {
     /** ↩️ Nút “Quay lại” */
     @FXML
     private void luongthuong_quaylaiAction() {
-        Stage stage = (Stage) luongthuong_tbluongthuong.getScene().getWindow();
-        stage.close();
+        App.setRoot("main");
     }
 
     // ============= HÀM HỖ TRỢ =============
