@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="657.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.First">
+   <children>
+      <Button fx:id="main_btnhansu" layoutX="439.0" layoutY="135.0" mnemonicParsing="false" onAction="#main_nhansuAction" prefHeight="38.0" prefWidth="126.0" text="Nhân sự">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="main_btphongban" layoutX="438.0" layoutY="183.0" mnemonicParsing="false" onAction="#main_phongbanAction" prefHeight="38.0" prefWidth="126.0" text="Phòng ban">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="448.0" layoutY="299.0" prefHeight="17.0" prefWidth="201.0" text="© Bản quyền thuộc về nhóm 5">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="417.0" layoutY="74.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="20.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="346.0" fitWidth="334.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../Gemini_Generated_Image_v45qjxv45qjxv45q.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="345.0" layoutY="28.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="main_btluongthuong" layoutX="437.0" layoutY="233.0" mnemonicParsing="false" onAction="#main_luongthuongAction" prefHeight="38.0" prefWidth="126.0" text="Lương thưởng">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
