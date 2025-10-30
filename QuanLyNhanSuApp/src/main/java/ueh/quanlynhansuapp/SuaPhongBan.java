@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.util.stream.Collectors;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 public class SuaPhongBan {
     @FXML
@@ -89,7 +91,40 @@ public class SuaPhongBan {
                 return;
             }
         }
+        
+        // 5️⃣ Kiểm tra trùng tên hoặc email (trừ chính mình)
+        for (PhongBan pb : DataService.getInstance().getDsPhongBan()) {
+            if (!pb.getMaPhong().equals(pBan.getMaPhong())) {
+                if (pb.getTenPhong().equalsIgnoreCase(ten)) {
+                    canhbao.canhbao("Trùng tên", "Tên phòng ban \"" + ten + "\" đã tồn tại.");
+                    return;
+                }
+                if (!email.isEmpty() && pb.getEmailPhong() != null &&
+                    pb.getEmailPhong().equalsIgnoreCase(email)) {
+                    canhbao.canhbao("Trùng email", "Email \"" + email + "\" đã được dùng bởi phòng khác.");
+                    return;
+                }
+            }
+        }
 
+        
+         // ⚠️ Thêm popup xác nhận ở đây:
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Xác nhận sửa thông tin");
+        confirm.setHeaderText("Bạn có chắc chắn muốn lưu thay đổi?");
+
+        ButtonType yesBtn = new ButtonType("Xác nhận", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(yesBtn, cancelBtn);
+        confirm.showAndWait();
+
+        // Nếu người dùng bấm Hủy -> dừng
+        if (confirm.getResult() == cancelBtn) {
+            canhbao.thongbao("Đã hủy", "Không có thay đổi nào được lưu.");
+            return;
+        }
+
+        // Nếu người dùng bấm "Xác nhận" 
         pBan.setTenPhong(ten);
         pBan.setMaTruongPhong(maTP); // Cập nhật mã trưởng phòng mới
         pBan.setSdtPhong(sdt);
@@ -97,13 +132,30 @@ public class SuaPhongBan {
         
         DataService.getInstance().updatePhongBan(pBan);
 
-        canhbao.thongbao("Thành công", "Đã cập nhật thông tin phòng ban!, nhất OK để thoát");
-        App.setRoot("phongban");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Thành công");
+        alert.setHeaderText(null);
+        alert.setContentText("Đã cập nhật thông tin phòng ban! Nhấn OK để quay lại.");
+        alert.showAndWait();
+
+        // Sau khi người dùng nhấn OK:
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("phongban.fxml"));
+        Parent root = loader.load();
+        suaphongban_btsua.getScene().setRoot(root);
     }
     
     @FXML
     private void suaphongban_trolaiAction() throws IOException {
-        canhbao.thongbao("Thông báo", "bạn đang thoát chức năng sửa");
-        App.setRoot("phongban");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận trở lại");
+        alert.setHeaderText("Bạn có chắc muốn quay về màn hình Phòng Ban?");
+        alert.setContentText("Mọi thay đổi chưa lưu sẽ bị mất.");
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("phongban.fxml"));
+            Parent root = loader.load();
+            suaphongban_bttrolai.getScene().setRoot(root);
+        }
     }
 }

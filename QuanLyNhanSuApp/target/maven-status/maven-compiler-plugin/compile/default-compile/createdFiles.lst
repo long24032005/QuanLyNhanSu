@@ -1,4 +1,5 @@
 ueh\quanlynhansuapp\NhanSuController$1.class
+ueh\quanlynhansuapp\NVNhanSuController.class
 ueh\quanlynhansuapp\TimKiemLuongThuong$1.class
 ueh\quanlynhansuapp\SuaNhanSu$1.class
 ueh\quanlynhansuapp\First.class
@@ -15,16 +16,18 @@ ueh\quanlynhansuapp\DatabaseManager.class
 ueh\quanlynhansuapp\SuaNhanSu$2.class
 ueh\quanlynhansuapp\App.class
 ueh\quanlynhansuapp\NhanSuController.class
-ueh\quanlynhansuapp\TimKiemNhanSu$2.class
 ueh\quanlynhansuapp\PrimaryController$1.class
 ueh\quanlynhansuapp\LuongThuongController$1.class
 ueh\quanlynhansuapp\PrimaryController.class
 ueh\quanlynhansuapp\NhanSuController$2.class
 ueh\quanlynhansuapp\canhbao.class
+ueh\quanlynhansuapp\NVLuongThuongController.class
 ueh\quanlynhansuapp\TimKiemNhanSu.class
 ueh\quanlynhansuapp\DataService.class
 ueh\quanlynhansuapp\LuongThuong.class
+ueh\quanlynhansuapp\NVMainController.class
+ueh\quanlynhansuapp\LoginController.class
 ueh\quanlynhansuapp\TimKiemLuongThuong.class
-ueh\quanlynhansuapp\TimKiemNhanSu$1.class
 ueh\quanlynhansuapp\DatabaseConnection.class
+ueh\quanlynhansuapp\NVLuongThuongController$1.class
 ueh\quanlynhansuapp\LuongThuongController.class

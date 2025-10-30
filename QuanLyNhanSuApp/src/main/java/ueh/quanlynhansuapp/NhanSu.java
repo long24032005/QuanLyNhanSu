@@ -18,6 +18,7 @@ public class NhanSu {
     private String sdt;
     private String maPhongBan;
     private String chucVu;
+    private String matKhau;
 
     // Constructor mặc định
     public NhanSu() {
@@ -64,6 +65,11 @@ public class NhanSu {
 
     public String getChucVu() { return chucVu; }
     public void setChucVu(String chucVu) { this.chucVu = chucVu; }
+    
+   
+    public String getMatKhau() {return this.matKhau; }
+
+    public void setMatKhau(String matKhau) { this.matKhau = matKhau; }
 
 
     @Override

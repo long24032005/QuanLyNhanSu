@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="514.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.NhanSuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="514.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.NVLuongThuongController">
    <children>
       <TableView fx:id="NVluongthuong_tbluongthuong" layoutX="16.0" layoutY="82.0" prefHeight="347.0" prefWidth="848.0">
         <columns>

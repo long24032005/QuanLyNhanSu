@@ -17,6 +17,7 @@ import java.util.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import javafx.concurrent.Task;
+import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
@@ -250,18 +251,12 @@ public class NhanSuController {
         String email = nhansu_txemail.getText().trim();
         String sdt = nhansu_txsdt.getText().trim();
         PhongBan selectedPB = nhansu_cbmaPB.getValue();
-        if (selectedPB == null) { // Kiểm tra nếu chưa chọn
-
-             canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng nhập thông tin nhân viên cần thêm.");
-
-            return;
-        }
         String maPhongBan = selectedPB.getMaPhong(); // Lấy mã từ đối tượng
         String chucVu = nhansu_cbchucvu.getValue();
-
-        if (maNV.isEmpty() || hoTen.isEmpty() || ngaySinh == null || maPhongBan == null) {
-            // Cập nhật lại thông báo lỗi một chút cho rõ ràng
-            canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng nhập đầy đủ Mã NV, Họ tên, Ngày sinh và Phòng ban.");
+          
+        if (maNV.isEmpty() || hoTen.isEmpty() || gioiTinh == null || gioiTinh.isEmpty() || ngaySinh == null || cccd.isEmpty() || email.isEmpty() || sdt.isEmpty()|| selectedPB == null || chucVu == null || chucVu.isEmpty()) {
+            canhbao.canhbao("Thiếu thông tin",
+                "Vui lòng điền đầy đủ tất cả thông tin!");
             return;
         }
 
@@ -269,27 +264,66 @@ public class NhanSuController {
             canhbao.canhbao("Sai định dạng", "Mã nhân viên phải có đúng 5 ký tự.");
             return;
         }
+        
+        if (dataService.timNhanSuTheoMa(maNV) != null) {
+            canhbao.canhbao("Trùng mã", "Mã nhân sự \"" + maNV + "\" đã tồn tại.");
+            return;
+        }
 
         // Kiểm tra CCCD (nếu người dùng có nhập)
         if (!cccd.isEmpty()) {
-            if (!isNumeric(cccd) || cccd.length() != 12) {
-                canhbao.canhbao("Sai định dạng", "CCCD (nếu nhập) phải là 12 ký tự số.");
+            // 1️⃣ Kiểm tra không phải số
+            if (!isNumeric(cccd)) {
+                canhbao.canhbao("Sai định dạng", "CCCD chỉ được phép chứa các ký tự số (0–9).");
+                return;
+            }
+
+            // 2️⃣ Kiểm tra độ dài không đúng
+            if (cccd.length() != 12) {
+                canhbao.canhbao("Sai số lượng ký tự", "CCCD phải gồm đúng 12 chữ số. Hiện tại bạn nhập " + cccd.length() + " ký tự.");
+                return;
+            }
+            
+            // ✅ Kiểm tra trùng CCCD
+            NhanSu nsTrungCCCD = dataService.timNhanSuTheoCCCD(cccd);
+            if (nsTrungCCCD != null) {
+                canhbao.canhbao("Trùng CCCD", 
+                    "CCCD \"" + cccd + "\" đã tồn tại cho nhân viên: " + nsTrungCCCD.getHoTen());
                 return;
             }
         }
 
-        // Kiểm tra SĐT (nếu người dùng có nhập)
+        // Kiểm tra SĐT (nếu người dùng có nhập)       
         if (!sdt.isEmpty()) {
-            if (!isNumeric(sdt) || sdt.length() != 10) {
-                canhbao.canhbao("Sai định dạng", "Số điện thoại (nếu nhập) phải là 10 ký tự số.");
+            // 1️⃣ Kiểm tra không phải số
+            if (!isNumeric(sdt)) {
+                canhbao.canhbao("Sai định dạng", "SDT chỉ được phép chứa các ký tự số (0–9).");
                 return;
             }
-    }
-        
-        if (maNV.isEmpty() || hoTen.isEmpty() || ngaySinh == null || maPhongBan == null) {
-            canhbao.canhbao("Thông tin không được bỏ trống", "Vui lòng nhập đầy đủ thông tin");
+
+            // 2️⃣ Kiểm tra độ dài không đúng
+            if (sdt.length() != 10) {
+                canhbao.canhbao("Sai số lượng ký tự", "SDT phải gồm đúng 10 chữ số. Hiện tại bạn nhập " + sdt.length() + " ký tự.");
+                return;
+            }
+            
+            // Kiểm tra trùng SĐT
+            NhanSu nsTrungSDT = dataService.timNhanSuTheoSDT(sdt);
+            if (nsTrungSDT != null) {
+                canhbao.canhbao("Trùng Số điện thoại", 
+                    "Số điện thoại \"" + sdt + "\" đã được dùng bởi nhân viên: " + nsTrungSDT.getHoTen());
+                return;
+            }
+        }   
+            
+        // Kiểm tra trùng Email
+        NhanSu nsTrungEmail = dataService.timNhanSuTheoEmail(email);
+        if (nsTrungEmail != null) {
+            canhbao.canhbao("Trùng Email", 
+                "Email \"" + email + "\" đã được sử dụng bởi nhân viên: " + nsTrungEmail.getHoTen());
             return;
         }
+        
         
         // Kiểm tra xem chức vụ có thuộc phòng ban đã chọn không
         if (chucVu == null || chucVu.isEmpty() || chucVu.contains("Chưa có chức vụ")) {
@@ -305,10 +339,6 @@ public class NhanSuController {
             return;
         }
 
-        if (dataService.timNhanSuTheoMa(maNV) != null) {
-            canhbao.canhbao("Trùng mã", "Mã nhân sự \"" + maNV + "\" đã tồn tại.");
-            return;
-        }
         
         NhanSu ns = new NhanSu(maNV, hoTen, gioiTinh, ngaySinh, cccd, email, sdt, maPhongBan, chucVu);
 
@@ -502,6 +532,10 @@ public class NhanSuController {
     
     @FXML
     private void nhansu_quaylaiAction() throws IOException {
-        App.setRoot("main");
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("main.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) nhansu_btquaylai.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
     }
 }

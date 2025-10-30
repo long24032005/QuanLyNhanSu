@@ -28,7 +28,6 @@ public class LuongThuongController {
     private static final DateTimeFormatter YMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DMY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ====== Form inputs ======
     @FXML private TextField luongthuong_txmaluong;
     @FXML private TextField luongthuong_txmaNV;
     @FXML private DatePicker luongthuong_datethangnam;
@@ -38,8 +37,13 @@ public class LuongThuongController {
     @FXML private TextField luongthuong_txkhautru;
     @FXML private TextField luongthuong_txtongluong;
     @FXML private DatePicker luongthuong_datengaychitra;
+    @FXML private Button luongthuong_btthem;
+    @FXML private Button luongthuong_btxoa;
+    @FXML private Button luongthuong_btsua;
+    @FXML private Button luongthuong_bttimkiem;
+    @FXML private Button luongthuong_btxuat;
+    @FXML private Button luongthuong_btquaylai;
 
-    // ====== Table ======
     @FXML private TableView<LuongThuong> luongthuong_tbluongthuong;
     @FXML private TableColumn<LuongThuong, String> luongthuong_colmaluong;
     @FXML private TableColumn<LuongThuong, String> luongthuong_colmaNV;
@@ -50,6 +54,8 @@ public class LuongThuongController {
     @FXML private TableColumn<LuongThuong, Double> luongthuong_colkhautru;
     @FXML private TableColumn<LuongThuong, Double> luongthuong_coltongluong;
     @FXML private TableColumn<LuongThuong, String> luongthuong_colngaychitra;
+    
+    
 
     private final ObservableList<LuongThuong> dsLuong = FXCollections.observableArrayList();
 
@@ -488,7 +494,11 @@ public class LuongThuongController {
 
     @FXML
     private void luongthuong_quaylaiAction() throws IOException {
-        App.setRoot("main");
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("main.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) luongthuong_btquaylai.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
     }
 
 

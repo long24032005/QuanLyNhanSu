@@ -6,33 +6,26 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
 
 public class SuaNhanSu {
-    @FXML
-    private TextField suanhansu_txma;
-    @FXML
-    private TextField suanhansu_txten;
-    @FXML
-    private ComboBox<String> suanhansu_cbgioitinh;
-    @FXML
-    private DatePicker suanhansu_datengaysinh;
-    @FXML
-    private TextField suanhansu_txcccd;
-    @FXML
-    private TextField suanhansu_txemail;
-    @FXML
-    private TextField suanhansu_txsdt;
-    @FXML
-    private ComboBox<PhongBan> suanhansu_cbmaPB;
-    @FXML
-    private ComboBox<String> suanhansu_cbchucvu;
-    @FXML
-    private Button suanhansu_btsua;
-    @FXML
-    private Button suanhansu_bttrolai;
+    @FXML private TextField suanhansu_txma;
+    @FXML private TextField suanhansu_txten;
+    @FXML private ComboBox<String> suanhansu_cbgioitinh;
+    @FXML private DatePicker suanhansu_datengaysinh;
+    @FXML private TextField suanhansu_txcccd;
+    @FXML private TextField suanhansu_txemail;
+    @FXML private TextField suanhansu_txsdt;
+    @FXML private ComboBox<PhongBan> suanhansu_cbmaPB;
+    @FXML private ComboBox<String> suanhansu_cbchucvu;
+    @FXML private Button suanhansu_btsua;
+    @FXML private Button suanhansu_bttrolai;
     
     private NhanSu ns;
     private String maPhongBanCu;
+    private final DataService dataService = DataService.getInstance();
     
     public void setData(NhanSu ns) {
         this.ns = ns;
@@ -98,50 +91,114 @@ public class SuaNhanSu {
         String email = suanhansu_txemail.getText().trim();
         String sdt = suanhansu_txsdt.getText().trim();
         PhongBan selectedPB = suanhansu_cbmaPB.getValue();
-        if (selectedPB == null) { // Kiểm tra nếu chưa chọn
-            canhbao.canhbao("Thiếu thông tin", "Vui lòng chọn Phòng ban.");
+        String chucVu = suanhansu_cbchucvu.getValue();
+    
+
+        if (hoTen.isEmpty() || gioiTinh == null || gioiTinh.isEmpty() || ngaySinh == null || cccd.isEmpty() || email.isEmpty() || sdt.isEmpty()|| selectedPB == null || chucVu == null || chucVu.isEmpty()) {
+            canhbao.canhbao("Thiếu thông tin",
+                "Vui lòng điền đầy đủ tất cả thông tin!");
             return;
         }
-        String maPhongBanMoi = selectedPB.getMaPhong();
-        
-        String chucVu = suanhansu_cbchucvu.getValue();
 
-        if (hoTen.isEmpty() || ngaySinh == null || maPhongBanMoi == null) {
-            canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập Họ tên, Ngày sinh và chọn Phòng ban.");
-            return; // Dừng lại nếu thiếu
-        }
-
-        // Kiểm tra CCCD (nếu người dùng có nhập)
+        // --- Kiểm tra CCCD ---
         if (!cccd.isEmpty()) {
-            if (!isNumeric(cccd) || cccd.length() != 12) {
-                canhbao.canhbao("Sai định dạng", "CCCD (nếu nhập) phải là 12 ký tự số.");
+            if (!isNumeric(cccd)) {
+                canhbao.canhbao("Sai định dạng", "CCCD chỉ được phép chứa các ký tự số (0–9).");
                 return;
             }
-        }
-    
-        // Kiểm tra SĐT (nếu người dùng có nhập)
-        if (!sdt.isEmpty()) {
-            if (!isNumeric(sdt) || sdt.length() != 10) {
-                canhbao.canhbao("Sai định dạng", "Số điện thoại (nếu nhập) phải là 10 ký tự số.");
+            if (cccd.length() != 12) {
+                canhbao.canhbao("Sai số lượng ký tự", "CCCD phải gồm đúng 12 chữ số.");
+                return;
+            }
+            boolean cccdTrung = dataService.getDsNhanSu().stream()
+                .anyMatch(p -> !p.getMaNV().equals(ns.getMaNV()) && cccd.equals(p.getCccd()));
+            if (cccdTrung) {
+                canhbao.canhbao("Trùng CCCD", "CCCD \"" + cccd + "\" đã tồn tại cho một nhân viên khác.");
                 return;
             }
         }
 
-        // Cập nhật DB
+        // --- Kiểm tra Email ---
+        if (!email.isEmpty()) {
+            boolean emailTrung = dataService.getDsNhanSu().stream()
+                .anyMatch(p -> !p.getMaNV().equals(ns.getMaNV()) && email.equalsIgnoreCase(p.getEmail()));
+            if (emailTrung) {
+                canhbao.canhbao("Trùng Email", "Email \"" + email + "\" đã được sử dụng bởi nhân viên khác.");
+                return;
+            }
+        }
+
+        // --- Kiểm tra SĐT ---
+        if (!sdt.isEmpty()) {
+            if (!isNumeric(sdt)) {
+                canhbao.canhbao("Sai định dạng", "SĐT chỉ được phép chứa các ký tự số (0–9).");
+                return;
+            }
+            if (sdt.length() != 10) {
+                canhbao.canhbao("Sai số lượng ký tự", "SĐT phải gồm đúng 10 chữ số.");
+                return;
+            }
+            boolean sdtTrung = dataService.getDsNhanSu().stream()
+                .anyMatch(p -> !p.getMaNV().equals(ns.getMaNV()) && sdt.equals(p.getSdt()));
+            if (sdtTrung) {
+                canhbao.canhbao("Trùng Số điện thoại", "SĐT \"" + sdt + "\" đã được dùng bởi nhân viên khác.");
+                return;
+            }
+        }
+
+        // --- Kiểm tra chức vụ ---
+        if (chucVu == null || chucVu.isEmpty()) {
+            canhbao.canhbao("Thiếu chức vụ", "Vui lòng chọn chức vụ cho nhân sự.");
+            return;
+        }
+
+        // --- Cập nhật dữ liệu ---
         ns.setHoTen(hoTen);
         ns.setGioiTinh(gioiTinh);
         ns.setNgaySinh(ngaySinh);
         ns.setCccd(cccd);
         ns.setEmail(email);
         ns.setSdt(sdt);
-        ns.setMaPhongBan(maPhongBanMoi);
+        ns.setMaPhongBan(selectedPB.getMaPhong());
         ns.setChucVu(chucVu);
-        
-        DataService.getInstance().updateNhanSu(ns);
 
-        canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công! Nhấn OK để thoát");
-        App.setRoot("nhansu");
-        
+        dataService.updateNhanSu(ns);
+
+        // --- Thông báo thành công & quay lại ---
+        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("nhansu.fxml"));
+        javafx.scene.Parent root = loader.load();
+
+        javafx.stage.Stage stage = (javafx.stage.Stage) suanhansu_btsua.getScene().getWindow();
+        stage.getScene().setRoot(root);
+
+        // --- Sau khi giao diện đã load xong, hiển thị thông báo ---
+        javafx.application.Platform.runLater(() -> 
+            canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!")
+        );
+    }   
+    @FXML
+    private void suanhansu_trolaiAction() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Xác nhận quay lại");
+        confirm.setHeaderText("Bạn có muốn quay lại danh sách nhân sự?");
+        confirm.setContentText("Mọi thay đổi chưa lưu sẽ bị mất.");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("nhansu.fxml"));
+                    Parent root = loader.load();
+
+                    // Lấy Stage hiện tại
+                    Stage stage = (Stage) suanhansu_bttrolai.getScene().getWindow();
+                    stage.getScene().setRoot(root);
+              
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    canhbao.canhbao("Lỗi điều hướng", "Không thể quay lại màn hình nhân sự.\nChi tiết: " + e.getMessage());
+                }
+            }
+        });
     }
-    
 }

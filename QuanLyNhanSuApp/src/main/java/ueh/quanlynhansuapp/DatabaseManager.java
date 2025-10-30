@@ -138,25 +138,31 @@ public class DatabaseManager {
                 Date dbDate = rs.getDate("ngaySinh");
                 LocalDate ngaySinh = (dbDate != null) ? dbDate.toLocalDate() : null;
 
-                list.add(new NhanSu(
-                        rs.getString("maNV"),
-                        rs.getString("hoTen"),
-                        rs.getString("gioiTinh"),
-                        ngaySinh,
-                        rs.getString("cccd"),
-                        rs.getString("email"),
-                        rs.getString("sdt"),
-                        rs.getString("maPhongBan"),
-                        rs.getString("chucVu")
-                ));
+                NhanSu ns = new NhanSu(
+                    rs.getString("maNV"),
+                    rs.getString("hoTen"),
+                    rs.getString("gioiTinh"),
+                    ngaySinh,
+                    rs.getString("cccd"),
+                    rs.getString("email"),
+                    rs.getString("sdt"),
+                    rs.getString("maPhongBan"),
+                    rs.getString("chucVu")
+                );
+                ns.setMatKhau(rs.getString("matkhau")); // ✅ lấy mật khẩu
+                list.add(ns);
             }
+
         } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("❌ Lỗi khi load danh sách nhân sự: " + e.getMessage());
         }
+
         return list;
     }
 
     public boolean addNhanSu(NhanSu ns) {
-        String sql = "INSERT INTO nhansu(maNV, hoTen, gioiTinh, ngaySinh, cccd, email, sdt, maPhongBan, chucVu) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO nhansu(maNV, hoTen, gioiTinh, ngaySinh, cccd, email, sdt, maPhongBan, chucVu, matkhau) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, ns.getMaNV());
@@ -168,6 +174,7 @@ public class DatabaseManager {
             pstmt.setString(7, ns.getSdt());
             pstmt.setString(8, ns.getMaPhongBan());
             pstmt.setString(9, ns.getChucVu());
+            pstmt.setString(10, ns.getMatKhau() != null ? ns.getMatKhau() : "123456");
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

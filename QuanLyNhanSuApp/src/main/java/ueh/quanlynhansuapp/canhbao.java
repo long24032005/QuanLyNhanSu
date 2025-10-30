@@ -24,6 +24,17 @@ public class canhbao {
         a.showAndWait();
     }
     
+    // Hàm nâng cao: cho phép kiểm soát thời điểm OK
+    public static void thongbaoChoxacnhan(String title, String message, Runnable onOK) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        a.setTitle(title);
+        a.showAndWait();
+
+        if (onOK != null) {
+            onOK.run();
+        }
+    }
+    
     public static boolean xacNhan(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);

@@ -9,14 +9,16 @@ import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 
 /**
  *
@@ -52,6 +54,8 @@ public class TimKiemNhanSu {
     @FXML private TableColumn<NhanSu, String> timkiemnhansu_colchucvu;
 
     private ObservableList<NhanSu> masterData = FXCollections.observableArrayList();
+    private ObservableList<NhanSu> ketQuaTimKiem = FXCollections.observableArrayList();
+
 
 
     @FXML
@@ -69,6 +73,107 @@ public class TimKiemNhanSu {
 
         // 2. Cài đặt các giá trị cố định cho các ComboBox
         timkiemnhansu_cbogioitinh.setItems(FXCollections.observableArrayList("Nam", "Nữ", "Khác"));
+        
+        // Khóa các ô thông tin, chỉ hiển thị
+        setInfoFieldsEditable(false);
+        
+        // Liên kết bảng với danh sách kết quả
+        timkiemnhansu_tbnhansu.setItems(ketQuaTimKiem);
+        
+    }
+
+    private void setInfoFieldsEditable(boolean editable) {
+        timkiemnhansu_txten.setEditable(editable);
+        timkiemnhansu_txcccd.setEditable(editable);
+        timkiemnhansu_txemail.setEditable(editable);
+        timkiemnhansu_txsdt.setEditable(editable);
+        // Không dùng setDisable để tránh bị mờ
+        timkiemnhansu_cbogioitinh.setMouseTransparent(!editable);
+        timkiemnhansu_cbogioitinh.setFocusTraversable(editable);
+
+        timkiemnhansu_datengaysinh.setMouseTransparent(!editable);
+        timkiemnhansu_datengaysinh.setFocusTraversable(editable);
+
+        timkiemnhansu_cbmaPB.setMouseTransparent(!editable);
+        timkiemnhansu_cbmaPB.setFocusTraversable(editable);
+
+        timkiemnhansu_cbchucvu.setMouseTransparent(!editable);
+        timkiemnhansu_cbchucvu.setFocusTraversable(editable);
+    }
+
+    public void setData(ObservableList<NhanSu> allNhanSu, ObservableList<PhongBan> dsPhongBan, ObservableList<String> allChucVu) {
+        this.masterData.setAll(allNhanSu);
+        timkiemnhansu_cbmaPB.setItems(dsPhongBan);
+        timkiemnhansu_cbchucvu.setItems(allChucVu);
+    }
+
+    @FXML
+    private void timkiemnhansu_timkiemAction() {
+        String maNV_input = timkiemnhansu_txma.getText().trim();
+        if (maNV_input.isEmpty()) {
+            canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập Mã nhân viên để tìm kiếm!");
+            return;
+        }
+
+        // Tìm nhân viên theo mã
+        NhanSu ketQua = null;
+        for (NhanSu ns : masterData) {
+            if (ns.getMaNV() != null && ns.getMaNV().equalsIgnoreCase(maNV_input)) {
+                ketQua = ns;
+                break;
+            }
+        }
+
+        if (ketQua == null) {
+            canhbao.thongbao("Không tìm thấy", "Không tồn tại nhân viên có mã \"" + maNV_input + "\"");
+            return;
+        }
+
+        // Kiểm tra nếu nhân viên này đã nằm trong danh sách tìm rồi thì không thêm nữa
+        boolean tonTaiTrongBang = ketQuaTimKiem.stream()
+            .anyMatch(ns -> ns.getMaNV() != null && ns.getMaNV().equalsIgnoreCase(maNV_input));
+
+        if (!tonTaiTrongBang) {
+            ketQuaTimKiem.add(ketQua);
+        } else {
+            canhbao.thongbao("Thông báo", "Nhân viên này đã có trong bảng kết quả.");
+        }
+
+        // Hiển thị thông tin lên form
+        showNhanSuInfo(ketQua);
+        timkiemnhansu_tbnhansu.getSelectionModel().select(ketQua);
+    }
+
+    private void showNhanSuInfo(NhanSu ns) {
+        timkiemnhansu_txten.setText(ns.getHoTen());
+        timkiemnhansu_txcccd.setText(ns.getCccd());
+        timkiemnhansu_txemail.setText(ns.getEmail());
+        timkiemnhansu_txsdt.setText(ns.getSdt());
+        timkiemnhansu_cbogioitinh.setValue(ns.getGioiTinh());
+        timkiemnhansu_datengaysinh.setValue(ns.getNgaySinh());
+        timkiemnhansu_cbmaPB.setValue(DataService.getInstance().timPhongBanTheoMa(ns.getMaPhongBan()));
+        timkiemnhansu_cbchucvu.setValue(ns.getChucVu());
+    }
+
+    private void clearInfoFields() {
+        timkiemnhansu_txten.clear();
+        timkiemnhansu_txcccd.clear();
+        timkiemnhansu_txemail.clear();
+        timkiemnhansu_txsdt.clear();
+        timkiemnhansu_cbogioitinh.setValue(null);
+        timkiemnhansu_datengaysinh.setValue(null);
+        timkiemnhansu_cbmaPB.setValue(null);
+        timkiemnhansu_cbchucvu.setValue(null);
+    }
+
+    @FXML
+    private void timkiemnhansu_lammoisAction() {
+        timkiemnhansu_txma.clear();
+        ketQuaTimKiem.clear();
+        clearInfoFields();
+        canhbao.thongbao("Đã làm mới", "Bảng kết quả tìm kiếm đã được xóa.");
+    }
+        /* Code cũ
         timkiemnhansu_cbmaPB.setCellFactory(param -> new ListCell<PhongBan>() {
             @Override
             protected void updateItem(PhongBan pb, boolean empty) {
@@ -255,10 +360,6 @@ public class TimKiemNhanSu {
         timkiemnhansu_bttimkiem.setDisable(true);
 
 
-
-        
-
-
         if (ketQuaTimKiem.size() == 1) {
             // Nếu chỉ có 1 kết quả, tự động chọn hàng đó
             timkiemnhansu_tbnhansu.getSelectionModel().selectFirst();
@@ -268,10 +369,26 @@ public class TimKiemNhanSu {
             timkiemnhansu_tbnhansu.getSelectionModel().clearSelection();
         }
     }
-
+*/
+        
     @FXML
     private void timkiemnhansu_trolaiAction() throws IOException {
-        canhbao.thongbao("Thông báo", "Bạn đang thoát chức năng tìm kiếm");
-        App.setRoot("nhansu"); // Quay về màn hình chính
+        // Hỏi xác nhận
+        boolean dongY = canhbao.xacNhan(
+            "Trở lại",
+            "Bạn có chắc chắn muốn quay về màn hình Nhân sự?",
+            "Mọi kết quả tìm kiếm hiện tại sẽ bị mất."
+        );
+        if (!dongY) return;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("nhansu.fxml"));
+        Parent root = loader.load();
+        NhanSuController controller = loader.getController();
+
+        // Truyền lại dữ liệu vào controller (nếu cần)
+        controller.initialize();
+
+        // Chuyển scene
+        timkiemnhansu_bttrolai.getScene().setRoot(root);
     }
 }

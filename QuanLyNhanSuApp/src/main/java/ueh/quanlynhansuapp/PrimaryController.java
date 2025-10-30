@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -111,6 +112,51 @@ public class PrimaryController {
             return;
             }
         }
+        
+        // Kiểm tra sự tồn tại của mã TP trong danh sách nhân sự
+    if (!maTP.isEmpty()) {
+        boolean tonTaiNhanSu = false;
+        for (NhanSu ns : dataService.getDsNhanSu()) {
+            if (ns.getMaNV() != null && ns.getMaNV().equalsIgnoreCase(maTP)) {
+                tonTaiNhanSu = true;
+                break;
+            }
+        }
+        if (!tonTaiNhanSu) {
+            canhbao.canhbao("Không tồn tại", "Mã nhân viên \"" + maTP + "\" không tồn tại trong danh sách nhân sự.");
+            return;
+        }
+    }
+        
+   
+         // Kiểm tra trùng dữ liệu
+        for (PhongBan pb : dataService.getDsPhongBan()) {
+            // Trùng mã phòng
+            if (pb.getMaPhong().equalsIgnoreCase(maPhong)) {
+                canhbao.canhbao("Trùng mã", "Phòng ban có mã \"" + maPhong + "\" đã tồn tại.");
+                return;
+            }
+            
+             // Trùng tên phòng
+            if (pb.getTenPhong() != null && pb.getTenPhong().trim().toLowerCase().equals(tenPhong.toLowerCase())) {
+                canhbao.canhbao("Trùng tên", "Tên phòng ban \"" + tenPhong + "\" đã tồn tại.");
+                return;
+            }
+            
+            // Trùng email (nếu có)
+            if (!emailPhong.isEmpty() && pb.getEmailPhong() != null &&
+                pb.getEmailPhong().trim().equalsIgnoreCase(emailPhong)) {
+                canhbao.canhbao("Trùng email", "Email phòng ban \"" + emailPhong + "\" đã được sử dụng.");
+                return;
+            }
+            
+            // Trùng mã trưởng phòng (nếu có nhập)
+            if (!maTP.isEmpty() && pb.getMaTruongPhong() != null &&
+                pb.getMaTruongPhong().equalsIgnoreCase(maTP)) {
+                canhbao.canhbao("Trùng trưởng phòng", "Mã trưởng phòng \"" + maTP + "\" đã được dùng ở phòng khác.");
+                return;
+            }  
+        }    
 
         PhongBan pb = new PhongBan(maPhong, tenPhong, maTP.isEmpty() ? null : maTP, sdtPhong, emailPhong, 0);
         
@@ -138,15 +184,7 @@ public class PrimaryController {
         boolean dongY = canhbao.xacNhan(
                 "Xác nhận xóa và di chuyển",
                 "Bạn có chắc chắn muốn xóa phòng ban: " + selectedPhongBan.getTenPhong() + "?",
-
-
-               
-
-               
-
-
                 "Tất cả nhân viên trong phòng này sẽ được chuyển sang phòng 'PB00 - Phòng ban Chờ phân công'."
-
         );
 
         if (dongY) {
@@ -306,9 +344,12 @@ public class PrimaryController {
     
     @FXML
     private void phongban_quaylaiAction() throws IOException {
-        App.setRoot("main");
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("main.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) phongban_btquaylai.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
     }
-    
      @FXML
     private void phonban_luongthuongAction() throws IOException {
         App.setRoot("luongthuong");
