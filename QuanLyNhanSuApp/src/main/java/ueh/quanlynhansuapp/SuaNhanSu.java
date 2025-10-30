@@ -2,6 +2,7 @@ package ueh.quanlynhansuapp;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,7 +10,12 @@ import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Arrays;
 
+// Controller của giao diện sửa nhân sự, phân quyển Admin (suanhansu.fxml)
 public class SuaNhanSu {
     @FXML private TextField suanhansu_txma;
     @FXML private TextField suanhansu_txten;
@@ -27,6 +33,20 @@ public class SuaNhanSu {
     private String maPhongBanCu;
     private final DataService dataService = DataService.getInstance();
     
+    // Map chứa danh sách chức vụ cho từng phòng ban
+    private final Map<String, List<String>> phongBanToChucVuMap = new HashMap<>();
+
+    // Hàm khởi tạo dữ liệu chức vụ cho từng phòng ban
+    private void initializeChucVuData() {
+        phongBanToChucVuMap.put("Phòng Kế toán", Arrays.asList("Trưởng phòng Kế toán", "Phó phòng Kế toán", "Kế toán trưởng", "Kế toán tổng hợp", "Kế toán viên", "Kế toán kho", "Kế toán thuế", "Thực tập sinh Kế toán"));
+        phongBanToChucVuMap.put("Phòng Nhân sự", Arrays.asList("Trưởng phòng Nhân sự", "Phó phòng Nhân sự", "Chuyên viên Tuyển dụng", "Chuyên viên C&B", "Chuyên viên Đào tạo", "Thực tập sinh Nhân sự"));
+        phongBanToChucVuMap.put("Phòng Kỹ thuật", Arrays.asList("Trưởng phòng IT", "Lập trình viên Backend", "Lập trình viên Frontend", "UI/UX Designer", "Quản trị hệ thống", "Nhân viên Hỗ trợ IT", "Thực tập sinh IT"));
+        phongBanToChucVuMap.put("Phòng Kinh doanh", Arrays.asList("Trưởng phòng Kinh doanh", "Phó phòng Kinh doanh", "Nhân viên kinh doanh", "Trợ lý kinh doanh", "Nhân viên Tele-sales", "Thực tập sinh Kinh doanh"));
+        phongBanToChucVuMap.put("Phòng Marketing", Arrays.asList("Trưởng phòng Marketing", "Chuyên viên Digital Marketing", "Chuyên viên Content Marketing", "Nhân viên thiết kế", "Chuyên viên SEO/SEM", "Thực tập sinh Marketing"));
+        phongBanToChucVuMap.put("Chờ phân công", Arrays.asList("Chưa có chức vụ")); // Dành cho P00
+    }
+    
+    // nhận dữ liệu nhân sự cần sửa từ giao diện chính
     public void setData(NhanSu ns) {
         this.ns = ns;
         this.maPhongBanCu = ns.getMaPhongBan();
@@ -67,6 +87,28 @@ public class SuaNhanSu {
                 }
             }
         });
+        // Gọi hàm nạp chức vụ theo phòng ban
+        initializeChucVuData();
+
+        // Khi chọn phòng ban thì load danh sách chức vụ tương ứng
+        suanhansu_cbmaPB.valueProperty().addListener((obs, oldPB, newPB) -> {
+            if (newPB != null) {
+                String tenPhong = newPB.getTenPhong();
+                List<String> chucVuList = phongBanToChucVuMap.getOrDefault(
+                    tenPhong, Collections.singletonList("Chưa có chức vụ"));
+                suanhansu_cbchucvu.setItems(FXCollections.observableArrayList(chucVuList));
+                suanhansu_cbchucvu.getSelectionModel().clearSelection();
+            }
+        });
+
+        // Set danh sách chức vụ tương ứng với phòng ban hiện tại
+        PhongBan phongBanHienTai = DataService.getInstance().timPhongBanTheoMa(ns.getMaPhongBan());
+        if (phongBanHienTai != null) {
+            String tenPhong = phongBanHienTai.getTenPhong();
+            List<String> chucVuList = phongBanToChucVuMap.getOrDefault(
+                tenPhong, Collections.singletonList("Chưa có chức vụ"));
+            suanhansu_cbchucvu.setItems(FXCollections.observableArrayList(chucVuList));
+        }
 
         // Đặt giá trị hiện tại
         suanhansu_cbgioitinh.setValue(ns.getGioiTinh());
@@ -82,6 +124,7 @@ public class SuaNhanSu {
         return str.matches("\\d+");
     }
     
+    // Nút "Sửa"
     @FXML
     private void suanhansu_suaAction() throws IOException {
         String hoTen = suanhansu_txten.getText().trim();
@@ -93,14 +136,14 @@ public class SuaNhanSu {
         PhongBan selectedPB = suanhansu_cbmaPB.getValue();
         String chucVu = suanhansu_cbchucvu.getValue();
     
-
+        // Kiểm tra trường bắt buộc
         if (hoTen.isEmpty() || gioiTinh == null || gioiTinh.isEmpty() || ngaySinh == null || cccd.isEmpty() || email.isEmpty() || sdt.isEmpty()|| selectedPB == null || chucVu == null || chucVu.isEmpty()) {
             canhbao.canhbao("Thiếu thông tin",
                 "Vui lòng điền đầy đủ tất cả thông tin!");
             return;
         }
 
-        // --- Kiểm tra CCCD ---
+        // Kiểm tra cccd
         if (!cccd.isEmpty()) {
             if (!isNumeric(cccd)) {
                 canhbao.canhbao("Sai định dạng", "CCCD chỉ được phép chứa các ký tự số (0–9).");
@@ -118,7 +161,7 @@ public class SuaNhanSu {
             }
         }
 
-        // --- Kiểm tra Email ---
+        // Kiểm tra email
         if (!email.isEmpty()) {
             boolean emailTrung = dataService.getDsNhanSu().stream()
                 .anyMatch(p -> !p.getMaNV().equals(ns.getMaNV()) && email.equalsIgnoreCase(p.getEmail()));
@@ -128,7 +171,7 @@ public class SuaNhanSu {
             }
         }
 
-        // --- Kiểm tra SĐT ---
+        // Kiểm tra SĐT 
         if (!sdt.isEmpty()) {
             if (!isNumeric(sdt)) {
                 canhbao.canhbao("Sai định dạng", "SĐT chỉ được phép chứa các ký tự số (0–9).");
@@ -146,36 +189,74 @@ public class SuaNhanSu {
             }
         }
 
-        // --- Kiểm tra chức vụ ---
-        if (chucVu == null || chucVu.isEmpty()) {
-            canhbao.canhbao("Thiếu chức vụ", "Vui lòng chọn chức vụ cho nhân sự.");
+
+        // Kiểm tra trùng chức vụ đặc biệt trong cùng phòng ban
+        if (chucVu.toLowerCase().contains("trưởng phòng") || chucVu.toLowerCase().contains("phó phòng")) {
+            String maPhongBanMoi = selectedPB.getMaPhong();
+
+            boolean daCoNguoiGiuChucVu = dataService.getDsNhanSu().stream()
+                .anyMatch(p ->
+                    !p.getMaNV().equals(ns.getMaNV()) && // loại chính nhân viên đang sửa
+                    p.getMaPhongBan().equalsIgnoreCase(maPhongBanMoi) &&
+                    p.getChucVu() != null &&
+                    p.getChucVu().equalsIgnoreCase(chucVu)
+                );
+
+            if (daCoNguoiGiuChucVu) {
+                canhbao.canhbao(
+                    "Trùng chức vụ",
+                    "Phòng \"" + selectedPB.getTenPhong() + "\" đã có " + chucVu.toLowerCase() + ".\n" +
+                    "Không thể gán thêm người với chức vụ này."
+                );
+                return;
+            }
+        }
+        // Kiểm tra xem chức vụ có thuộc phòng ban đã chọn không
+        if (chucVu == null || chucVu.isEmpty() || chucVu.contains("Chưa có chức vụ")) {
+             canhbao.canhbao("Thiếu chức vụ", "Vui lòng chọn chức vụ cho nhân sự.");
             return;
         }
 
-        // --- Cập nhật dữ liệu ---
-        ns.setHoTen(hoTen);
-        ns.setGioiTinh(gioiTinh);
-        ns.setNgaySinh(ngaySinh);
-        ns.setCccd(cccd);
-        ns.setEmail(email);
-        ns.setSdt(sdt);
-        ns.setMaPhongBan(selectedPB.getMaPhong());
-        ns.setChucVu(chucVu);
+         // Popup xác nhận trước khi lưu thay đổi
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Xác nhận sửa thông tin");
+        confirm.setHeaderText("Bạn có chắc chắn muốn lưu thay đổi?");
+        confirm.setContentText("Nhân sự: " + ns.getMaNV() + " - " + ns.getHoTen());
+        ButtonType yesBtn = new ButtonType("Xác nhận", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(yesBtn, cancelBtn);
 
-        dataService.updateNhanSu(ns);
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == yesBtn) {
+                // --- Nếu người dùng xác nhận ---
+                ns.setHoTen(hoTen);
+                ns.setGioiTinh(gioiTinh);
+                ns.setNgaySinh(ngaySinh);
+                ns.setCccd(cccd);
+                ns.setEmail(email);
+                ns.setSdt(sdt);
+                ns.setMaPhongBan(selectedPB.getMaPhong());
+                ns.setChucVu(chucVu);
 
-        // --- Thông báo thành công & quay lại ---
-        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("nhansu.fxml"));
-        javafx.scene.Parent root = loader.load();
+                dataService.updateNhanSu(ns);
 
-        javafx.stage.Stage stage = (javafx.stage.Stage) suanhansu_btsua.getScene().getWindow();
-        stage.getScene().setRoot(root);
+                canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!");
 
-        // --- Sau khi giao diện đã load xong, hiển thị thông báo ---
-        javafx.application.Platform.runLater(() -> 
-            canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!")
-        );
-    }   
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("nhansu.fxml"));
+                    Parent root = loader.load();
+                    suanhansu_btsua.getScene().setRoot(root);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    canhbao.canhbao("Lỗi", "Không thể quay lại màn hình nhân sự.");
+                }
+            } else {
+                canhbao.thongbao("Đã hủy", "Không có thay đổi nào được lưu.");
+            }
+        });
+    }
+    
+    // Nút "Trở lại"
     @FXML
     private void suanhansu_trolaiAction() {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);

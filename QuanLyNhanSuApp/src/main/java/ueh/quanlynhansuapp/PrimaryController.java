@@ -16,11 +16,17 @@ import java.io.FileOutputStream;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+/*
+Controller của giao diện phòng ban, phân quyền Admin (phongban.fxml)
+Chức năng: thêm, sửa, xóa, tìm kiếm và xuất danh sách nhân sự của từng phòng.
+*/
 
 public class PrimaryController {
     
@@ -51,12 +57,12 @@ public class PrimaryController {
     @FXML private TableColumn<PhongBan, String> phongban_colemail;
     @FXML private TableColumn<PhongBan, Integer> phongban_coltong;
 
-    // Lấy instance của DataService để truy cập dữ liệu chung
+    // Truy cập dữ liệu chung qua DataService
     private final DataService dataService = DataService.getInstance();
 
     @FXML
     public void initialize() {
-        // --- CÀI ĐẶT CÁC CỘT CHO BẢNG PHÒNG BAN ---
+        // Cài đặt dữ liệu cho các cột của bảng phòng ban
         phongban_colma.setCellValueFactory(new PropertyValueFactory<>("maPhong"));
         phongban_colten.setCellValueFactory(new PropertyValueFactory<>("tenPhong"));
         phongban_colmaTP.setCellValueFactory(new PropertyValueFactory<>("maTruongPhong"));
@@ -64,10 +70,10 @@ public class PrimaryController {
         phongban_colemail.setCellValueFactory(new PropertyValueFactory<>("emailPhong"));
         phongban_coltong.setCellValueFactory(new PropertyValueFactory<>("tongSoNhanVien"));
 
-        // --- GÁN NGUỒN DỮ LIỆU TỪ DATASERVICE ---
+        // Gán dữ liệu từ DataService
         phongban_tbphongban.setItems(dataService.getDsPhongBan());
 
-        // --- SỰ KIỆN KHI CHỌN MỘT DÒNG TRONG BẢNG ---
+        //  Khi chọn 1 dòng trong bảng, hiển thị thông tin lên các ô nhập liệu
         phongban_tbphongban.getSelectionModel().selectedItemProperty().addListener((obs, oldV, pb) -> {
             if (pb != null) {
                 phongban_txma.setText(pb.getMaPhong());
@@ -78,15 +84,19 @@ public class PrimaryController {
                 phongban_txtong.setText(String.valueOf(pb.getTongSoNhanVien()));
             }
         });
+        // Ô tổng số nhân viên chỉ đọc
         phongban_txtong.setEditable(false);
     }
+    
+    // Hàm hỗ trợ
     private boolean isNumeric(String str) {
         if (str == null) 
             return false;
-    // Sử dụng regex để kiểm tra chuỗi có chứa TOÀN BỘ là số hay không
+    // Sử dụng regex để kiểm tra chuỗi có chứa toàn bộ là số hay không
         return str.matches("\\d+");
     }
 
+    // Nút "Thêm"
     @FXML
     private void phongban_themAction() {
         String maPhong = phongban_txma.getText().trim();
@@ -95,11 +105,13 @@ public class PrimaryController {
         String sdtPhong = phongban_txsdt.getText().trim();
         String emailPhong = phongban_txemail.getText().trim();
 
+        // Kiểm tra thông tin bắt buộc
         if (maPhong.isEmpty() || tenPhong.isEmpty()) {
             canhbao.canhbao("Thiếu thông tin", "Mã phòng và Tên phòng là bắt buộc.");
             return;
         }
 
+        // Kiểm tra độ dài mã phòng
         if (maPhong.length() != 3) {
             canhbao.canhbao("Sai định dạng", "Mã phòng ban phải có đúng 3 ký tự.");
             return;
@@ -158,6 +170,7 @@ public class PrimaryController {
             }  
         }    
 
+        // Tạo đối tượng PhongBan mới
         PhongBan pb = new PhongBan(maPhong, tenPhong, maTP.isEmpty() ? null : maTP, sdtPhong, emailPhong, 0);
         
         // Thêm thông qua DataService để đồng bộ với Database
@@ -172,6 +185,7 @@ public class PrimaryController {
         }
     }
     
+    // Nút "Xóa"
     @FXML 
     private void phongban_xoaAction() { 
         PhongBan selectedPhongBan = phongban_tbphongban.getSelectionModel().getSelectedItem();
@@ -184,7 +198,7 @@ public class PrimaryController {
         boolean dongY = canhbao.xacNhan(
                 "Xác nhận xóa và di chuyển",
                 "Bạn có chắc chắn muốn xóa phòng ban: " + selectedPhongBan.getTenPhong() + "?",
-                "Tất cả nhân viên trong phòng này sẽ được chuyển sang phòng 'PB00 - Phòng ban Chờ phân công'."
+                "Tất cả nhân viên trong phòng này sẽ được chuyển sang phòng 'P00 - Phòng ban Chờ phân công'."
         );
 
         if (dongY) {
@@ -193,7 +207,7 @@ public class PrimaryController {
             canhbao.thongbao("Thành công", "Đã xóa phòng ban và di chuyển nhân viên.");
         }
     }
-    
+    // Nút "Sửa"
     @FXML 
     private void phongban_suaAction() throws IOException  { 
         PhongBan pbselected = phongban_tbphongban.getSelectionModel().getSelectedItem();
@@ -204,21 +218,22 @@ public class PrimaryController {
             return;
         }
         
+        // Tải giao diện "suaphongban.fxml" và truyền dữ liệu sang controller
         FXMLLoader loader = new FXMLLoader(getClass().getResource("suaphongban.fxml"));
         Parent root = loader.load();
-    
         // Lấy controller của màn hình "suaphongban"
         SuaPhongBan controller = loader.getController();
         // Gọi hàm setData để truyền phòng ban đã chọn qua
         controller.setData(pbselected);
     
-        // Lấy Scene hiện tại và set root mới
+        // Hiển thị giao diện sửa trên cùng cửa sổ
         phongban_btsua.getScene().setRoot(root);
     }
     
+    // Nút "TÌm Kiếm"
     @FXML 
     private void phongban_timkiemAction() throws IOException { 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("timkiemphongban.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("timkiemphongban.fxml")); // Tải giao diện "timkiemphongban.fxml" 
         Parent root = loader.load();
 
         // Lấy controller của màn hình "timkiemphongban"
@@ -226,7 +241,7 @@ public class PrimaryController {
         // Gọi hàm setData để truyền toàn bộ danh sách phòng ban qua
         controller.setData(dataService.getDsPhongBan());
     
-        // Lấy Scene hiện tại và set root mới
+        // Hiển thị giao diện sửa trên cùng cửa sổ
         phongban_bttimkiem.getScene().setRoot(root);
     }
     
@@ -234,74 +249,88 @@ public class PrimaryController {
     private void phongban_xuatAction() {
         PhongBan selected = phongban_tbphongban.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            canhbao.canhbao("Chưa chọn phòng ban", "Vui lòng chọn 1 hàng trước khi xuất thông tin.");
+            canhbao.canhbao("Chưa chọn phòng ban", "Vui lòng chọn một hàng trước khi xuất thông tin.");
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, 
-            "Bạn có muốn xuất thông tin tất cả nhân viên của phòng \"" + selected.getTenPhong() + "\" ra file Excel không?", 
-            ButtonType.YES, ButtonType.NO);
-        confirm.setTitle("Xác nhận xuất file");
-        confirm.showAndWait();
+        // Popup Xác nhận xuất file
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Xác nhận xuất Excel");
+        confirm.setHeaderText("Bạn có muốn xuất thông tin tất cả nhân viên của phòng này?");
+        confirm.setContentText("Phòng ban: " + selected.getMaPhong() + " - " + selected.getTenPhong());
 
-        if (confirm.getResult() == ButtonType.NO) return;
+        ButtonType yesBtn = new ButtonType("Xác nhận", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(yesBtn, cancelBtn);
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Chọn nơi lưu file Excel");
-        fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Excel File (*.xlsx)", "*.xlsx"));
-        fileChooser.setInitialFileName("NhanVien_" + selected.getTenPhong() + ".xlsx");
-        File file = fileChooser.showSaveDialog(new Stage());
-        if (file == null) return;
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == yesBtn) {
+                // Chọn nơi lưu file 
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Chọn nơi lưu file Excel");
+                fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Excel File (*.xlsx)", "*.xlsx"));
+                fileChooser.setInitialFileName("NhanVien_" + selected.getTenPhong() + ".xlsx");
+                File file = fileChooser.showSaveDialog(new Stage());
+                if (file == null) return;
 
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        Alert progressAlert = new Alert(Alert.AlertType.INFORMATION);
-        progressAlert.setTitle("Đang xuất file...");
-        progressAlert.setHeaderText("Vui lòng chờ trong giây lát...");
-        progressAlert.getDialogPane().setContent(progressIndicator);
-        progressAlert.show();
+                //  Hiển thị progress
+                ProgressIndicator progressIndicator = new ProgressIndicator();
+                Alert progressAlert = new Alert(Alert.AlertType.INFORMATION);
+                progressAlert.setTitle("Đang xuất file...");
+                progressAlert.setHeaderText("Vui lòng chờ trong giây lát...");
+                progressAlert.getDialogPane().setContent(progressIndicator);
+                progressAlert.show();
 
-        Task<Void> exportTask = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                exportNhanSuTheoPhong(file, selected.getMaPhong());
-                return null;
-            }
-        };
+                // Tạo Task chạy nền tránh treo UI
+                Task<Void> exportTask = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        exportNhanSuTheoPhong(file, selected);
+                        return null;
+                    }
+                };
 
-        exportTask.setOnSucceeded(e -> {
-            progressAlert.close();
-            Alert success = new Alert(Alert.AlertType.INFORMATION);
-            success.setTitle("Xuất thành công!");
-            success.setHeaderText("Đã xuất thông tin thành công!");
-            success.setContentText("File đã lưu tại:\n" + file.getAbsolutePath());
+                exportTask.setOnSucceeded(e -> {
+                    progressAlert.close();
+                    Alert success = new Alert(Alert.AlertType.INFORMATION);
+                    success.setTitle("Xuất thành công!");
+                    success.setHeaderText("Đã xuất dữ liệu thành công!");
+                    success.setContentText("File đã lưu tại:\n" + file.getAbsolutePath());
 
-            ButtonType openBtn = new ButtonType("Mở file");
-            ButtonType backBtn = new ButtonType("Quay lại");
-            success.getButtonTypes().setAll(openBtn, backBtn);
-            success.showAndWait();
+                    ButtonType openBtn = new ButtonType("Mở file");
+                    ButtonType backBtn = new ButtonType("Quay lại");
+                    success.getButtonTypes().setAll(openBtn, backBtn);
+                    success.showAndWait();
 
-            if (success.getResult() == openBtn) {
-                try {
-                    java.awt.Desktop.getDesktop().open(file);
-                } catch (IOException ex) {
-                    canhbao.canhbao("Lỗi", "Không thể mở file vừa tạo.");
-                }
+                    if (success.getResult() == openBtn) {
+                        try {
+                            java.awt.Desktop.getDesktop().open(file);
+                        } catch (IOException ex) {
+                            canhbao.canhbao("Lỗi", "Không thể mở file vừa tạo.");
+                        }
+                    }
+                });
+
+                exportTask.setOnFailed(e -> {
+                    progressAlert.close();
+                    canhbao.canhbao("Lỗi", "Không thể xuất file Excel.\nChi tiết: " + exportTask.getException());
+                });
+
+                new Thread(exportTask).start();
+            } else {
+                canhbao.thongbao("Đã hủy", "Không có dữ liệu nào được xuất.");
             }
         });
-
-        exportTask.setOnFailed(e -> {
-            progressAlert.close();
-            canhbao.canhbao("Lỗi", "Không thể xuất file Excel.\nChi tiết: " + exportTask.getException());
-        });
-
-        new Thread(exportTask).start();
     }
 
-    // === HÀM HỖ TRỢ ===
-    private void exportNhanSuTheoPhong(File file, String maPhong) throws IOException {
+    
+    // Hàm xuất thông tin nhân sự của 1 phòng ban ra file Excel
+    private void exportNhanSuTheoPhong(File file, PhongBan phongBan) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("NhanVien_" + maPhong);
+            Sheet sheet = workbook.createSheet("NhanVien_" + phongBan.getMaPhong());
+
+            // eader
             Row header = sheet.createRow(0);
             String[] headers = {
                 "Mã NV", "Họ tên", "Giới tính", "Ngày sinh",
@@ -311,10 +340,11 @@ public class PrimaryController {
                 header.createCell(i).setCellValue(headers[i]);
             }
 
+            // Dữ liệu
             ObservableList<NhanSu> list = dataService.getDsNhanSu();
             int rowNum = 1;
             for (NhanSu ns : list) {
-                if (ns.getMaPhongBan().equals(maPhong)) {
+                if (ns.getMaPhongBan().equals(phongBan.getMaPhong())) {
                     Row row = sheet.createRow(rowNum++);
                     row.createCell(0).setCellValue(ns.getMaNV());
                     row.createCell(1).setCellValue(ns.getHoTen());
@@ -323,25 +353,24 @@ public class PrimaryController {
                     row.createCell(4).setCellValue(ns.getCccd());
                     row.createCell(5).setCellValue(ns.getEmail());
                     row.createCell(6).setCellValue(ns.getSdt());
-                    row.createCell(7).setCellValue(ns.getMaPhongBan());
+                    row.createCell(7).setCellValue(phongBan.getTenPhong());
                     row.createCell(8).setCellValue(ns.getChucVu());
                 }
             }
 
+            // Tự động căn chỉnh độ rộng cột
             for (int i = 0; i < headers.length; i++) {
                 sheet.autoSizeColumn(i);
             }
 
+            // Ghi file
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 workbook.write(fos);
             }
         }
     }
 
-
-
-    
-    
+    // Nút "Quay lại"
     @FXML
     private void phongban_quaylaiAction() throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("main.fxml"));

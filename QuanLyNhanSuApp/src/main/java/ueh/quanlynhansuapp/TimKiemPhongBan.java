@@ -16,10 +16,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-/**
- *
- * @author lagia
- */
+
+/*
+    Controller cho giao diện "Tìm kiếm phòng ban", phân quyền Admin (timkiemphongban.fxml)
+    Chức năng:
+    - Cho phép nhập mã phòng ban để tìm kiếm
+    - Hiển thị kết quả trong bảng
+    - Chỉ hiển thị thông tin, không cho chỉnh sửa
+*/
 public class TimKiemPhongBan {
     // Khai báo cho các ô nhập liệu (TextField)
     @FXML private TextField timkiemphongban_txma;
@@ -55,21 +59,7 @@ public class TimKiemPhongBan {
         timkiemphongban_colsdt.setCellValueFactory(new PropertyValueFactory<>("sdtPhong"));
         timkiemphongban_colemail.setCellValueFactory(new PropertyValueFactory<>("emailPhong"));
         timkiemphongban_coltong.setCellValueFactory(new PropertyValueFactory<>("tongSoNhanVien"));
-       
-        
-        /*timkiemphongban_tbphongban.getSelectionModel().selectedItemProperty().addListener((obs, oldV, pb) -> {
-            if (pb != null) {
-                // Hiển thị dữ liệu của phòng ban (pb) lên các ô tìm kiếm
-                timkiemphongban_txma.setText(pb.getMaPhong());
-                timkiemphongban_txten.setText(pb.getTenPhong());
-                timkiemphongban_txmaTP.setText(pb.getMaTruongPhong());
-                timkiemphongban_txsdt.setText(pb.getSdtPhong());
-                timkiemphongban_txemail.setText(pb.getEmailPhong());
-                timkiemphongban_txtong.setText(String.valueOf(pb.getTongSoNhanVien()));
-            }
-        }); */
-
-        
+             
         // Gán bảng hiển thị danh sách kết quả
         timkiemphongban_tbphongban.setItems(ketQuaTimKiem);
 
@@ -78,6 +68,7 @@ public class TimKiemPhongBan {
 
     }
     
+    // khóa hoặc mở khóa các ô nhập
     private void setInfoFieldsEditable(boolean editable) {
         timkiemphongban_txten.setEditable(editable);
         timkiemphongban_txmaTP.setEditable(editable);
@@ -89,16 +80,13 @@ public class TimKiemPhongBan {
     // Nhận dữ liệu gốc từ controller chính
     public void setData(ObservableList<PhongBan> allPhongBan) {
         this.masterData.setAll(allPhongBan);
-        
-    /*public void setData(ObservableList<PhongBan> allPhongBan) {
-        this.masterData.setAll(allPhongBan); // Sao chép toàn bộ dữ liệu vào danh sách gốc
-        timkiemphongban_tbphongban.setItems(masterData); // Hiển thị tất cả lên bảng lúc đầu */
     }
 
     @FXML
     private void timkiemphongban_timkiemAction() {
         // Lấy các giá trị tìm kiếm từ các ô TextField
         String maPB_input = timkiemphongban_txma.getText().trim();
+        // kiểm tra người dùng đã nhập mã phòng hay chưa 
         if (maPB_input.isEmpty()) {
             canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập Mã phòng ban để tìm kiếm!");
             return;
@@ -112,7 +100,7 @@ public class TimKiemPhongBan {
                 break;
             }
         }
-
+        // nếu không tìm thấy phòng ban
         if (ketQua == null) {
             canhbao.thongbao("Không tìm thấy", "Không tồn tại phòng ban có mã \"" + maPB_input + "\"");
             return;
@@ -133,6 +121,7 @@ public class TimKiemPhongBan {
         timkiemphongban_tbphongban.getSelectionModel().select(ketQua);
     }
 
+    // Hàm hiển thị thông tin của phòng ban lên các ô chi tiết
     private void showPhongBanInfo(PhongBan pb) {
         timkiemphongban_txten.setText(pb.getTenPhong());
         timkiemphongban_txmaTP.setText(pb.getMaTruongPhong());
@@ -141,6 +130,7 @@ public class TimKiemPhongBan {
         timkiemphongban_txtong.setText(String.valueOf(pb.getTongSoNhanVien()));
     }
 
+    // Hàm xóa thông tin trong form
     private void clearInfoFields() {
         timkiemphongban_txten.clear();
         timkiemphongban_txmaTP.clear();
@@ -149,6 +139,7 @@ public class TimKiemPhongBan {
         timkiemphongban_txtong.clear();
     }
 
+    // Nút "Trở lại"
     @FXML
     private void timkiemphongban_trolaiAction() throws IOException {
         boolean dongY = canhbao.xacNhan(

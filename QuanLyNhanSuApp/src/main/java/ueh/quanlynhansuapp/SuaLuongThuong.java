@@ -9,20 +9,23 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 /**
- * Controller cho màn hình "Sửa lương thưởng"
- * Chuẩn hóa: Bao phủ ngoại lệ, kiểm tra hợp lệ, auto tính tổng lương.
+Controller cho màn hình "Sửa lương thưởng" phân quyền Admin (sualuongthuong.fxml)
+Chức năng:
+ - Hiển thị dữ liệu lương thưởng được chọn từ bảng chính.
+ - Chỉnh sửa, kiểm tra hợp lệ và lưu thay đổi.
+ - Tự động tính tổng lương (Lương cơ bản + Phụ cấp + Thưởng - Khấu trừ).
  */
 public class SuaLuongThuong {
 
-    // ===== Định dạng ngày dùng chung =====
+    // Các định dạng ngày tháng sử dụng trong form 
     private static final DateTimeFormatter MONTH_YEAR = DateTimeFormatter.ofPattern("MM/yyyy");
     private static final DateTimeFormatter YMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DMY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ===== Biến =====
+    // Biến dữ liệu được truyền vào từ form chính
     private LuongThuong luongThuong;
 
-    // ====== FXML Components ======
+    // Liên kết fxml
     @FXML private TextField sualuongthuong_txmaluong;
     @FXML private TextField sualuongthuong_txmaNV;
     @FXML private DatePicker sualuongthuong_datethangnam;
@@ -35,12 +38,10 @@ public class SuaLuongThuong {
     @FXML private Button sualuongthuong_btsua;
     @FXML private Button sualuongthuong_btquaylai;
 
-    // ==================== KHỞI TẠO ====================
-
     @FXML
     public void initialize() {
         try {
-            // Không cho sửa mã lương (khóa chính)
+            // Không cho sửa mã lương (khóa chính)và tổng lương
             sualuongthuong_txmaluong.setEditable(false);
             sualuongthuong_txtongluong.setEditable(false);
             sualuongthuong_txtongluong.setStyle("-fx-alignment: CENTER-LEFT;");
@@ -52,7 +53,7 @@ public class SuaLuongThuong {
             sualuongthuong_txthuong.textProperty().addListener(recalc);
             sualuongthuong_txkhautru.textProperty().addListener(recalc);
 
-            // Ràng buộc: chỉ cho phép nhập số nguyên dương
+            // Ràng buộc => chỉ cho phép nhập số nguyên dương
             addIntegerOnlyValidation(sualuongthuong_txluongcoban, "Lương cơ bản");
             addIntegerOnlyValidation(sualuongthuong_txphucap, "Phụ cấp");
             addIntegerOnlyValidation(sualuongthuong_txthuong, "Thưởng");
@@ -61,14 +62,15 @@ public class SuaLuongThuong {
             canhbao.canhbao("Lỗi khởi tạo", "Không thể khởi tạo form sửa: " + e.getMessage());
         }
     }
+    
 
-    // ==================== NHẬN DỮ LIỆU TỪ FORM CHÍNH ====================
-
+    // Nhận dữ liệu từ form chính
     public void setLuongThuong(LuongThuong lt) {
         try {
             this.luongThuong = lt;
             if (lt == null) return;
 
+            // Gán dữ liệu vào các ô tương ứng
             sualuongthuong_txmaluong.setText(lt.getMaLuong());
             sualuongthuong_txmaNV.setText(lt.getMaNhanVien());
             sualuongthuong_txluongcoban.setText(doubleToPlain(lt.getLuongCoBan()));
@@ -77,12 +79,14 @@ public class SuaLuongThuong {
             sualuongthuong_txkhautru.setText(doubleToPlain(lt.getKhauTru()));
             sualuongthuong_txtongluong.setText(doubleToPlain(lt.getTongLuong()));
 
+            // Chuyển định dạng tháng/năm sang LocalDate
             try {
                 sualuongthuong_datethangnam.setValue(LocalDate.parse("01/" + lt.getThangNam(), DMY));
             } catch (DateTimeParseException ex) {
                 sualuongthuong_datethangnam.setValue(null);
             }
 
+            // Chuyển định dạng ngày chi trả
             try {
                 String ngay = lt.getNgayChiTra();
                 LocalDate d = ngay.contains("/") ? LocalDate.parse(ngay, DMY) : LocalDate.parse(ngay, YMD);
@@ -96,8 +100,7 @@ public class SuaLuongThuong {
         }
     }
 
-    // ==================== NÚT SỬA ====================
-
+    //Nút sửa
     @FXML
     private void sualuongthuong_suaAction() {
         try {
@@ -106,39 +109,42 @@ public class SuaLuongThuong {
                 return;
             }
 
+            // Lấy dữ liệu từ giao diện
             String maLuong = safeTrim(sualuongthuong_txmaluong.getText());
             String maNV = safeTrim(sualuongthuong_txmaNV.getText());
             LocalDate thangNamDate = sualuongthuong_datethangnam.getValue();
             LocalDate ngayChiTraDate = sualuongthuong_datengaychitra.getValue();
 
-            // ===== Kiểm tra thiếu dữ liệu =====
+            // Kiểm tra thiếu dữ liệu 
             if (maNV.isEmpty() || thangNamDate == null || ngayChiTraDate == null) {
                 canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin trước khi lưu!");
                 return;
             }
 
-            // ===== Parse tiền =====
+            // Parse các giá trị tiền
             double luongCoBan = parseMoneySafe(sualuongthuong_txluongcoban.getText(), "Lương cơ bản");
             double phuCap = parseMoneySafe(sualuongthuong_txphucap.getText(), "Phụ cấp");
             double thuong = parseMoneySafe(sualuongthuong_txthuong.getText(), "Thưởng");
             double khauTru = parseMoneySafe(sualuongthuong_txkhautru.getText(), "Khấu trừ");
 
+            // Không cho nhập giá trị âm
             if (luongCoBan < 0 || phuCap < 0 || thuong < 0 || khauTru < 0) {
                 canhbao.canhbao("Giá trị không hợp lệ", "Không được nhập số âm cho các trường lương!");
                 return;
             }
+            // Khấu trừ không thể lớn hơn tổng thu nhập
             if (khauTru > (luongCoBan + phuCap + thuong)) {
                 canhbao.canhbao("Khấu trừ quá cao", "Khoản khấu trừ không thể vượt tổng thu nhập!");
                 return;
             }
 
-            // ===== Kiểm tra ngày =====
+            // Ngày chi trả phải sau hoặc bằng tháng lương
             if (ngayChiTraDate.isBefore(thangNamDate.withDayOfMonth(1))) {
                 canhbao.canhbao("Lỗi thời gian", "Ngày chi trả không thể trước tháng lương!");
                 return;
             }
 
-            // ===== Kiểm tra nhân viên có tồn tại =====
+            // Kiểm tra mã nhân viên có tồn tại trong hệ thống
             boolean tonTaiNV = DataService.getInstance().getDsNhanSu()
                     .stream().anyMatch(ns -> ns.getMaNV().equalsIgnoreCase(maNV));
             if (!tonTaiNV) {
@@ -146,13 +152,13 @@ public class SuaLuongThuong {
                 return;
             }
 
-            // ===== Xác nhận =====
+            // Popup xác nhận
             if (!canhbao.xacNhan("Xác nhận sửa", "Lưu thay đổi?", 
                     "Mã lương: " + maLuong + "\nNhân viên: " + maNV)) {
                 return;
             }
 
-            // ===== Cập nhật vào đối tượng =====
+            // Cập nhật vào đối tượng 
             luongThuong.setMaNhanVien(maNV);
             luongThuong.setThangNam(thangNamDate.format(MONTH_YEAR));
             luongThuong.setLuongCoBan(luongCoBan);
@@ -161,10 +167,10 @@ public class SuaLuongThuong {
             luongThuong.setKhauTru(khauTru);
             luongThuong.setNgayChiTra(ngayChiTraDate.format(YMD));
 
-            // ===== Lưu xuống DB =====
+            // Lưu xuống db
             try {
                 DataService.getInstance().updateLuongThuong(luongThuong);
-                canhbao.thongbao("Thành công 🎉", "Đã cập nhật thông tin lương thưởng!");
+                canhbao.thongbao("Thành công", "Đã cập nhật thông tin lương thưởng!");
                 ((Stage) sualuongthuong_btsua.getScene().getWindow()).close();
             } catch (Exception ex) {
                 canhbao.canhbao("Lỗi cơ sở dữ liệu", "Không thể cập nhật dữ liệu: " + ex.getMessage());
@@ -176,8 +182,7 @@ public class SuaLuongThuong {
         }
     }
 
-    // ==================== NÚT QUAY LẠI ====================
-
+    // Nút "Quay lại"
     @FXML
     private void sualuongthuong_quaylaiAction() {
         try {
@@ -187,8 +192,10 @@ public class SuaLuongThuong {
         }
     }
 
-    // ==================== HÀM HỖ TRỢ ====================
-
+    
+    // Hàm hỗ trợ
+    
+    // Tính tổng lương khi người dùng thay đổi giá trị
     private void capNhatTongLuong() {
         try {
             double luongCoBan = parseMoneySafe(sualuongthuong_txluongcoban.getText(), "");
@@ -203,6 +210,7 @@ public class SuaLuongThuong {
         }
     }
 
+    // Chuyển double sang dạng hiển thị dễ đọc
     private String doubleToPlain(double v) {
         if (Math.abs(v - Math.rint(v)) < 1e-9) return String.valueOf((long)Math.rint(v));
         return String.format("%.2f", v);
@@ -212,6 +220,7 @@ public class SuaLuongThuong {
         return s == null ? "" : s.trim();
     }
 
+    // Parse chuỗi tiền về double
     private double parseMoneySafe(String s, String fieldName) {
         try {
             if (s == null || s.isBlank()) return 0;
@@ -224,6 +233,7 @@ public class SuaLuongThuong {
         }
     }
 
+    // Ràng buộc chỉ nhập số nguyên dương vào các textfield tiền
     private void addIntegerOnlyValidation(TextField field, String fieldName) {
         field.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) return;

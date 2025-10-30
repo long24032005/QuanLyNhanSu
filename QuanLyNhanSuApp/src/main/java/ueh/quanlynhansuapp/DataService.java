@@ -6,60 +6,61 @@ package ueh.quanlynhansuapp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+
+
+/*
+Lớp DataService là tầng trung gian giữa Controller và Database.
+ - Lưu trữ dữ liệu đã tải vào bộ nhớ.
+ - Cung cấp các hàm truy vấn, thêm, xóa, sửa.
+ */
 
 public class DataService {
-    private static DataService instance;
-    private final DatabaseManager dbManager; // Quản lý truy cập CSDL
+    private static DataService instance; // Đối tượng duy nhất của lớp này
+    private final DatabaseManager dbManager; // Dùng để thao tác với database
 
-    // === Danh sách dữ liệu trong bộ nhớ ===
+    // Danh sách dữ liệu trong bộ nhớ
     private final ObservableList<NhanSu> dsNhanSu = FXCollections.observableArrayList();
     private final ObservableList<PhongBan> dsPhongBan = FXCollections.observableArrayList();
     private final ObservableList<LuongThuong> dsLuongThuong = FXCollections.observableArrayList();
 
-    // === Singleton ===
+    // Lấy ra instance duy nhất của lớp (nếu chưa có thì tạo mới)
     public static DataService getInstance() {
         if (instance == null) {
             instance = new DataService();
         }
         return instance;
     }
-
+    // Hàm khởi tạo: kết nối với DatabaseManager và tải dữ liệu ban đầu
     private DataService() {
         dbManager = new DatabaseManager();
         reloadAllData(); // Tải dữ liệu lần đầu khi khởi động
     }
 
-    // ==========================================================
-    // 🔹 TẢI LẠI DỮ LIỆU
-    // ==========================================================
+    // Tải lại toàn bộ dữ liệu từ database vào các danh sách 
     public final void reloadAllData() {
         dsPhongBan.setAll(dbManager.loadAllPhongBan());
         dsNhanSu.setAll(dbManager.loadAllNhanSu());
         dsLuongThuong.setAll(dbManager.loadAllLuongThuong());
-        System.out.println("✅ Dữ liệu đã tải: " + dsNhanSu.size() + " nhân sự, " +
+        System.out.println("Dữ liệu đã tải: " + dsNhanSu.size() + " nhân sự, " +
                 dsPhongBan.size() + " phòng ban, " + dsLuongThuong.size() + " bản ghi lương thưởng.");
     }
 
-    // ==========================================================
-    // 🔹 GETTER CƠ BẢN
-    // ==========================================================
+    // Trả về danh sách hiện tại
     public ObservableList<NhanSu> getDsNhanSu() { return dsNhanSu; }
     public ObservableList<PhongBan> getDsPhongBan() { return dsPhongBan; }
     public ObservableList<LuongThuong> getDsLuongThuong() { return dsLuongThuong; }
 
-    // ==========================================================
-    // 🔹 TRA CỨU CƠ BẢN
-    // ==========================================================
+    
+    // Các hàm tìm kiếm cơ bản
+    
+    //  Tìm phòng ban theo mã phòng ban
     public PhongBan timPhongBanTheoMa(String maPhong) {
         return dsPhongBan.stream()
                 .filter(pb -> pb.getMaPhong().equalsIgnoreCase(maPhong))
                 .findFirst()
                 .orElse(null);
     }
-
+    // Tìm nhân sự theo mã nhân viên
     public NhanSu timNhanSuTheoMa(String maNV) {
         if (maNV == null || maNV.isEmpty()) return null;
         for (NhanSu ns : dsNhanSu) {
@@ -70,7 +71,7 @@ public class DataService {
         return null;
     }
     
-    // ======= KIỂM TRA TRÙNG CCCD =======
+    // Kiểm tra trùng CCCD
     public NhanSu timNhanSuTheoCCCD(String cccd) {
         if (cccd == null || cccd.isEmpty()) return null;
         for (NhanSu ns : dsNhanSu) {
@@ -81,7 +82,7 @@ public class DataService {
         return null; // không trùng
     }
 
-    // ======= KIỂM TRA TRÙNG EMAIL =======
+    // Kiểm tra trùng Email
     public NhanSu timNhanSuTheoEmail(String email) {
         if (email == null || email.isEmpty()) return null;
         for (NhanSu ns : dsNhanSu) {
@@ -92,7 +93,7 @@ public class DataService {
         return null;
     }
 
-    // ======= KIỂM TRA TRÙNG SỐ ĐIỆN THOẠI =======
+    // Kiểm tra trùng SDT
     public NhanSu timNhanSuTheoSDT(String sdt) {
         if (sdt == null || sdt.isEmpty()) return null;
         for (NhanSu ns : dsNhanSu) {
@@ -103,9 +104,7 @@ public class DataService {
         return null;
     }
 
-    // ==========================================================
-    // 🔹 LẤY DANH SÁCH LƯƠNG THEO MÃ NHÂN VIÊN (HÀM QUAN TRỌNG)
-    // ==========================================================
+    // Lấy danh sách lương thưởng theo mã nhân viên
     public ObservableList<LuongThuong> getLuongByMaNV(String maNV) {
         ObservableList<LuongThuong> ketQua = FXCollections.observableArrayList();
         if (maNV == null || maNV.trim().isEmpty()) {
@@ -126,9 +125,10 @@ public class DataService {
         return ketQua;
     }
 
-    // ==========================================================
-    // 🔹 CÁC HÀM THÊM / XÓA / SỬA
-    // ==========================================================
+    
+    // Các hàm thêm / xóa / sửa dữ liệu
+    
+    // Thêm phòng ban mới vào database
     public boolean addPhongBan(PhongBan pb) {
         if (dbManager.addPhongBan(pb)) {
             reloadAllData();
@@ -136,19 +136,23 @@ public class DataService {
         }
         return false;
     }
-
-    public void deletePhongBan(PhongBan selectedPhongBan) {
-        if (dbManager.deletePhongBanAndReassignNhanSu(selectedPhongBan.getMaPhong())) {
+    // Xóa phòng ban và chuyển nhân viên của phòng đó về mã 'P00
+    public void deletePhongBan(PhongBan phongBan) {
+        boolean ok = dbManager.deletePhongBanAndReassignNhanSu(phongBan.getMaPhong());
+        if (ok) {
             reloadAllData();
+            canhbao.thongbao("Thành công", "Đã xóa phòng ban và di chuyển nhân viên sang 'P00'.");
+        } else {
+            canhbao.canhbao("Lỗi", "Không thể xóa phòng ban hoặc di chuyển nhân viên.");
         }
     }
-
+    // Cập nhật lại thông tin phòng ban
     public void updatePhongBan(PhongBan pbDaSua) {
         if (dbManager.updatePhongBan(pbDaSua)) {
             reloadAllData();
         }
     }
-
+    //  Thêm nhân sự mới
     public boolean addNhanSu(NhanSu ns) {
         if (dbManager.addNhanSu(ns)) {
             reloadAllData();
@@ -156,19 +160,19 @@ public class DataService {
         }
         return false;
     }
-
+    // Xóa nhân sự theo mã NV
     public void deleteNhanSu(NhanSu ns) {
         if (dbManager.deleteNhanSu(ns.getMaNV())) {
             reloadAllData();
         }
     }
-
+    // Cập nhật thông tin nhân sự
     public void updateNhanSu(NhanSu nsDaSua) {
         if (dbManager.updateNhanSu(nsDaSua)) {
             reloadAllData();
         }
     }
-
+    // Thêm bản ghi lương thưởng
     public boolean addLuongThuong(LuongThuong lt) {
         if (dbManager.addLuongThuong(lt)) {
             reloadAllData();
@@ -176,13 +180,13 @@ public class DataService {
         }
         return false;
     }
-
+    // Cập nhật bản ghi lương thưởng
     public void updateLuongThuong(LuongThuong lt) {
         if (dbManager.updateLuongThuong(lt)) {
             reloadAllData();
         }
     }
-
+    // Xóa bản ghi lương thưởng
     public void deleteLuongThuong(LuongThuong lt) {
         if (dbManager.deleteLuongThuong(lt.getMaLuong())) {
             reloadAllData();

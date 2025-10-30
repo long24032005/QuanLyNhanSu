@@ -4,13 +4,12 @@
  */
 package ueh.quanlynhansuapp;
 
-/**
- *
- * @author philo
- */
+/*
+Lớp PhongBan mô tả thông tin của một phòng ban trong công ty.
+Mỗi đối tượng PhongBan tương ứng với một dòng trong bảng "phongban" trong cơ sở dữ liệu.
+*/
 public class PhongBan {
 
-    // Các thuộc tính đã tuân thủ quy ước camelCase
     private String maPhong;
     private String tenPhong;
     private String maTruongPhong;
@@ -18,11 +17,11 @@ public class PhongBan {
     private String emailPhong;
     private int tongSoNhanVien;
 
-    // Constructor mặc định
+    // Constructor mặc định (dùng khi cần tạo đối tượng trống)
     public PhongBan() {
     }
 
-    // Constructor đầy đủ tham số
+    // Constructor đầy đủ tham số (dùng khi đọc dữ liệu từ db hoặc thêm mới)
     public PhongBan(String maPhong, String tenPhong, String maTruongPhong, String sdtPhong, String emailPhong, int tongSoNhanVien) {
         this.maPhong = maPhong;
         this.tenPhong = tenPhong;
@@ -32,8 +31,7 @@ public class PhongBan {
         this.tongSoNhanVien = tongSoNhanVien;
     }
 
-    // --- GETTERS AND SETTERS ---
-    // Các phương thức đã tuân thủ quy ước
+    // getter/setter
     public String getMaPhong() { return maPhong; }
     public void setMaPhong(String maPhong) { this.maPhong = maPhong; }
 
@@ -52,6 +50,7 @@ public class PhongBan {
     public int getTongSoNhanVien() { return tongSoNhanVien; }
     public void setTongSoNhanVien(int tongSoNhanVien) { this.tongSoNhanVien = tongSoNhanVien; }
 
+    // Hàm hỗ trợ hiển thị debug
     @Override
     public String toString() {
         return "PhongBan{" +

@@ -14,6 +14,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/*
+Controller cho giao diện xem thông tin cá nhân của NHÂN VIÊN.
+Màn hình này chỉ hiển thị thông tin, không cho phép chỉnh sửa.
+ */
 public class NVNhanSuController {
 
     @FXML private TextField NVnhansu_txma;
@@ -27,7 +31,7 @@ public class NVNhanSuController {
     @FXML private TextField NVnhansu_txchucvu;
     @FXML private Button NVnhansu_btquaylai;
 
-    // Phương thức này nhận đối tượng NhanSu và hiển thị thông tin
+     // Nhận đối tượng NhanSu từ NVMainController và hiển thị thông tin lên giao diện
     public void displayNhanSuInfo(NhanSu user) {
         if (user == null) return;
 
@@ -44,7 +48,8 @@ public class NVNhanSuController {
         // Vô hiệu hóa tất cả các trường để người dùng chỉ có thể xem
         setFieldsEditable(false);
     }
-
+    
+    // Đặt trạng thái cho phép nhập/chỉnh sửa của các ô TextField
     private void setFieldsEditable(boolean editable) {
         NVnhansu_txma.setEditable(editable);
         NVnhansu_txten.setEditable(editable);
@@ -57,9 +62,10 @@ public class NVNhanSuController {
         NVnhansu_txchucvu.setEditable(editable);
     }
 
+     // Đóng cửa sổ hiện tại khi bấm nút "Quay lại"
     @FXML
     private void NVnhansu_quaylaiAction() {
-        // Lấy Stage (cửa sổ) hiện tại và đóng nó
+        // Lấy Stage hiện tại và đóng nó
         Stage stage = (Stage) NVnhansu_btquaylai.getScene().getWindow();
         stage.close();
     }

@@ -6,9 +6,12 @@ package ueh.quanlynhansuapp;
 
 import java.time.LocalDate;
 
+/*
+Lớp NhanSu mô tả thông tin của một nhân viên trong hệ thống.
+Mỗi đối tượng tương ứng với một dòng trong bảng "nhansu" trong cơ sở dữ liệu.
+*/
 public class NhanSu {
-
-    // Các thuộc tính đã tuân thủ quy ước camelCase
+    
     private String maNV;
     private String hoTen;
     private String gioiTinh;
@@ -20,11 +23,11 @@ public class NhanSu {
     private String chucVu;
     private String matKhau;
 
-    // Constructor mặc định
+    // Constructor mặc định (dùng khi cần tạo đối tượng rỗng)
     public NhanSu() {
     }
 
-    // Constructor đầy đủ tham số
+    // Constructor đầy đủ tham số (dùng khi đọc từ db hoặc thêm mới)
     public NhanSu(String maNV, String hoTen, String gioiTinh, LocalDate ngaySinh, String cccd, String email, String sdt, String maPhongBan, String chucVu) {
         this.maNV = maNV;
         this.hoTen = hoTen;
@@ -37,8 +40,7 @@ public class NhanSu {
         this.chucVu = chucVu;
     }
 
-    // --- GETTERS AND SETTERS ---
-    // Các phương thức đã tuân thủ quy ước
+    // getter/setter 
     public String getMaNV() { return maNV; }
     public void setMaNV(String maNV) { this.maNV = maNV; }
 
@@ -71,7 +73,7 @@ public class NhanSu {
 
     public void setMatKhau(String matKhau) { this.matKhau = matKhau; }
 
-
+    // Hàm hỗ trợ dùng trong debug
     @Override
     public String toString() {
         return "NhanSu{" +

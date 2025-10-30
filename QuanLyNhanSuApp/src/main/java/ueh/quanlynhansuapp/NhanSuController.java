@@ -23,12 +23,13 @@ import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-/**
- *
- * @author lagia
- */
+
+/*
+Controller của giao diện nhân sự thuộc phân quyền admin (nhansu.fxml)
+Quản lý toàn bộ chức năng thêm, sửa, xóa, tìm kiếm, xuất Excel.
+*/
 public class NhanSuController {
-    // --- KHAI BÁO BIẾN CHO NHÂN SỰ ---
+    // khai báo biến cho nhân sự 
     @FXML private TextField nhansu_txma;
     @FXML private TextField nhansu_txten;
     @FXML private ComboBox<String> nhansu_cbogioitinh;
@@ -56,25 +57,25 @@ public class NhanSuController {
     @FXML private Button nhansu_btxuat;
     @FXML private Button nhansu_bttimkiem;
     @FXML private Button nhansu_btquaylai;
-    // Lấy instance của DataService để truy cập dữ liệu chung
+    // Truy cập dữ liệu dùng chung qua lớp DataService 
     private final DataService dataService = DataService.getInstance();
     
     // Danh sách riêng cho ComboBox mã phòng ban
     private final ObservableList<String> dsMaPhongForCombo = FXCollections.observableArrayList();
     
-    // Map để lưu Tên Phòng Ban -> Danh sách Chức Vụ
+    // Map để lưu Tên Phòng Ban => Danh sách Chức Vụ
     private final Map<String, List<String>> phongBanToChucVuMap = new HashMap<>();
-    // Map để lưu Chức Vụ -> Tên Phòng Ban
+    // Map để lưu Chức Vụ => Tên Phòng Ban
     private final Map<String, String> chucVuToPhongBanMap = new HashMap<>();
-    // Danh sách chứa TẤT CẢ các chức vụ
+    // Danh sách chứa tất cả các chức vụ
     private final ObservableList<String> allChucVuList = FXCollections.observableArrayList();
     
-    // ngăn các listener chạy khi không cần thiết
+    // Ngăn các listener chạy khi không cần thiết
     private boolean dangCapNhatTuDong = false;
 
     @FXML
     public void initialize() {
-        // --- CÀI ĐẶT CÁC CỘT CHO BẢNG NHÂN SỰ ---
+        // Cài đặt các cột cho bảng nhân sự
         nhansu_colma.setCellValueFactory(new PropertyValueFactory<>("maNV"));
         nhansu_colten.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
         nhansu_colgioitinh.setCellValueFactory(new PropertyValueFactory<>("gioiTinh"));
@@ -85,16 +86,16 @@ public class NhanSuController {
         nhansu_colmaPB.setCellValueFactory(new PropertyValueFactory<>("maPhongBan"));
         nhansu_colchucvu.setCellValueFactory(new PropertyValueFactory<>("chucVu"));
 
-        // --- GÁN NGUỒN DỮ LIỆU TỪ DATASERVICE ---
+        // Gắn nguồn dữ liệu từ DataService
         nhansu_tbnhansu.setItems(dataService.getDsNhanSu());
 
-        // --- CÀI ĐẶT GIÁ TRỊ CHO CÁC COMBOBOX ---
+        // Cài đặt giá trị cho các combobox
         nhansu_cbogioitinh.setItems(FXCollections.observableArrayList("Nam", "Nữ", "Khác"));
         
         // 1. Khởi tạo dữ liệu chức vụ
         initializeChucVuData();
         
-        // 2. Mặc định, ComboBox chức vụ hiển thị TẤT CẢ chức vụ
+        // 2. Mặc định, ComboBox chức vụ hiển thị tất cả chức vụ
         nhansu_cbchucvu.setItems(allChucVuList);
         
         // Tải danh sách mã phòng ban vào ComboBox lần đầu
@@ -123,7 +124,7 @@ public class NhanSuController {
             }
         });
         
-        // --- KHI CHỌN MỘT DÒNG TRONG BẢNG ---
+        // Khi chọn một dòng trong bảng, tự động hiển thị dữ liệu lên form
         nhansu_tbnhansu.getSelectionModel().selectedItemProperty().addListener((obs, oldV, ns) -> {
             if (ns != null) {
                 dangCapNhatTuDong = true;
@@ -143,14 +144,15 @@ public class NhanSuController {
                 dangCapNhatTuDong = false;
             }
         });
+        // Khi chọn phòng ban, tự động lọc danh sách chức vụ phù hợp
         nhansu_cbmaPB.valueProperty().addListener((obs, oldMaPhong, newMaPhong) -> {
             String currentChucVu = nhansu_cbchucvu.getValue();
            
             if (newMaPhong == null) {
-                // Nếu không chọn phòng ban, hiển thị TẤT CẢ chức vụ
+                // Nếu không chọn phòng ban, hiển thị tất cả chức vụ
                 nhansu_cbchucvu.setItems(allChucVuList);
             } else {
-                // Lấy TÊN phòng ban từ MÃ phòng ban
+                // Lấy tên phòng ban từ mã phòng ban
                 PhongBan pb = newMaPhong;
                 if (pb != null) {
                     String tenPhong = pb.getTenPhong();
@@ -175,11 +177,12 @@ public class NhanSuController {
                 nhansu_cbchucvu.setValue(currentChucVu);
             }
         });
-        // cho ComboBox Chức Vụ (Scenario 2)
+        
+        // Khi chọn chức vụ, tự động gợi ý phòng ban tương ứng
         nhansu_cbchucvu.valueProperty().addListener((obs, oldChucVu, newChucVu) -> {
             if (dangCapNhatTuDong) return; // Nếu đang set tự động thì bỏ qua
 
-            // Chỉ tự động cập nhật phòng ban NẾU phòng ban đang trống
+            // Chỉ tự động cập nhật phòng ban Nếu phòng ban đang trống
            PhongBan currentPhongBan = nhansu_cbmaPB.getValue();
             if (newChucVu != null && !newChucVu.isEmpty() && !newChucVu.contains("Chưa có chức vụ")) {
                 
@@ -206,19 +209,19 @@ public class NhanSuController {
             }
         });
     }
-    /**
-     * Khởi tạo dữ liệu mẫu cho các Map
-     * Quan trọng: Tên phòng ban (key của Map) phải khớp 100%
-     * với Tên phòng ban (tenPhong) được lưu trong file Excel.
+    
+    /*
+     Khởi tạo dữ liệu mẫu cho các Map
+     - Quan trọng: Tên phòng ban (key của Map) phải khớp 100%
+     - với Tên phòng ban (tenPhong) được lưu trong file Excel.
      */
     private void initializeChucVuData() {
-        // Dùng TÊN PHÒNG BAN làm key
+        // Dùng Tên Phòng ban làm key
         phongBanToChucVuMap.put("Phòng Kế toán", Arrays.asList("Trưởng phòng Kế toán", "Phó phòng Kế toán", "Kế toán trưởng", "Kế toán tổng hợp", "Kế toán viên", "Kế toán kho", "Kế toán thuế", "Thực tập sinh Kế toán"));
         phongBanToChucVuMap.put("Phòng Nhân sự", Arrays.asList("Trưởng phòng Nhân sự", "Phó phòng Nhân sự", "Chuyên viên Tuyển dụng", "Chuyên viên C&B", "Chuyên viên Đào tạo", "Thực tập sinh Nhân sự"));
-        phongBanToChucVuMap.put("Phòng Công nghệ thông tin", Arrays.asList("Trưởng phòng IT", "Lập trình viên Backend", "Lập trình viên Frontend", "UI/UX Designer", "Quản trị hệ thống", "Nhân viên Hỗ trợ IT", "Thực tập sinh IT"));
+        phongBanToChucVuMap.put("Phòng Kỹ thuật", Arrays.asList("Trưởng phòng IT", "Lập trình viên Backend", "Lập trình viên Frontend", "UI/UX Designer", "Quản trị hệ thống", "Nhân viên Hỗ trợ IT", "Thực tập sinh IT"));
         phongBanToChucVuMap.put("Phòng Kinh doanh", Arrays.asList("Trưởng phòng Kinh doanh", "Phó phòng Kinh doanh", "Nhân viên kinh doanh", "Trợ lý kinh doanh", "Nhân viên Tele-sales", "Thực tập sinh Kinh doanh"));
         phongBanToChucVuMap.put("Phòng Marketing", Arrays.asList("Trưởng phòng Marketing", "Chuyên viên Digital Marketing", "Chuyên viên Content Marketing", "Nhân viên thiết kế", "Chuyên viên SEO/SEM", "Thực tập sinh Marketing"));
-        phongBanToChucVuMap.put("Ban Giám đốc", Arrays.asList("Tổng Giám đốc (CEO)", "Phó Tổng Giám đốc", "Giám đốc Tài chính (CFO)", "Giám đốc Công nghệ (CTO)", "Trợ lý Giám đốc"));
         phongBanToChucVuMap.put("Chờ phân công", Arrays.asList("Chưa có chức vụ")); // Dành cho P00
 
         // Tạo map ngược (Chức Vụ -> Tên Phòng) và danh sách tổng (allChucVuList)
@@ -241,6 +244,7 @@ public class NhanSuController {
             return str.matches("\\d+");
     }
     
+    // Nút "Thêm"
     @FXML
     private void nhansu_themAction() {
         String maNV = nhansu_txma.getText().trim();
@@ -251,7 +255,6 @@ public class NhanSuController {
         String email = nhansu_txemail.getText().trim();
         String sdt = nhansu_txsdt.getText().trim();
         PhongBan selectedPB = nhansu_cbmaPB.getValue();
-        String maPhongBan = selectedPB.getMaPhong(); // Lấy mã từ đối tượng
         String chucVu = nhansu_cbchucvu.getValue();
           
         if (maNV.isEmpty() || hoTen.isEmpty() || gioiTinh == null || gioiTinh.isEmpty() || ngaySinh == null || cccd.isEmpty() || email.isEmpty() || sdt.isEmpty()|| selectedPB == null || chucVu == null || chucVu.isEmpty()) {
@@ -259,6 +262,8 @@ public class NhanSuController {
                 "Vui lòng điền đầy đủ tất cả thông tin!");
             return;
         }
+        
+        String maPhongBan = selectedPB.getMaPhong(); // Lấy mã từ đối tượng
 
         if (maNV.length() != 5) {
             canhbao.canhbao("Sai định dạng", "Mã nhân viên phải có đúng 5 ký tự.");
@@ -324,7 +329,25 @@ public class NhanSuController {
             return;
         }
         
-        
+        // Kiểm tra trùng chức vụ đặc biệt trong cùng phòng ban
+        if (chucVu.toLowerCase().contains("trưởng phòng") || chucVu.toLowerCase().contains("phó phòng")) {
+            // Lấy danh sách nhân sự hiện tại của phòng ban này
+            boolean daCoNguoiGiuChucVu = dataService.getDsNhanSu().stream()
+                .anyMatch(ns ->
+                    ns.getMaPhongBan().equalsIgnoreCase(maPhongBan)
+                    && ns.getChucVu() != null
+                    && ns.getChucVu().equalsIgnoreCase(chucVu)
+                );
+
+            if (daCoNguoiGiuChucVu) {
+                canhbao.canhbao(
+                    "Trùng chức vụ",
+                    "Phòng \"" + selectedPB.getTenPhong() + "\" đã có " + chucVu.toLowerCase() + ".\n" +
+                    "Không thể thêm thêm một người với chức vụ này."
+                );
+                return;
+            }
+        }
         // Kiểm tra xem chức vụ có thuộc phòng ban đã chọn không
         if (chucVu == null || chucVu.isEmpty() || chucVu.contains("Chưa có chức vụ")) {
              canhbao.canhbao("Thiếu chức vụ", "Vui lòng chọn chức vụ cho nhân sự.");
@@ -359,30 +382,35 @@ public class NhanSuController {
         }
     }
 
+    // Nút "Xóa"
     @FXML 
     private void nhansu_xoaAction() { 
-         NhanSu selectedNhanSu = nhansu_tbnhansu.getSelectionModel().getSelectedItem();
-        if (selectedNhanSu == null) {
+         NhanSu selectedNhanSu = nhansu_tbnhansu.getSelectionModel().getSelectedItem(); // Lấy nhân viên đang được chọn trong bảng
+        if (selectedNhanSu == null) { // Nếu chưa chọn dòng nào thì cảnh báo và dừng lại
             canhbao.canhbao("Chưa chọn nhân viên", "Vui lòng chọn một hàng để xóa.");
             return;
         }
         
+        // Hiển thị hộp thoại xác nhận trước khi xóa
         boolean dongY = canhbao.xacNhan(
                     "Xác nhận xóa",
                     "Bạn có chắc chắn muốn xóa nhân viên: " + selectedNhanSu.getHoTen() + "?",
                     "Hành động này không thể hoàn tác."
         );
         
+        // Nếu người dùng đồng ý thì tiến hành xóa
         if (dongY) {
             dataService.deleteNhanSu(selectedNhanSu);
             canhbao.thongbao("Thành công", "Đã xóa nhân viên.");
         }
     }
     
+    // Nút "Sửa"
     @FXML 
     private void nhansu_suaAction() throws IOException {
-        NhanSu nsselected = nhansu_tbnhansu.getSelectionModel().getSelectedItem();
-        if(nsselected == null){
+        NhanSu nsselected = nhansu_tbnhansu.getSelectionModel().getSelectedItem(); // Lấy nhân viên đang được chọn trong bảng
+        
+        if(nsselected == null){  // Nếu chưa chọn nhân viên nào thì hiển thị thông báo và dừng lại
             Alert a = new Alert(Alert.AlertType.INFORMATION,"Chọn 1 hàng để sửa", ButtonType.YES);
             a.setTitle("Thong Tin");
             a.showAndWait();
@@ -390,44 +418,47 @@ public class NhanSuController {
         }
          
         try {
+            // Tải giao diện sửa nhân sự (suanhansu.fxml)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("suanhansu.fxml"));
             Parent root = loader.load();
-
+             // Lấy controller của form sửa và truyền dữ liệu nhân viên đã chọn sang
             SuaNhanSu controller = loader.getController();
             controller.setData(nsselected);
-
+            // Chuyển sang giao diện sửa trên cùng cửa sổ hiện tại
             nhansu_btsua.getScene().setRoot(root);
 
         } catch (IOException e) {
-            // In chi tiết lỗi ra Console để bạn xem
+            // In chi tiết lỗi ra Console để debug
             e.printStackTrace(); 
         
-            // Hiển thị một cảnh báo trực tiếp trên giao diện
+            // Hiển thị cảnh báo trên giao diện nếu không tải được giao diện
             canhbao.canhbao("Lỗi Tải Giao Diện", 
                 "Không thể tải file suanhansu.fxml.\n" +
                 "Vui lòng kiểm tra cửa sổ Output/Console để xem chi tiết lỗi.");
         }
     }
     
+    // Nút "Tìm kiếm" 
     @FXML 
     private void nhansu_timkiemAction() throws IOException { 
+        // Tải giao diện tìm kiếm (timkiemnhansu.fxml)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("timkiemnhansu.fxml"));
         Parent root = loader.load();
     
         // Lấy controller của màn hình "timkiemnhansu"
         TimKiemNhanSu controller = loader.getController();
     
-        // Lấy danh sách mã phòng ban từ dsMaPhongForCombo đã có sẵn
-        // Và truyền toàn bộ danh sách nhân sự từ dataService
+        // Lấy danh sách mã phòng ban từ dsMaPhongForCombo đã có sẵn và truyền toàn bộ danh sách nhân sự từ dataService
         controller.setData(dataService.getDsNhanSu(), dataService.getDsPhongBan(), allChucVuList);
     
-        // Lấy Scene hiện tại và set root mới
+        // Chuyển sang giao diện tìm kiếm trên cùng cửa sổ hiện tại
         nhansu_bttimkiem.getScene().setRoot(root);
     }
     
-    
+    // Nút "Xuát thông tin"
     @FXML
     private void nhansu_xuatAction() {
+        // Popup xác nhận
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, 
             "Bạn có muốn xuất thông tin toàn bộ nhân viên ra file Excel không?", 
             ButtonType.YES, ButtonType.NO);
@@ -455,22 +486,24 @@ public class NhanSuController {
         progressAlert.getDialogPane().setContent(progressIndicator);
         progressAlert.show();
 
-        // Tạo task chạy nền
+        // Tạo task chạy nền để xử lý việc export
         Task<Void> exportTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                exportNhanSuToExcel(file);
+                exportNhanSuToExcel(file); // Gọi hàm ghi file Excel
                 return null;
             }
         };
 
+        // Khi export thành công
         exportTask.setOnSucceeded(e -> {
-            progressAlert.close();
+            progressAlert.close();  // Đóng cửa sổ tiến trình
+            // Hiển thị thông báo thành công
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("Xuất thành công!");
             success.setHeaderText("Đã xuất thông tin thành công!");
             success.setContentText("File đã lưu tại:\n" + file.getAbsolutePath());
-
+            // Cho phép người dùng mở file ngay
             ButtonType openBtn = new ButtonType("Mở file");
             ButtonType backBtn = new ButtonType("Quay lại");
             success.getButtonTypes().setAll(openBtn, backBtn);
@@ -478,33 +511,37 @@ public class NhanSuController {
 
             if (success.getResult() == openBtn) {
                 try {
-                    java.awt.Desktop.getDesktop().open(file);
+                    java.awt.Desktop.getDesktop().open(file); // Trực tiếp mở file bằng Excel
                 } catch (IOException ex) {
                     canhbao.canhbao("Lỗi", "Không thể mở file vừa tạo.");
                 }
             }
         });
 
+        // Khi export thất bại => báo lỗi
         exportTask.setOnFailed(e -> {
             progressAlert.close();
             canhbao.canhbao("Lỗi", "Không thể xuất file Excel.\nChi tiết: " + exportTask.getException());
         });
 
+        // Chạy task trong một luồng riêng tránh treo UI
         Thread thread = new Thread(exportTask);
         thread.setDaemon(true);
         thread.start();
     }
 
-    // === HÀM HỖ TRỢ XUẤT FILE EXCEL ===
+    // Hàm hỗ trợ ghi danh sách nhân sự ra file Excel
     private void exportNhanSuToExcel(File file) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("NhanSu");
+            // Tạo hàng tiêu đề 
             Row header = sheet.createRow(0);
             String[] headers = {"Mã NV", "Họ tên", "Giới tính", "Ngày sinh", "CCCD", "Email", "SĐT", "Phòng ban", "Chức vụ"};
             for (int i = 0; i < headers.length; i++) {
                 header.createCell(i).setCellValue(headers[i]);
             }
 
+            // Ghi dữ liệu từng nhân viên
             ObservableList<NhanSu> list = dataService.getDsNhanSu();
             int rowNum = 1;
             for (NhanSu ns : list) {
@@ -520,16 +557,19 @@ public class NhanSuController {
                 row.createCell(8).setCellValue(ns.getChucVu());
             }
 
+            // Tự căn chỉnh độ rộng cột cho vừa nội dung
             for (int i = 0; i < headers.length; i++) {
                 sheet.autoSizeColumn(i);
             }
 
+            // Ghi dữ liệu ra file thật
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 workbook.write(fos);
             }
         }
     }
     
+    // Nút "Quay lại => Trở về màn hình chính (main.fxml)
     @FXML
     private void nhansu_quaylaiAction() throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("main.fxml"));

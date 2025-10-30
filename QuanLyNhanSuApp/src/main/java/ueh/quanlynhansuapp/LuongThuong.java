@@ -1,5 +1,9 @@
 package ueh.quanlynhansuapp;
 
+/*
+ - Lớp LuongThuong khai báo thông tin một bản ghi lương thưởng của nhân viên.
+ - Mỗi đối tượng tương ứng với một dòng trong bảng "luongthuong" của database.
+ */
 public class LuongThuong {
     private String maLuong;
     private String maNhanVien;
@@ -10,14 +14,18 @@ public class LuongThuong {
     private double khauTru;
     private String ngayChiTra;   // "yyyy-MM-dd"
 
-    public LuongThuong(String maLuong,
-                       String maNhanVien,
-                       String thangNam,
+    /*
+     - Hàm khởi tạo nhận đầy đủ thông tin một bản lương. 
+     - Dùng phương thức nn() để tránh lỗi null (chuyển null thành chuỗi rỗng).
+    */
+    public LuongThuong(String maLuong,  
+                       String maNhanVien, 
+                       String thangNam,                       
                        double luongCoBan,
                        double phuCap,
                        double thuong,
                        double khauTru,
-                       String ngayChiTra) {
+                       String ngayChiTra) { // Ngày chi trả lương, lưu dưới dạng chuỗi yyyy-MM-dd
         this.maLuong = nn(maLuong);
         this.maNhanVien = nn(maNhanVien);
         this.thangNam = nn(thangNam);
@@ -28,9 +36,10 @@ public class LuongThuong {
         this.ngayChiTra = nn(ngayChiTra);
     }
 
+    //  Nếu chuỗi bị null thì trả về rỗng =>  tránh lỗi NullPointerException khi hiển thị hoặc lưu dữ liệu
     private String nn(String s) { return s == null ? "" : s; }
 
-    // Getters/Setters
+    // Getter/Setter cho từng  thuộc tính
     public String getMaLuong() { return maLuong; }
     public void setMaLuong(String maLuong) { this.maLuong = nn(maLuong); }
 
@@ -55,14 +64,21 @@ public class LuongThuong {
     public String getNgayChiTra() { return ngayChiTra; }
     public void setNgayChiTra(String ngayChiTra) { this.ngayChiTra = nn(ngayChiTra); }
 
-    /** Tổng lương = lương cơ bản + phụ cấp + thưởng - khấu trừ */
+    
+    // Hàm tính toán và hỗ trợ
+    
+    // Tổng lương = lương cơ bản + phụ cấp + thưởng - khấu trừ 
     public double getTongLuong() {
         return luongCoBan + phuCap + thuong - khauTru;
     }
 
-    /** Setter giả để tránh lỗi khi TableColumn đòi property writeable */
+    /*
+     - Setter giả cho thuộc tính tongLuong.
+     - Lý do: khi dùng TableView trong JavaFX, nếu cột có cả getter và setter thì nó mới không báo lỗi “property not writeable”=> Hàm này không làm gì cả (no-op).
+     */
     public void setTongLuong(double ignored) { /* no-op */ }
 
+    // Trả về chuỗi mô tả ngắn gọn một bản lương để dễ xem trong log
     @Override
     public String toString() {
         return maLuong + " - " + maNhanVien + " - " + thangNam;
