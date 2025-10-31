@@ -576,7 +576,7 @@ public class LuongThuongController {
     
     @FXML
     private void luongthuong_nhansuAction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("luongthuong.fxml"));
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("nhansu.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage) luongthuong_btnhansu.getScene().getWindow();
         stage.setScene(scene);

@@ -6,29 +6,61 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="444.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemLuongThuong">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemLuongThuong">
    <children>
-      <TableView fx:id="timkiemluongthuong_tbluongthuong" layoutX="16.0" layoutY="140.0" prefHeight="288.0" prefWidth="848.0">
+      <TableView fx:id="timkiemluongthuong_tbluongthuong" layoutX="46.0" layoutY="304.0" prefHeight="401.0" prefWidth="944.0">
         <columns>
           <TableColumn fx:id="timkiemluongthuong_colmaluong" prefWidth="76.80001449584961" text="Mã lương" />
           <TableColumn fx:id="timkiemluongthuong_colmaNV" prefWidth="90.39999389648438" text="Mã nhân viên" />
-            <TableColumn fx:id="timkiemluongthuong_colthangnam" prefWidth="84.00007629394531" text="Tháng năm" />
-            <TableColumn fx:id="timkiemluongthuong_colluongcoban" prefWidth="95.199951171875" text="Lương cơ bản" />
-            <TableColumn fx:id="timkiemluongthuong_colphucap" prefWidth="97.5999755859375" text="Phụ cấp" />
-            <TableColumn fx:id="timkiemluongthuong_colthuong" prefWidth="89.5999755859375" text="Thưởng" />
-            <TableColumn fx:id="timkiemluongthuong_colkhautru" minWidth="0.0" prefWidth="87.20001220703125" text="Khấu trừ" />
-            <TableColumn fx:id="timkiemluongthuong_coltongluong" prefWidth="108.0" text="Tổng lương " />
-            <TableColumn fx:id="timkiemluongthuong_colngaychitra" minWidth="1.5999755859375" prefWidth="118.4000244140625" text="Ngày chi trả" />
+            <TableColumn fx:id="timkiemluongthuong_colthangnam" prefWidth="92.0" text="Tháng năm" />
+            <TableColumn fx:id="timkiemluongthuong_colluongcoban" prefWidth="110.0" text="Lương cơ bản" />
+            <TableColumn fx:id="timkiemluongthuong_colphucap" prefWidth="94.0" text="Phụ cấp" />
+            <TableColumn fx:id="timkiemluongthuong_colthuong" prefWidth="107.0" text="Thưởng" />
+            <TableColumn fx:id="timkiemluongthuong_colkhautru" minWidth="0.0" prefWidth="104.0" text="Khấu trừ" />
+            <TableColumn fx:id="timkiemluongthuong_coltongluong" prefWidth="134.0" text="Tổng lương " />
+            <TableColumn fx:id="timkiemluongthuong_colngaychitra" minWidth="1.5999755859375" prefWidth="134.0" text="Ngày chi trả" />
         </columns>
       </TableView>
-      <Button fx:id="timkiemluongthuong_btquaylai" layoutX="456.0" layoutY="98.0" mnemonicParsing="false" onAction="#timkiemluongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" text="Quay lại" />
-      <Button fx:id="timkiemluongthuong_bttimkiem" layoutX="303.0" layoutY="98.0" mnemonicParsing="false" onAction="#timkiemluongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
-      <Label layoutX="278.0" layoutY="47.0" text="Nhập mã nhân viên cần tìm:">
+      <Button fx:id="timkiemluongthuong_btquaylai" layoutX="877.0" layoutY="54.0" mnemonicParsing="false" onAction="#timkiemluongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" text="Quay lại" />
+      <Button fx:id="timkiemluongthuong_bttimkiem" layoutX="665.0" layoutY="216.0" mnemonicParsing="false" onAction="#timkiemluongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
+      <Label layoutX="269.0" layoutY="222.0" text="Nhập mã nhân viên cần tìm:">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>
-      <TextField fx:id="timkiemluongthuong_txmaNV" layoutX="443.0" layoutY="42.0" prefHeight="26.0" prefWidth="158.0" />
+      <TextField fx:id="timkiemluongthuong_txmaNV" layoutX="446.0" layoutY="218.0" prefHeight="26.0" prefWidth="158.0" />
+      <Label layoutX="895.0" layoutY="273.0" text="Đơn vị tính: VNĐ">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f3f6f8" height="133.0" layoutX="46.0" layoutY="54.0" stroke="BLACK" strokeType="INSIDE" width="207.0" />
+      <Label layoutX="435.0" layoutY="82.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="363.0" layoutY="36.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="58.0" layoutY="68.0" prefHeight="38.0" prefWidth="103.0" text="Tính năng" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold Italic" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="68.0" layoutY="111.0" prefHeight="38.0" prefWidth="75.0" style="-fx-blend-mode: 1;" text="Tìm kiếm" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="128.0" layoutY="149.0" prefHeight="38.0" prefWidth="175.0" style="-fx-blend-mode: 1;" text="Lương Thưởng" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

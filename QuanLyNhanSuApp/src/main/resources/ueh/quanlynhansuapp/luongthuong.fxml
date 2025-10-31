@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <!-- ✅ thêm dòng này -->
@@ -38,7 +39,7 @@
       </TableView>
 
 
-      <Button fx:id="luongthuong_btthem" layoutX="79.0" layoutY="630.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
+      <Button fx:id="luongthuong_btthem" layoutX="82.0" layoutY="705.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
       <Button fx:id="luongthuong_btxoa" layoutX="293.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_xoaAction" prefHeight="29.0" prefWidth="107.0" text="Xóa" />
       <Button fx:id="luongthuong_btsua" layoutX="440.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
       <Button fx:id="luongthuong_bttimkiem" layoutX="600.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
@@ -47,27 +48,27 @@
 
 
       
-      <Label layoutX="35.0" layoutY="313.0" text="Mã lương*" />
-      <Label layoutX="35.0" layoutY="347.0" text="Mã nhân viên*" />
-      <Label layoutX="35.0" layoutY="381.0" text="Tháng năm*" />
-      <Label layoutX="35.0" layoutY="413.0" text="Lương cơ bản" />
-      <Label layoutX="35.0" layoutY="448.0" text="Phụ cấp" />
-      <Label layoutX="35.0" layoutY="483.0" text="Thưởng" />
-      <Label layoutX="33.0" layoutY="516.0" text="Khấu trừ" />
-      <Label layoutX="33.0" layoutY="552.0" text="Tổng lương" />
-      <Label layoutX="33.0" layoutY="587.0" prefHeight="17.0" prefWidth="77.0" text="Ngày chi trả*" />
+      <Label layoutX="38.0" layoutY="292.0" text="Mã lương*" />
+      <Label layoutX="38.0" layoutY="336.0" text="Mã nhân viên*" />
+      <Label layoutX="38.0" layoutY="378.0" text="Tháng năm*" />
+      <Label layoutX="38.0" layoutY="430.0" text="Lương cơ bản" />
+      <Label layoutX="38.0" layoutY="475.0" text="Phụ cấp" />
+      <Label layoutX="38.0" layoutY="520.0" text="Thưởng" />
+      <Label layoutX="38.0" layoutY="559.0" text="Khấu trừ" />
+      <Label layoutX="38.0" layoutY="597.0" text="Tổng lương" />
+      <Label layoutX="38.0" layoutY="655.0" prefHeight="17.0" prefWidth="77.0" text="Ngày chi trả*" />
 
 
        
-        <TextField fx:id="luongthuong_txmaluong" layoutX="122.0" layoutY="310.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txmaNV" layoutX="122.0" layoutY="342.0" prefHeight="26.0" prefWidth="134.0" />
-        <DatePicker fx:id="luongthuong_datethangnam" layoutX="122.0" layoutY="376.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txluongcoban" layoutX="120.0" layoutY="410.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txphucap" layoutX="120.0" layoutY="443.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txthuong" layoutX="120.0" layoutY="478.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txkhautru" layoutX="118.0" layoutY="511.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txtongluong" editable="false" layoutX="118.0" layoutY="547.0" prefHeight="26.0" prefWidth="134.0" />
-        <DatePicker fx:id="luongthuong_datengaychitra" layoutX="118.0" layoutY="582.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txmaluong" layoutX="125.0" layoutY="289.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txmaNV" layoutX="125.0" layoutY="331.0" prefHeight="26.0" prefWidth="134.0" />
+        <DatePicker fx:id="luongthuong_datethangnam" layoutX="125.0" layoutY="373.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txluongcoban" layoutX="123.0" layoutY="427.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txphucap" layoutX="123.0" layoutY="470.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txthuong" layoutX="123.0" layoutY="515.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txkhautru" layoutX="123.0" layoutY="554.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txtongluong" editable="false" layoutX="123.0" layoutY="592.0" prefHeight="26.0" prefWidth="134.0" />
+        <DatePicker fx:id="luongthuong_datengaychitra" layoutX="123.0" layoutY="651.0" prefHeight="26.0" prefWidth="134.0" />
       <Label layoutX="530.0" layoutY="103.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
@@ -93,5 +94,12 @@
             <Font size="14.0" />
          </font>
       </Button>
+      <Label layoutX="61.0" layoutY="231.0" prefHeight="38.0" prefWidth="190.0" text="Chi tiết lương thưởng" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="20.0" />
+         </font>
+      </Label>
+      <Line endX="121.0" layoutX="136.0" layoutY="410.0" startX="-100.0" />
+      <Line endX="123.0" layoutX="136.0" layoutY="634.0" startX="-100.0" />
    </children>
 </AnchorPane>

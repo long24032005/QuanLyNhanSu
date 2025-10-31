@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.PrimaryController">
@@ -20,20 +21,20 @@
             <TableColumn fx:id="phongban_coltong" prefWidth="113.0" text="Tổng số nhân viên" />
         </columns>
       </TableView>
-      <Label layoutX="21.0" layoutY="319.0" prefHeight="17.0" prefWidth="103.0" text="Tên phòng ban" />
-      <Label layoutX="20.0" layoutY="285.0" prefHeight="17.0" prefWidth="103.0" text="Mã phòng ban" />
-      <Label layoutX="21.0" layoutY="353.0" prefHeight="17.0" prefWidth="103.0" text="Mã trưởng phòng" />
-      <TextField fx:id="phongban_txma" layoutX="127.0" layoutY="280.0" prefHeight="26.0" prefWidth="162.0" />
-      <TextField fx:id="phongban_txten" layoutX="127.0" layoutY="314.0" prefHeight="26.0" prefWidth="162.0" />
-      <TextField fx:id="phongban_txmaTP" layoutX="127.0" layoutY="348.0" prefHeight="26.0" prefWidth="162.0" />
-      <Label layoutX="20.0" layoutY="431.0" prefHeight="17.0" prefWidth="103.0" text="Email phòng ban" />
-      <Label layoutX="20.0" layoutY="397.0" prefHeight="17.0" prefWidth="103.0" text="SĐT phòng ban" />
-      <Label layoutX="20.0" layoutY="465.0" prefHeight="20.0" prefWidth="103.0" text="Tổng số nhân viên" />
-      <TextField fx:id="phongban_txsdt" layoutX="126.0" layoutY="394.0" prefHeight="26.0" prefWidth="162.0" />
-      <TextField fx:id="phongban_txemail" layoutX="126.0" layoutY="428.0" prefHeight="26.0" prefWidth="162.0" />
-      <TextField fx:id="phongban_txtong" layoutX="126.0" layoutY="462.0" prefHeight="26.0" prefWidth="162.0" />
+      <Label layoutX="20.0" layoutY="312.0" prefHeight="17.0" prefWidth="103.0" text="Tên phòng ban" />
+      <Label layoutX="19.0" layoutY="266.0" prefHeight="17.0" prefWidth="103.0" text="Mã phòng ban" />
+      <Label layoutX="20.0" layoutY="355.0" prefHeight="17.0" prefWidth="103.0" text="Mã trưởng phòng" />
+      <TextField fx:id="phongban_txma" layoutX="126.0" layoutY="261.0" prefHeight="26.0" prefWidth="162.0" />
+      <TextField fx:id="phongban_txten" layoutX="126.0" layoutY="307.0" prefHeight="26.0" prefWidth="162.0" />
+      <TextField fx:id="phongban_txmaTP" layoutX="126.0" layoutY="350.0" prefHeight="26.0" prefWidth="162.0" />
+      <Label layoutX="19.0" layoutY="483.0" prefHeight="17.0" prefWidth="103.0" text="Email phòng ban" />
+      <Label layoutX="19.0" layoutY="436.0" prefHeight="17.0" prefWidth="103.0" text="SĐT phòng ban" />
+      <Label layoutX="19.0" layoutY="534.0" prefHeight="20.0" prefWidth="103.0" text="Tổng số nhân viên" />
+      <TextField fx:id="phongban_txsdt" layoutX="125.0" layoutY="433.0" prefHeight="26.0" prefWidth="162.0" />
+      <TextField fx:id="phongban_txemail" layoutX="125.0" layoutY="480.0" prefHeight="26.0" prefWidth="162.0" />
+      <TextField fx:id="phongban_txtong" layoutX="125.0" layoutY="531.0" prefHeight="26.0" prefWidth="162.0" />
       <Button fx:id="phongban_bttimkiem" layoutX="678.0" layoutY="652.0" mnemonicParsing="false" onAction="#phongban_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
-      <Button fx:id="phongban_btthem" layoutX="100.0" layoutY="515.0" mnemonicParsing="false" onAction="#phongban_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
+      <Button fx:id="phongban_btthem" layoutX="108.0" layoutY="595.0" mnemonicParsing="false" onAction="#phongban_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
       <Button fx:id="phongban_btxoa" layoutX="431.0" layoutY="652.0" mnemonicParsing="false" onAction="#phongban_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
       <Button fx:id="phongban_btsua" layoutX="558.0" layoutY="652.0" mnemonicParsing="false" onAction="#phongban_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
       <Button fx:id="phongban_btquaylai" layoutX="883.0" layoutY="45.0" mnemonicParsing="false" onAction="#phongban_quaylaiAction" prefHeight="26.0" prefWidth="91.0" text="Quay Lại" />
@@ -63,10 +64,11 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Label layoutX="61.0" layoutY="219.0" prefHeight="38.0" prefWidth="199.0" text="Thông tin Phòng ban" textAlignment="CENTER">
+      <Label layoutX="54.0" layoutY="201.0" prefHeight="38.0" prefWidth="199.0" text="Thông tin Phòng ban" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
          </font>
       </Label>
+      <Line endX="162.0" layoutX="122.0" layoutY="406.0" startX="-100.0" />
    </children>
 </AnchorPane>

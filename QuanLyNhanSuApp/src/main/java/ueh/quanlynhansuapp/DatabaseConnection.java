@@ -14,7 +14,7 @@ public class DatabaseConnection {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/quanlynhansu_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     // Tên đăng nhập và mật khẩu của MySQL
     private static final String USER = "root";
-    private static final String PASS = "Nam@2005"; 
+    private static final String PASS = "12345678@LOC@"; 
 
     // Hàm mở kết nối tới database, 
     public static Connection getConnection() {
