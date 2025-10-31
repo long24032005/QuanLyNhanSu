@@ -410,36 +410,35 @@ public class NhanSuController {
     
     // Nút "Sửa"
     @FXML 
-    private void nhansu_suaAction() throws IOException {
-        NhanSu nsselected = nhansu_tbnhansu.getSelectionModel().getSelectedItem(); // Lấy nhân viên đang được chọn trong bảng
-        
-        if(nsselected == null){  // Nếu chưa chọn nhân viên nào thì hiển thị thông báo và dừng lại
-            Alert a = new Alert(Alert.AlertType.INFORMATION,"Chọn 1 hàng để sửa", ButtonType.YES);
-            a.setTitle("Thong Tin");
-            a.showAndWait();
-            return;
-        }
-         
+    private void nhansu_suaAction() {
         try {
-            // Tải giao diện sửa nhân sự (suanhansu.fxml)
+            NhanSu nsselected = nhansu_tbnhansu.getSelectionModel().getSelectedItem();
+            if (nsselected == null) {
+                canhbao.canhbao("Thiếu lựa chọn", "Vui lòng chọn nhân viên cần sửa!");
+                return;
+            }
+
+            // Tải form sửa nhân sự
             FXMLLoader loader = new FXMLLoader(getClass().getResource("suanhansu.fxml"));
             Parent root = loader.load();
-             // Lấy controller của form sửa và truyền dữ liệu nhân viên đã chọn sang
             SuaNhanSu controller = loader.getController();
             controller.setData(nsselected);
-            // Chuyển sang giao diện sửa trên cùng cửa sổ hiện tại
-            nhansu_btsua.getScene().setRoot(root);
+
+            // Tạo cửa sổ mới thay vì chỉ đổi scene
+            Stage stage = new Stage();
+            stage.setTitle("Sửa thông tin nhân sự");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            // Khi form sửa đóng => reload lại bảng nhân sự
+            stage.setOnHidden(e -> nhansu_tbnhansu.refresh());
 
         } catch (IOException e) {
-            // In chi tiết lỗi ra Console để debug
-            e.printStackTrace(); 
-        
-            // Hiển thị cảnh báo trên giao diện nếu không tải được giao diện
-            canhbao.canhbao("Lỗi Tải Giao Diện", 
-                "Không thể tải file suanhansu.fxml.\n" +
-                "Vui lòng kiểm tra cửa sổ Output/Console để xem chi tiết lỗi.");
+            canhbao.canhbao("Lỗi giao diện", "Không thể mở form sửa nhân sự: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
     
     // Nút "Tìm kiếm" 
     @FXML 

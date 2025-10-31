@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import java.util.stream.Collectors;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.stage.Stage;
 /*
     Controller cho giao diện "Sửa phòng ban", phân quyền Admin (suaphongban.fxml)
     Chức năng:
@@ -177,24 +178,23 @@ public class SuaPhongBan {
         alert.showAndWait();
 
         // Sau khi người dùng nhấn OK => quay lại màn hình phòng ban
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("phongban.fxml"));
-        Parent root = loader.load();
-        suaphongban_btsua.getScene().setRoot(root);
+        Stage currentStage = (Stage) suaphongban_btsua.getScene().getWindow();
+        currentStage.close();
     }
     
     // Nút "Trở lại"
     @FXML
-    private void suaphongban_trolaiAction() throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận trở lại");
-        alert.setHeaderText("Bạn có chắc muốn quay về màn hình Phòng Ban?");
-        alert.setContentText("Mọi thay đổi chưa lưu sẽ bị mất.");
-        alert.showAndWait();
+    private void suaphongban_trolaiAction() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Xác nhận quay lại");
+        confirm.setHeaderText("Bạn có muốn quay lại danh sách phòng ban?");
+        confirm.setContentText("Mọi thay đổi chưa lưu sẽ bị mất.");
 
-        if (alert.getResult() == ButtonType.OK) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("phongban.fxml"));
-            Parent root = loader.load();
-            suaphongban_bttrolai.getScene().setRoot(root);
-        }
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                Stage currentStage = (Stage) suaphongban_bttrolai.getScene().getWindow();
+                currentStage.close(); // Đóng popup
+            }
+        });
     }
 }

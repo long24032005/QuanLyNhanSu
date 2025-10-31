@@ -208,25 +208,32 @@ public class PrimaryController {
     }
     // Nút "Sửa"
     @FXML 
-    private void phongban_suaAction() throws IOException  { 
-        PhongBan pbselected = phongban_tbphongban.getSelectionModel().getSelectedItem();
-        if(pbselected == null){
-            Alert a = new Alert(Alert.AlertType.INFORMATION,"Chọn 1 hàng để sửa", ButtonType.YES);
-            a.setTitle("Thông Tin");
-            a.showAndWait();
-            return;
+    private void phongban_suaAction() {
+        try {
+            PhongBan pbselected = phongban_tbphongban.getSelectionModel().getSelectedItem();
+            if (pbselected == null) {
+                canhbao.canhbao("Thiếu lựa chọn", "Vui lòng chọn phòng ban cần sửa!");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("suaphongban.fxml"));
+            Parent root = loader.load();
+            SuaPhongBan controller = loader.getController();
+            controller.setData(pbselected);
+
+            // Tạo stage mới thay vì thay scene
+            Stage stage = new Stage();
+            stage.setTitle("Sửa phòng ban");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            // Khi cửa sổ sửa đóng => refresh lại bảng phòng ban
+            stage.setOnHidden(e -> phongban_tbphongban.refresh());
+
+        } catch (IOException e) {
+            canhbao.canhbao("Lỗi giao diện", "Không thể mở form sửa phòng ban: " + e.getMessage());
+            e.printStackTrace();
         }
-        
-        // Tải giao diện "suaphongban.fxml" và truyền dữ liệu sang controller
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("suaphongban.fxml"));
-        Parent root = loader.load();
-        // Lấy controller của màn hình "suaphongban"
-        SuaPhongBan controller = loader.getController();
-        // Gọi hàm setData để truyền phòng ban đã chọn qua
-        controller.setData(pbselected);
-    
-        // Hiển thị giao diện sửa trên cùng cửa sổ
-        phongban_btsua.getScene().setRoot(root);
     }
     
     // Nút "TÌm Kiếm"
