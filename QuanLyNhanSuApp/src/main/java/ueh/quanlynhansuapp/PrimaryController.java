@@ -46,8 +46,7 @@ public class PrimaryController {
     @FXML private Button phongban_btquaylai;
     
     @FXML private Button phongban_btluongthuong;
-    @FXML private Button phongban_btphongban;
-    @FXML private Button phonban_btnhansu;
+    @FXML private Button phongban_btnhansu;
 
     @FXML private TableView<PhongBan> phongban_tbphongban;
     @FXML private TableColumn<PhongBan, String> phongban_colma;
@@ -380,14 +379,22 @@ public class PrimaryController {
         stage.centerOnScreen();
     }
      @FXML
-    private void phonban_luongthuongAction() throws IOException {
-        App.setRoot("luongthuong");
+    private void phongban_luongthuongAction() throws IOException {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("luongthuong.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) phongban_btluongthuong.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
     }
 
      @FXML
     private void phongban_nhansuAction() throws IOException {
-        App.setRoot("nhansu");
-    }
+    FXMLLoader loader = new FXMLLoader(App.class.getResource("nhansu.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) phongban_btnhansu.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
+}
     
     
 }

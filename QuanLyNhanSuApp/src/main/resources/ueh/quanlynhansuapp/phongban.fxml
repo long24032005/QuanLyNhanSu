@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.PrimaryController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.PrimaryController">
    <children>
       <TableView fx:id="phongban_tbphongban" layoutX="298.0" layoutY="201.0" prefHeight="439.0" prefWidth="721.0">
         <columns>
@@ -48,17 +48,17 @@
          </font>
       </Label>
       <Button fx:id="phongban_btxuat" layoutX="786.0" layoutY="652.0" mnemonicParsing="false" onAction="#phongban_xuatAction" prefHeight="26.0" prefWidth="103.0" text="Xuất thông tin" />
-      <Button fx:id="phonban_btnhansu" layoutX="100.0" layoutY="140.0" mnemonicParsing="false" onAction="#phongban_nhansuAction" prefHeight="38.0" prefWidth="218.0" text="Nhân sự">
+      <Button fx:id="phongban_btnhansu" layoutX="100.0" layoutY="140.0" mnemonicParsing="false" onAction="#phongban_nhansuAction" prefHeight="38.0" prefWidth="218.0" text="Nhân sự">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="phongban_btphongban" disable="true" layoutX="402.0" layoutY="140.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="218.0" text="Phòng ban" underline="true">
+      <Button disable="true" layoutX="402.0" layoutY="140.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="218.0" text="Phòng ban" underline="true">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="phongban_btluongthuong" layoutX="677.0" layoutY="140.0" mnemonicParsing="false" onAction="#phonban_luongthuongAction" prefHeight="38.0" prefWidth="218.0" text="Lương thưởng">
+      <Button fx:id="phongban_btluongthuong" layoutX="677.0" layoutY="140.0" mnemonicParsing="false" onAction="#phongban_luongthuongAction" prefHeight="38.0" prefWidth="218.0" text="Lương thưởng">
          <font>
             <Font size="14.0" />
          </font>

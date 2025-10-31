@@ -57,6 +57,9 @@ public class NhanSuController {
     @FXML private Button nhansu_btxuat;
     @FXML private Button nhansu_bttimkiem;
     @FXML private Button nhansu_btquaylai;
+    @FXML private Button nhansu_btphongban;
+    @FXML private Button nhansu_btluongthuong;
+    
     // Truy cập dữ liệu dùng chung qua lớp DataService 
     private final DataService dataService = DataService.getInstance();
     
@@ -575,6 +578,24 @@ public class NhanSuController {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("main.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage) nhansu_btquaylai.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
+    
+    @FXML
+    private void nhansu_luongthuongAction() throws IOException {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("luongthuong.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) nhansu_btluongthuong.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
+
+    @FXML
+    private void nhansu_phongbanAction() throws IOException {
+    FXMLLoader loader = new FXMLLoader(App.class.getResource("phongban.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) nhansu_btphongban.getScene().getWindow();
         stage.setScene(scene);
         stage.centerOnScreen();
     }

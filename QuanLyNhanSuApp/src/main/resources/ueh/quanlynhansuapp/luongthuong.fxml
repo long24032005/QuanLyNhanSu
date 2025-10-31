@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <!-- ✅ thêm dòng này -->
 <!-- 
@@ -17,12 +18,12 @@
   - Controller: ueh.quanlynhansuapp.LuongThuongController
 -->
 
-<AnchorPane prefHeight="514.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.LuongThuongController">
+<AnchorPane prefHeight="853.0" prefWidth="1167.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.LuongThuongController">
 
    <children>
 
 
-      <TableView fx:id="luongthuong_tbluongthuong" layoutX="16.0" layoutY="243.0" prefHeight="254.0" prefWidth="848.0">
+      <TableView fx:id="luongthuong_tbluongthuong" layoutX="293.0" layoutY="231.0" prefHeight="503.0" prefWidth="842.0">
          <columns>
             <TableColumn fx:id="luongthuong_colmaluong" prefWidth="76.8" text="Mã lương" />
             <TableColumn fx:id="luongthuong_colmaNV" prefWidth="90.4" text="Mã nhân viên" />
@@ -37,35 +38,60 @@
       </TableView>
 
 
-      <Button fx:id="luongthuong_btthem" layoutX="39.0" layoutY="202.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
-      <Button fx:id="luongthuong_btxoa" layoutX="176.0" layoutY="202.0" mnemonicParsing="false" onAction="#luongthuong_xoaAction" prefHeight="29.0" prefWidth="107.0" text="Xóa" />
-      <Button fx:id="luongthuong_btsua" layoutX="315.0" layoutY="202.0" mnemonicParsing="false" onAction="#luongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
-      <Button fx:id="luongthuong_bttimkiem" layoutX="475.0" layoutY="202.0" mnemonicParsing="false" onAction="#luongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
-      <Button fx:id="luongthuong_btxuat" layoutX="626.0" layoutY="202.0" mnemonicParsing="false" onAction="#luongthuong_xuatAction" prefHeight="29.0" prefWidth="107.0" text="Xuất thông tin" />
-      <Button fx:id="luongthuong_btquaylai" layoutX="757.0" layoutY="202.0" mnemonicParsing="false" onAction="#luongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" text="Quay lại" />
+      <Button fx:id="luongthuong_btthem" layoutX="79.0" layoutY="630.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
+      <Button fx:id="luongthuong_btxoa" layoutX="293.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_xoaAction" prefHeight="29.0" prefWidth="107.0" text="Xóa" />
+      <Button fx:id="luongthuong_btsua" layoutX="440.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
+      <Button fx:id="luongthuong_bttimkiem" layoutX="600.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
+      <Button fx:id="luongthuong_btxuat" layoutX="1028.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_xuatAction" prefHeight="29.0" prefWidth="107.0" text="Xuất thông tin" />
+      <Button fx:id="luongthuong_btquaylai" layoutX="1028.0" layoutY="28.0" mnemonicParsing="false" onAction="#luongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" style="-fx-text-fill: white; -fx-background-color: red;" text="Quay lại" />
 
 
       
-      <Label layoutX="53.0" layoutY="48.0" text="Mã lương*" />
-      <Label layoutX="53.0" layoutY="97.0" text="Mã nhân viên*" />
-      <Label layoutX="53.0" layoutY="145.0" text="Tháng năm*" />
-      <Label layoutX="315.0" layoutY="49.0" text="Lương cơ bản" />
-      <Label layoutX="315.0" layoutY="98.0" text="Phụ cấp" />
-      <Label layoutX="315.0" layoutY="146.0" text="Thưởng" />
-      <Label layoutX="582.0" layoutY="49.0" text="Khấu trừ" />
-      <Label layoutX="582.0" layoutY="98.0" text="Tổng lương" />
-      <Label layoutX="582.0" layoutY="146.0" text="Ngày chi trả*" />
+      <Label layoutX="35.0" layoutY="313.0" text="Mã lương*" />
+      <Label layoutX="35.0" layoutY="347.0" text="Mã nhân viên*" />
+      <Label layoutX="35.0" layoutY="381.0" text="Tháng năm*" />
+      <Label layoutX="35.0" layoutY="413.0" text="Lương cơ bản" />
+      <Label layoutX="35.0" layoutY="448.0" text="Phụ cấp" />
+      <Label layoutX="35.0" layoutY="483.0" text="Thưởng" />
+      <Label layoutX="33.0" layoutY="516.0" text="Khấu trừ" />
+      <Label layoutX="33.0" layoutY="552.0" text="Tổng lương" />
+      <Label layoutX="33.0" layoutY="587.0" prefHeight="17.0" prefWidth="77.0" text="Ngày chi trả*" />
 
 
        
-        <TextField fx:id="luongthuong_txmaluong" layoutX="140.0" layoutY="45.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txmaNV" layoutX="140.0" layoutY="92.0" prefHeight="26.0" prefWidth="134.0" />
-        <DatePicker fx:id="luongthuong_datethangnam" layoutX="140.0" layoutY="140.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txluongcoban" layoutX="400.0" layoutY="46.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txphucap" layoutX="400.0" layoutY="93.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txthuong" layoutX="400.0" layoutY="141.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txkhautru" layoutX="653.0" layoutY="44.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txtongluong" editable="false" layoutX="653.0" layoutY="92.0" prefHeight="26.0" prefWidth="134.0" />
-        <DatePicker fx:id="luongthuong_datengaychitra" layoutX="653.0" layoutY="140.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txmaluong" layoutX="122.0" layoutY="310.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txmaNV" layoutX="122.0" layoutY="342.0" prefHeight="26.0" prefWidth="134.0" />
+        <DatePicker fx:id="luongthuong_datethangnam" layoutX="122.0" layoutY="376.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txluongcoban" layoutX="120.0" layoutY="410.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txphucap" layoutX="120.0" layoutY="443.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txthuong" layoutX="120.0" layoutY="478.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txkhautru" layoutX="118.0" layoutY="511.0" prefHeight="26.0" prefWidth="134.0" />
+        <TextField fx:id="luongthuong_txtongluong" editable="false" layoutX="118.0" layoutY="547.0" prefHeight="26.0" prefWidth="134.0" />
+        <DatePicker fx:id="luongthuong_datengaychitra" layoutX="118.0" layoutY="582.0" prefHeight="26.0" prefWidth="134.0" />
+      <Label layoutX="530.0" layoutY="103.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
+         <font>
+            <Font name="System Italic" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="458.0" layoutY="57.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="luongthuong_btnhansu" layoutX="203.0" layoutY="159.0" mnemonicParsing="false" onAction="#luongthuong_nhansuAction" prefHeight="38.0" prefWidth="218.0" text="Nhân sự">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="luongthuong_btphongban" layoutX="505.0" layoutY="159.0" mnemonicParsing="false" onAction="#luongthuong_phongbanAction" prefHeight="38.0" prefWidth="218.0" text="Phòng ban">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button disable="true" layoutX="780.0" layoutY="159.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="218.0" text="Lương thưởng" underline="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

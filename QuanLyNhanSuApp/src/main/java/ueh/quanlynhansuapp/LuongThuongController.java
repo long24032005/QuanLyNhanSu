@@ -55,6 +55,9 @@ public class LuongThuongController {
     @FXML private Button luongthuong_bttimkiem;
     @FXML private Button luongthuong_btxuat;
     @FXML private Button luongthuong_btquaylai;
+    @FXML private Button luongthuong_btphongban;
+    @FXML private Button luongthuong_btnhansu;
+    
     // Bảng hiển thị dữ liệu lương thưởng
     @FXML private TableView<LuongThuong> luongthuong_tbluongthuong;
     @FXML private TableColumn<LuongThuong, String> luongthuong_colmaluong;
@@ -570,4 +573,23 @@ public class LuongThuongController {
             }
         });
     }
+    
+    @FXML
+    private void luongthuong_nhansuAction() throws IOException {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("luongthuong.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) luongthuong_btnhansu.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
+
+    @FXML
+    private void luongthuong_phongbanAction() throws IOException {
+    FXMLLoader loader = new FXMLLoader(App.class.getResource("phongban.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = (Stage) luongthuong_btphongban.getScene().getWindow();
+        stage.setScene(scene);
+        stage.centerOnScreen();
+    }
 }
+    
