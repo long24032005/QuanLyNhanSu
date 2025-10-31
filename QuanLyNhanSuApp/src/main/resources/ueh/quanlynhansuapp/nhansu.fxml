@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="767.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.NhanSuController">
    <children>
-      <TableView fx:id="nhansu_tbnhansu" layoutX="299.0" layoutY="277.0" prefHeight="383.0" prefWidth="721.0">
+      <TableView fx:id="nhansu_tbnhansu" layoutX="233.0" layoutY="222.0" prefHeight="407.0" prefWidth="771.0">
         <columns>
           <TableColumn fx:id="nhansu_colma" prefWidth="87.0" text="Mã nhân viên" />
           <TableColumn fx:id="nhansu_colten" minWidth="6.40008544921875" prefWidth="85.0" text="Họ và tên" />
@@ -21,32 +21,32 @@
             <TableColumn fx:id="nhansu_colcccd" prefWidth="95.0" text="CCCD" />
             <TableColumn fx:id="nhansu_colemail" minWidth="0.0" prefWidth="76.0" text="Email" />
             <TableColumn fx:id="nhansu_colsdt" minWidth="0.0" prefWidth="62.0" text="SĐT" />
-            <TableColumn fx:id="nhansu_colmaPB" minWidth="0.0" prefWidth="91.0" text="Mã phòng ban" />
-            <TableColumn fx:id="nhansu_colchucvu" minWidth="0.0" prefWidth="70.0" text="Chức vụ" />
+            <TableColumn fx:id="nhansu_colmaPB" minWidth="0.0" prefWidth="108.0" text="Mã phòng ban" />
+            <TableColumn fx:id="nhansu_colchucvu" minWidth="0.0" prefWidth="101.0" text="Chức vụ" />
         </columns>
       </TableView>
-      <Label layoutX="18.0" layoutY="336.0" text="Họ và Tên" />
-      <Label layoutX="18.0" layoutY="304.0" text="Mã nhân viên" />
-      <Label layoutX="17.0" layoutY="367.0" prefHeight="18.0" prefWidth="54.0" text="Giới tính" />
-      <TextField fx:id="nhansu_txma" layoutX="104.0" layoutY="300.0" prefHeight="26.0" prefWidth="164.0" />
-      <TextField fx:id="nhansu_txten" layoutX="104.0" layoutY="332.0" prefHeight="26.0" prefWidth="164.0" />
-      <Label layoutX="17.0" layoutY="506.0" prefHeight="18.0" prefWidth="45.0" text="SĐT" />
-      <Label layoutX="17.0" layoutY="474.0" text="Email" />
-      <Label layoutX="17.0" layoutY="537.0" prefHeight="20.0" prefWidth="120.0" text="Mã phòng ban" />
-      <TextField fx:id="nhansu_txemail" layoutX="103.0" layoutY="470.0" prefHeight="26.0" prefWidth="164.0" />
-      <TextField fx:id="nhansu_txsdt" layoutX="103.0" layoutY="502.0" prefHeight="26.0" prefWidth="164.0" />
-      <Button fx:id="nhansu_bttimkiem" layoutX="569.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
-      <Button fx:id="nhansu_btthem" layoutX="101.0" layoutY="611.0" mnemonicParsing="false" onAction="#nhansu_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
-      <Button fx:id="nhansu_btxoa" layoutX="299.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
-      <Button fx:id="nhansu_btsua" layoutX="440.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
-      <Label layoutX="17.0" layoutY="400.0" text="Ngày sinh" />
-      <DatePicker fx:id="nhansu_datengaysinh" layoutX="104.0" layoutY="397.0" prefHeight="26.0" prefWidth="164.0" />
-      <Label layoutX="17.0" layoutY="434.0" text="CCCD" />
-      <TextField fx:id="nhansu_txcccd" layoutX="103.0" layoutY="430.0" prefHeight="26.0" prefWidth="164.0" />
-      <Label layoutX="17.0" layoutY="569.0" prefHeight="20.0" prefWidth="120.0" text="Chức vụ" />
-      <ComboBox fx:id="nhansu_cbogioitinh" layoutX="103.0" layoutY="365.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Giới Tính -- " />
-      <ComboBox fx:id="nhansu_cbmaPB" layoutX="103.0" layoutY="535.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Mã Phòng Ban -- " />
-      <ComboBox fx:id="nhansu_cbchucvu" layoutX="101.0" layoutY="567.0" prefHeight="25.0" prefWidth="164.0" promptText="-- Chức vụ -- " />
+      <Label layoutX="14.0" layoutY="305.0" text="Họ và Tên" />
+      <Label layoutX="14.0" layoutY="273.0" text="Mã nhân viên" />
+      <Label layoutX="13.0" layoutY="336.0" prefHeight="18.0" prefWidth="54.0" text="Giới tính" />
+      <TextField fx:id="nhansu_txma" layoutX="100.0" layoutY="269.0" prefHeight="26.0" prefWidth="131.0" />
+      <TextField fx:id="nhansu_txten" layoutX="100.0" layoutY="301.0" prefHeight="26.0" prefWidth="131.0" />
+      <Label layoutX="13.0" layoutY="475.0" prefHeight="18.0" prefWidth="45.0" text="SĐT" />
+      <Label layoutX="13.0" layoutY="443.0" text="Email" />
+      <Label layoutX="13.0" layoutY="506.0" prefHeight="20.0" prefWidth="120.0" text="Mã phòng ban" />
+      <TextField fx:id="nhansu_txemail" layoutX="99.0" layoutY="439.0" prefHeight="26.0" prefWidth="131.0" />
+      <TextField fx:id="nhansu_txsdt" layoutX="99.0" layoutY="471.0" prefHeight="26.0" prefWidth="131.0" />
+      <Button fx:id="nhansu_bttimkiem" layoutX="514.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
+      <Button fx:id="nhansu_btthem" layoutX="83.0" layoutY="601.0" mnemonicParsing="false" onAction="#nhansu_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
+      <Button fx:id="nhansu_btxoa" layoutX="244.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
+      <Button fx:id="nhansu_btsua" layoutX="385.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
+      <Label layoutX="13.0" layoutY="369.0" text="Ngày sinh" />
+      <DatePicker fx:id="nhansu_datengaysinh" layoutX="100.0" layoutY="366.0" prefHeight="26.0" prefWidth="131.0" />
+      <Label layoutX="13.0" layoutY="403.0" text="CCCD" />
+      <TextField fx:id="nhansu_txcccd" layoutX="99.0" layoutY="399.0" prefHeight="26.0" prefWidth="131.0" />
+      <Label layoutX="13.0" layoutY="538.0" prefHeight="20.0" prefWidth="120.0" text="Chức vụ" />
+      <ComboBox fx:id="nhansu_cbogioitinh" layoutX="99.0" layoutY="334.0" prefHeight="25.0" prefWidth="131.0" promptText="-- Giới Tính -- " />
+      <ComboBox fx:id="nhansu_cbmaPB" layoutX="99.0" layoutY="504.0" prefHeight="25.0" prefWidth="131.0" promptText="-- Phòng Ban -- " />
+      <ComboBox fx:id="nhansu_cbchucvu" layoutX="97.0" layoutY="536.0" prefHeight="25.0" prefWidth="131.0" promptText="-- Chức vụ -- " />
       <Button fx:id="nhansu_btquaylai" layoutX="911.0" layoutY="50.0" mnemonicParsing="false" onAction="#nhansu_quaylaiAction" prefHeight="26.0" prefWidth="91.0" style="-fx-text-fill: white; -fx-background-color: red;" text="Quay lại" />
       <Button fx:id="nhansu_btxuat" layoutX="902.0" layoutY="687.0" mnemonicParsing="false" onAction="#nhansu_xuatAction" prefHeight="26.0" prefWidth="110.0" text="Xuất thông tin" />
       <Label layoutX="449.0" layoutY="86.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
@@ -74,7 +74,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Label layoutX="63.0" layoutY="236.0" prefHeight="38.0" prefWidth="168.0" text="Thông tin nhân sự" textAlignment="CENTER">
+      <Label layoutX="29.0" layoutY="205.0" prefHeight="38.0" prefWidth="168.0" text="Thông tin nhân sự" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
          </font>

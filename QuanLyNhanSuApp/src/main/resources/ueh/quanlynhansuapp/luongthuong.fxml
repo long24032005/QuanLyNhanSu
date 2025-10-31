@@ -39,7 +39,7 @@
       </TableView>
 
 
-      <Button fx:id="luongthuong_btthem" layoutX="79.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
+      <Button fx:id="luongthuong_btthem" layoutX="67.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
       <Button fx:id="luongthuong_btxoa" layoutX="269.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_xoaAction" prefHeight="29.0" prefWidth="107.0" text="Xóa" />
       <Button fx:id="luongthuong_btsua" layoutX="416.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
       <Button fx:id="luongthuong_bttimkiem" layoutX="576.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
