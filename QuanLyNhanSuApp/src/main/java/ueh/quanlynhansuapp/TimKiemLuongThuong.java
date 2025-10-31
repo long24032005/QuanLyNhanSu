@@ -66,11 +66,9 @@ public class TimKiemLuongThuong {
             alignLeft(timkiemluongthuong_colthuong);
             alignLeft(timkiemluongthuong_colkhautru);
             alignLeft(timkiemluongthuong_coltongluong);
-
-            // Nạp dữ liệu mặc định
-            DataService.getInstance().reloadAllData();
-            dsLuong.setAll(DataService.getInstance().getDsLuongThuong());
-            timkiemluongthuong_tbluongthuong.setItems(dsLuong);
+            
+            // Gán cho bảng này một danh sách trống
+            timkiemluongthuong_tbluongthuong.setItems(FXCollections.observableArrayList());
 
         } catch (Exception e) {
             canhbao.canhbao("Lỗi khởi tạo", "Không thể khởi tạo bảng dữ liệu: " + e.getMessage());
