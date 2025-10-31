@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemLuongThuong">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1036.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemLuongThuong">
    <children>
       <TableView fx:id="timkiemluongthuong_tbluongthuong" layoutX="46.0" layoutY="304.0" prefHeight="401.0" prefWidth="944.0">
         <columns>
@@ -24,7 +24,7 @@
             <TableColumn fx:id="timkiemluongthuong_colngaychitra" minWidth="1.5999755859375" prefWidth="134.0" text="Ngày chi trả" />
         </columns>
       </TableView>
-      <Button fx:id="timkiemluongthuong_btquaylai" layoutX="877.0" layoutY="54.0" mnemonicParsing="false" onAction="#timkiemluongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" text="Quay lại" />
+      <Button fx:id="timkiemluongthuong_btquaylai" layoutX="877.0" layoutY="54.0" mnemonicParsing="false" onAction="#timkiemluongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Quay lại" />
       <Button fx:id="timkiemluongthuong_bttimkiem" layoutX="665.0" layoutY="216.0" mnemonicParsing="false" onAction="#timkiemluongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
       <Label layoutX="269.0" layoutY="222.0" text="Nhập mã nhân viên cần tìm:">
          <font>
@@ -37,12 +37,12 @@
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f3f6f8" height="133.0" layoutX="46.0" layoutY="54.0" stroke="BLACK" strokeType="INSIDE" width="207.0" />
-      <Label layoutX="435.0" layoutY="82.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
+      <Label layoutX="434.0" layoutY="87.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="363.0" layoutY="36.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
+      <Label layoutX="362.0" layoutY="41.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

@@ -44,7 +44,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="main_btDangXuat" layoutX="563.0" layoutY="13.0" mnemonicParsing="false" onAction="#main_dangXuatAction" prefHeight="30.0" prefWidth="85.0" text="Đăng xuất">
+      <Button fx:id="main_btDangXuat" layoutX="563.0" layoutY="13.0" mnemonicParsing="false" onAction="#main_dangXuatAction" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Đăng xuất">
          <font>
             <Font size="14.0" />
          </font>

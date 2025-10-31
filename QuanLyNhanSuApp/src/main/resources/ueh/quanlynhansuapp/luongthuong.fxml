@@ -19,87 +19,87 @@
   - Controller: ueh.quanlynhansuapp.LuongThuongController
 -->
 
-<AnchorPane prefHeight="853.0" prefWidth="1167.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.LuongThuongController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.LuongThuongController">
 
    <children>
 
 
-      <TableView fx:id="luongthuong_tbluongthuong" layoutX="293.0" layoutY="231.0" prefHeight="503.0" prefWidth="842.0">
+      <TableView fx:id="luongthuong_tbluongthuong" layoutX="233.0" layoutY="222.0" prefHeight="407.0" prefWidth="771.0">
          <columns>
-            <TableColumn fx:id="luongthuong_colmaluong" prefWidth="76.8" text="Mã lương" />
-            <TableColumn fx:id="luongthuong_colmaNV" prefWidth="90.4" text="Mã nhân viên" />
-            <TableColumn fx:id="luongthuong_colthangnam" prefWidth="84.0" text="Tháng năm" />
-            <TableColumn fx:id="luongthuong_colluongcoban" prefWidth="95.2" text="Lương cơ bản" />
-            <TableColumn fx:id="luongthuong_colphucap" prefWidth="97.6" text="Phụ cấp" />
-            <TableColumn fx:id="luongthuong_colthuong" prefWidth="89.6" text="Thưởng" />
-            <TableColumn fx:id="luongthuong_colkhautru" prefWidth="87.2" text="Khấu trừ" />
-            <TableColumn fx:id="luongthuong_coltongluong" prefWidth="108.0" text="Tổng lương" />
-            <TableColumn fx:id="luongthuong_colngaychitra" prefWidth="118.4" text="Ngày chi trả" />
+            <TableColumn fx:id="luongthuong_colmaluong" prefWidth="63.0" text="Mã lương" />
+            <TableColumn fx:id="luongthuong_colmaNV" prefWidth="83.0" text="Mã nhân viên" />
+            <TableColumn fx:id="luongthuong_colthangnam" prefWidth="82.0" text="Tháng năm" />
+            <TableColumn fx:id="luongthuong_colluongcoban" prefWidth="99.0" text="Lương cơ bản" />
+            <TableColumn fx:id="luongthuong_colphucap" prefWidth="93.0" text="Phụ cấp" />
+            <TableColumn fx:id="luongthuong_colthuong" prefWidth="83.0" text="Thưởng" />
+            <TableColumn fx:id="luongthuong_colkhautru" prefWidth="86.0" text="Khấu trừ" />
+            <TableColumn fx:id="luongthuong_coltongluong" prefWidth="96.0" text="Tổng lương" />
+            <TableColumn fx:id="luongthuong_colngaychitra" prefWidth="85.0" text="Ngày chi trả" />
          </columns>
       </TableView>
 
 
-      <Button fx:id="luongthuong_btthem" layoutX="82.0" layoutY="705.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
-      <Button fx:id="luongthuong_btxoa" layoutX="293.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_xoaAction" prefHeight="29.0" prefWidth="107.0" text="Xóa" />
-      <Button fx:id="luongthuong_btsua" layoutX="440.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
-      <Button fx:id="luongthuong_bttimkiem" layoutX="600.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
-      <Button fx:id="luongthuong_btxuat" layoutX="1028.0" layoutY="751.0" mnemonicParsing="false" onAction="#luongthuong_xuatAction" prefHeight="29.0" prefWidth="107.0" text="Xuất thông tin" />
-      <Button fx:id="luongthuong_btquaylai" layoutX="1028.0" layoutY="28.0" mnemonicParsing="false" onAction="#luongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" style="-fx-text-fill: white; -fx-background-color: red;" text="Quay lại" />
+      <Button fx:id="luongthuong_btthem" layoutX="79.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_themAction" prefHeight="29.0" prefWidth="107.0" text="Thêm" />
+      <Button fx:id="luongthuong_btxoa" layoutX="269.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_xoaAction" prefHeight="29.0" prefWidth="107.0" text="Xóa" />
+      <Button fx:id="luongthuong_btsua" layoutX="416.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
+      <Button fx:id="luongthuong_bttimkiem" layoutX="576.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_timkiemAction" prefHeight="29.0" prefWidth="107.0" text="Tìm kiếm" />
+      <Button fx:id="luongthuong_btxuat" layoutX="897.0" layoutY="663.0" mnemonicParsing="false" onAction="#luongthuong_xuatAction" prefHeight="29.0" prefWidth="107.0" text="Xuất thông tin" />
+      <Button fx:id="luongthuong_btquaylai" layoutX="909.0" layoutY="46.0" mnemonicParsing="false" onAction="#luongthuong_quaylaiAction" prefHeight="25.0" prefWidth="95.0" style="-fx-text-fill: white; -fx-background-color: red;" text="Quay lại" />
 
 
       
-      <Label layoutX="38.0" layoutY="292.0" text="Mã lương*" />
-      <Label layoutX="38.0" layoutY="336.0" text="Mã nhân viên*" />
-      <Label layoutX="38.0" layoutY="378.0" text="Tháng năm*" />
-      <Label layoutX="38.0" layoutY="430.0" text="Lương cơ bản" />
-      <Label layoutX="38.0" layoutY="475.0" text="Phụ cấp" />
-      <Label layoutX="38.0" layoutY="520.0" text="Thưởng" />
-      <Label layoutX="38.0" layoutY="559.0" text="Khấu trừ" />
-      <Label layoutX="38.0" layoutY="597.0" text="Tổng lương" />
-      <Label layoutX="38.0" layoutY="655.0" prefHeight="17.0" prefWidth="77.0" text="Ngày chi trả*" />
+      <Label layoutX="29.0" layoutY="269.0" text="Mã lương*" />
+      <Label layoutX="25.0" layoutY="304.0" text="Mã nhân viên*" />
+      <Label layoutX="25.0" layoutY="339.0" text="Tháng năm*" />
+      <Label layoutX="24.0" layoutY="388.0" text="Lương cơ bản" />
+      <Label layoutX="26.0" layoutY="425.0" text="Phụ cấp" />
+      <Label layoutX="27.0" layoutY="459.0" text="Thưởng" />
+      <Label layoutX="26.0" layoutY="495.0" text="Khấu trừ" />
+      <Label layoutX="27.0" layoutY="530.0" text="Tổng lương" />
+      <Label layoutX="26.0" layoutY="587.0" prefHeight="17.0" prefWidth="77.0" text="Ngày chi trả*" />
 
 
        
-        <TextField fx:id="luongthuong_txmaluong" layoutX="125.0" layoutY="289.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txmaNV" layoutX="125.0" layoutY="331.0" prefHeight="26.0" prefWidth="134.0" />
-        <DatePicker fx:id="luongthuong_datethangnam" layoutX="125.0" layoutY="373.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txluongcoban" layoutX="123.0" layoutY="427.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txphucap" layoutX="123.0" layoutY="470.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txthuong" layoutX="123.0" layoutY="515.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txkhautru" layoutX="123.0" layoutY="554.0" prefHeight="26.0" prefWidth="134.0" />
-        <TextField fx:id="luongthuong_txtongluong" editable="false" layoutX="123.0" layoutY="592.0" prefHeight="26.0" prefWidth="134.0" />
-        <DatePicker fx:id="luongthuong_datengaychitra" layoutX="123.0" layoutY="651.0" prefHeight="26.0" prefWidth="134.0" />
-      <Label layoutX="530.0" layoutY="103.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
+        <TextField fx:id="luongthuong_txmaluong" layoutX="113.0" layoutY="265.0" prefHeight="25.0" prefWidth="107.0" />
+        <TextField fx:id="luongthuong_txmaNV" layoutX="112.0" layoutY="300.0" prefHeight="25.0" prefWidth="107.0" />
+        <DatePicker fx:id="luongthuong_datethangnam" layoutX="113.0" layoutY="335.0" prefHeight="25.0" prefWidth="107.0" />
+        <TextField fx:id="luongthuong_txluongcoban" layoutX="114.0" layoutY="384.0" prefHeight="25.0" prefWidth="107.0" />
+        <TextField fx:id="luongthuong_txphucap" layoutX="111.0" layoutY="421.0" prefHeight="25.0" prefWidth="107.0" />
+        <TextField fx:id="luongthuong_txthuong" layoutX="111.0" layoutY="455.0" prefHeight="25.0" prefWidth="107.0" />
+        <TextField fx:id="luongthuong_txkhautru" layoutX="111.0" layoutY="491.0" prefHeight="25.0" prefWidth="107.0" />
+        <TextField fx:id="luongthuong_txtongluong" editable="false" layoutX="111.0" layoutY="526.0" prefHeight="25.0" prefWidth="107.0" />
+        <DatePicker fx:id="luongthuong_datengaychitra" layoutX="111.0" layoutY="583.0" prefHeight="26.0" prefWidth="107.0" />
+      <Label layoutX="449.0" layoutY="84.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="458.0" layoutY="57.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
+      <Label layoutX="377.0" layoutY="38.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="luongthuong_btnhansu" layoutX="203.0" layoutY="159.0" mnemonicParsing="false" onAction="#luongthuong_nhansuAction" prefHeight="38.0" prefWidth="218.0" text="Nhân sự">
+      <Button fx:id="luongthuong_btnhansu" layoutX="122.0" layoutY="140.0" mnemonicParsing="false" onAction="#luongthuong_nhansuAction" prefHeight="38.0" prefWidth="218.0" text="Nhân sự">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="luongthuong_btphongban" layoutX="505.0" layoutY="159.0" mnemonicParsing="false" onAction="#luongthuong_phongbanAction" prefHeight="38.0" prefWidth="218.0" text="Phòng ban">
+      <Button fx:id="luongthuong_btphongban" layoutX="424.0" layoutY="140.0" mnemonicParsing="false" onAction="#luongthuong_phongbanAction" prefHeight="38.0" prefWidth="218.0" text="Phòng ban">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Button disable="true" layoutX="780.0" layoutY="159.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="218.0" text="Lương thưởng" underline="true">
+      <Button disable="true" layoutX="699.0" layoutY="140.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="218.0" text="Lương thưởng" underline="true">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Label layoutX="61.0" layoutY="231.0" prefHeight="38.0" prefWidth="190.0" text="Chi tiết lương thưởng" textAlignment="CENTER">
+      <Label layoutX="29.0" layoutY="205.0" prefHeight="38.0" prefWidth="190.0" text="Chi tiết lương thưởng" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
          </font>
       </Label>
-      <Line endX="121.0" layoutX="136.0" layoutY="410.0" startX="-100.0" />
-      <Line endX="123.0" layoutX="136.0" layoutY="634.0" startX="-100.0" />
+      <Line endX="94.0" layoutX="125.0" layoutY="374.0" startX="-100.0" />
+      <Line endX="92.0" layoutX="124.0" layoutY="565.0" startX="-100.0" />
    </children>
 </AnchorPane>

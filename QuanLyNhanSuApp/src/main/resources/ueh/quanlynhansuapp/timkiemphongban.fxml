@@ -37,7 +37,7 @@
       <TextField fx:id="timkiemphongban_txemail" layoutX="500.0" layoutY="314.0" prefHeight="26.0" prefWidth="159.0" />
       <TextField fx:id="timkiemphongban_txtong" layoutX="780.0" layoutY="275.0" prefHeight="26.0" prefWidth="159.0" />
       <Button fx:id="timkiemphongban_bttimkiem" defaultButton="true" layoutX="663.0" layoutY="200.0" mnemonicParsing="false" onAction="#timkiemphongban_timkiemAction" prefHeight="26.0" prefWidth="91.0" text="Tìm kiếm" />
-      <Button fx:id="timkiemphongban_bttrolai" layoutX="920.0" layoutY="45.0" mnemonicParsing="false" onAction="#timkiemphongban_trolaiAction" prefHeight="26.0" prefWidth="91.0" text="Quay lại" />
+      <Button fx:id="timkiemphongban_bttrolai" layoutX="920.0" layoutY="45.0" mnemonicParsing="false" onAction="#timkiemphongban_trolaiAction" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Quay lại" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f3f6f8" height="144.0" layoutX="24.0" layoutY="25.0" stroke="BLACK" strokeType="INSIDE" width="227.0" />
       <Label layoutX="36.0" layoutY="39.0" prefHeight="38.0" prefWidth="103.0" text="Tính năng" textAlignment="CENTER">
          <font>
@@ -49,12 +49,12 @@
             <Font name="System Italic" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="445.0" layoutY="91.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
+      <Label layoutX="456.0" layoutY="91.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="373.0" layoutY="45.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
+      <Label layoutX="384.0" layoutY="45.0" prefHeight="65.0" prefWidth="311.0" text="PHẦN MỀM QUẢN LÝ NHÂN SỰ" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
