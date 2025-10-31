@@ -239,17 +239,11 @@ public class SuaNhanSu {
                 ns.setChucVu(chucVu);
 
                 dataService.updateNhanSu(ns);
-
                 canhbao.thongbao("Thành công", "Cập nhật thông tin nhân sự thành công!");
 
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("nhansu.fxml"));
-                    Parent root = loader.load();
-                    suanhansu_btsua.getScene().setRoot(root);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    canhbao.canhbao("Lỗi", "Không thể quay lại màn hình nhân sự.");
-                }
+                // Đóng cửa sổ sửa (Stage hiện tại)
+                Stage currentStage = (Stage) suanhansu_btsua.getScene().getWindow();
+                currentStage.close();
             } else {
                 canhbao.thongbao("Đã hủy", "Không có thay đổi nào được lưu.");
             }
@@ -266,19 +260,8 @@ public class SuaNhanSu {
 
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("nhansu.fxml"));
-                    Parent root = loader.load();
-
-                    // Lấy Stage hiện tại
-                    Stage stage = (Stage) suanhansu_bttrolai.getScene().getWindow();
-                    stage.getScene().setRoot(root);
-              
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    canhbao.canhbao("Lỗi điều hướng", "Không thể quay lại màn hình nhân sự.\nChi tiết: " + e.getMessage());
-                }
+                Stage currentStage = (Stage) suanhansu_bttrolai.getScene().getWindow();
+                currentStage.close(); // Đóng form popup
             }
         });
     }

@@ -379,9 +379,7 @@ public class LuongThuongController {
         
         } catch (IOException e) {
             canhbao.canhbao("Lỗi giao diện", "Không thể mở form sửa: " + e.getMessage());
-        } catch (Exception e) {
-            canhbao.canhbao("Lỗi hệ thống", "Không thể mở cửa sổ sửa: " + e.getMessage());
-        }
+        } 
     }
 
     // Nút "Tìm kiếm" => mở cửa sổ riêng

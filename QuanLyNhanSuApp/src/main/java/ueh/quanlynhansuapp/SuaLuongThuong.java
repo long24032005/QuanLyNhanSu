@@ -117,7 +117,7 @@ public class SuaLuongThuong {
 
             // Kiểm tra thiếu dữ liệu 
             if (maNV.isEmpty() || thangNamDate == null || ngayChiTraDate == null) {
-                canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin trước khi lưu!");
+                canhbao.canhbao("Thiếu thông tin", "Vui lòng nhập đầy đủ mã nhân viên, tháng năm và ngày chi trả!");
                 return;
             }
 
@@ -153,7 +153,7 @@ public class SuaLuongThuong {
             }
 
             // Popup xác nhận
-            if (!canhbao.xacNhan("Xác nhận sửa", "Lưu thay đổi?", 
+            if (!canhbao.xacNhan("Xác nhận sửa", "Bạn có muốn lưu thay đổi?", 
                     "Mã lương: " + maLuong + "\nNhân viên: " + maNV)) {
                 return;
             }
@@ -185,11 +185,17 @@ public class SuaLuongThuong {
     // Nút "Quay lại"
     @FXML
     private void sualuongthuong_quaylaiAction() {
-        try {
-            ((Stage) sualuongthuong_btquaylai.getScene().getWindow()).close();
-        } catch (Exception e) {
-            canhbao.canhbao("Lỗi thoát", "Không thể đóng cửa sổ: " + e.getMessage());
-        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Xác nhận quay lại");
+        confirm.setHeaderText("Bạn có muốn quay lại danh sách lương thưởng?");
+        confirm.setContentText("Mọi thay đổi chưa lưu sẽ bị mất.");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                Stage currentStage = (Stage) sualuongthuong_btquaylai.getScene().getWindow();
+                currentStage.close();
+            }
+        });
     }
 
     

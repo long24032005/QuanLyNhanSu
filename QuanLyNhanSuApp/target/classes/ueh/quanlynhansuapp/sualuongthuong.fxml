@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="276.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.SuaLuongThuong">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="276.0" prefWidth="879.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.SuaLuongThuong">
    <children>
       <Button fx:id="sualuongthuong_btquaylai" layoutX="467.0" layoutY="202.0" mnemonicParsing="false" onAction="#sualuongthuong_quaylaiAction" prefHeight="29.0" prefWidth="107.0" text="Quay lại" />
       <Button fx:id="sualuongthuong_btsua" layoutX="284.0" layoutY="202.0" mnemonicParsing="false" onAction="#sualuongthuong_suaAction" prefHeight="29.0" prefWidth="107.0" text="Sửa" />
