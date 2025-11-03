@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1036.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemNhanSu">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="677.0" prefWidth="1036.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemNhanSu">
    <children>
       <TableView fx:id="timkiemnhansu_tbnhansu" layoutX="26.0" layoutY="409.0" prefHeight="224.0" prefWidth="984.0">
         <columns>

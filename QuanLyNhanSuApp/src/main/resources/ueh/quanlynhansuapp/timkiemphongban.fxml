@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="767.0" prefWidth="1036.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemPhongBan">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="717.0" prefWidth="1036.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ueh.quanlynhansuapp.TimKiemPhongBan">
    <children>
       <TableView fx:id="timkiemphongban_tbphongban" layoutX="49.0" layoutY="371.0" prefHeight="308.0" prefWidth="938.0">
         <columns>
