@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /*
-Controller màn hình chính (main.fxml) sau khi người dùng đăng nhập thành công.
+Controller màn hình chính (main.fxml) sau khi người dùng Admin đăng nhập thành công.
  - Hiển thị các nút truy cập đến các chức năng: Nhân sự, Phòng ban, Lương thưởng.
  - Có nút Đăng xuất để quay lại màn hình đăng nhập.
  - Hạn chế quyền truy cập: nhân viên thường không thể mở các màn hình quản lý.
