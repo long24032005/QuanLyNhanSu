@@ -32,7 +32,7 @@
       
       <ImageView fitHeight="306.0" fitWidth="230.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../Ảnh%20chụp%20màn%20hình%202025-10-05%20112006.PNG" />
+            <Image url="@../../logo.PNG" />
          </image>
       </ImageView>
       <Label layoutX="411.0" layoutY="271.0" prefHeight="18.0" prefWidth="151.0" text="Bản quyền thuộc về nhóm 5">

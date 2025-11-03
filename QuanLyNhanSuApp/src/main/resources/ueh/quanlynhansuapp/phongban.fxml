@@ -37,7 +37,7 @@
       <Button fx:id="phongban_btthem" layoutX="83.0" layoutY="601.0" mnemonicParsing="false" onAction="#phongban_themAction" prefHeight="26.0" prefWidth="91.0" text="Thêm" />
       <Button fx:id="phongban_btxoa" layoutX="244.0" layoutY="687.0" mnemonicParsing="false" onAction="#phongban_xoaAction" prefHeight="26.0" prefWidth="91.0" text="Xóa" />
       <Button fx:id="phongban_btsua" layoutX="385.0" layoutY="687.0" mnemonicParsing="false" onAction="#phongban_suaAction" prefHeight="26.0" prefWidth="91.0" text="Sửa" />
-      <Button fx:id="phongban_btquaylai" layoutX="911.0" layoutY="50.0" mnemonicParsing="false" onAction="#phongban_quaylaiAction" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Quay Lại" />
+      <Button fx:id="phongban_btquaylai" layoutX="911.0" layoutY="50.0" mnemonicParsing="false" onAction="#phongban_quaylaiAction" prefHeight="26.0" prefWidth="91.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Quay lại" />
       <Label layoutX="449.0" layoutY="84.0" prefHeight="38.0" prefWidth="168.0" text="Dành cho quản lý" textAlignment="CENTER">
          <font>
             <Font name="System Italic" size="20.0" />
