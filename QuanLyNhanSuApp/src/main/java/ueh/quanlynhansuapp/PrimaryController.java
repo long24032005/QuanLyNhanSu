@@ -161,6 +161,14 @@ public class PrimaryController {
                 return;
             }
             
+            // Trùng số điện thoại (nếu có)
+            if (!sdtPhong.isEmpty() && pb.getSdtPhong() != null &&
+                pb.getSdtPhong().trim().equals(sdtPhong)) {
+                canhbao.canhbao("Trùng số điện thoại", 
+                    "Số điện thoại \"" + sdtPhong + "\" đã được sử dụng ở phòng ban khác.");
+                return;
+            }
+            
             // Trùng mã trưởng phòng (nếu có nhập)
             if (!maTP.isEmpty() && pb.getMaTruongPhong() != null &&
                 pb.getMaTruongPhong().equalsIgnoreCase(maTP)) {

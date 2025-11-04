@@ -278,21 +278,21 @@ public class NhanSuController {
             return;
         }
 
-        // Kiểm tra CCCD (nếu người dùng có nhập)
+        // Kiểm tra CCCD 
         if (!cccd.isEmpty()) {
-            // 1️⃣ Kiểm tra không phải số
+            // Kiểm tra không phải số
             if (!isNumeric(cccd)) {
                 canhbao.canhbao("Sai định dạng", "CCCD chỉ được phép chứa các ký tự số (0–9).");
                 return;
             }
 
-            // 2️⃣ Kiểm tra độ dài không đúng
+            // Kiểm tra độ dài
             if (cccd.length() != 12) {
                 canhbao.canhbao("Sai số lượng ký tự", "CCCD phải gồm đúng 12 chữ số. Hiện tại bạn nhập " + cccd.length() + " ký tự.");
                 return;
             }
             
-            // ✅ Kiểm tra trùng CCCD
+            // Kiểm tra trùng CCCD
             NhanSu nsTrungCCCD = dataService.timNhanSuTheoCCCD(cccd);
             if (nsTrungCCCD != null) {
                 canhbao.canhbao("Trùng CCCD", 
@@ -301,7 +301,7 @@ public class NhanSuController {
             }
         }
 
-        // Kiểm tra SĐT (nếu người dùng có nhập)       
+        // Kiểm tra SĐT 
         if (!sdt.isEmpty()) {
             // 1️⃣ Kiểm tra không phải số
             if (!isNumeric(sdt)) {
@@ -309,7 +309,7 @@ public class NhanSuController {
                 return;
             }
 
-            // 2️⃣ Kiểm tra độ dài không đúng
+            // Kiểm tra độ dài
             if (sdt.length() != 10) {
                 canhbao.canhbao("Sai số lượng ký tự", "SDT phải gồm đúng 10 chữ số. Hiện tại bạn nhập " + sdt.length() + " ký tự.");
                 return;
@@ -346,7 +346,7 @@ public class NhanSuController {
                 canhbao.canhbao(
                     "Trùng chức vụ",
                     "Phòng \"" + selectedPB.getTenPhong() + "\" đã có " + chucVu.toLowerCase() + ".\n" +
-                    "Không thể thêm thêm một người với chức vụ này."
+                    "Mỗi phòng ban chỉ có 1 trưởng phòng và 1 phó phòng."
                 );
                 return;
             }
