@@ -32,8 +32,8 @@ public class App extends Application {
 
     // Đổi giao diện (root FXML) hiện tại. Nếu Stage tồn tại, cập nhật lại kích thước và căn giữa cửa sổ.
     static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-        Stage stage = (Stage) scene.getWindow();
+        scene.setRoot(loadFXML(fxml)); // hàm có sẵn của lớp Scene trong JavaFX
+        Stage stage = (Stage) scene.getWindow();  // ép kiểu window về stage về điều chỉnh kích thước, căn giữa cửa sổ cho hợp với giao diện mới
         if (stage != null) {
             stage.sizeToScene();
             stage.centerOnScreen();

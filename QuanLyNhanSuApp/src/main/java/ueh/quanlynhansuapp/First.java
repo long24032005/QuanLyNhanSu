@@ -34,11 +34,11 @@ public class First {
     // Nút mở màn hình Nhân sự
     @FXML
     private void main_nhansuAction() throws IOException {
-        // Nếu người dùng là nhân viên thường => không được truy cập
+        /* Nếu người dùng là nhân viên thường => không được truy cập
         if (isEmployee()) {
             showAccessDenied();
             return;
-        }
+        } */
         // Tải file giao diện "nhansu.fxml" và hiển thị
         FXMLLoader loader = new FXMLLoader(App.class.getResource("nhansu.fxml"));
         Scene scene = new Scene(loader.load());
@@ -51,10 +51,10 @@ public class First {
     // Nút mở màn hình Phòng ban
     @FXML
     private void main_phongbanAction() throws IOException {
-        if (isEmployee()) {
+        /*if (isEmployee()) {
             showAccessDenied();
             return;
-        }
+        }*/
         FXMLLoader loader = new FXMLLoader(App.class.getResource("phongban.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage) main_btphongban.getScene().getWindow();
@@ -65,10 +65,10 @@ public class First {
     // Nút mở màn hình Lương thưởng
     @FXML
     private void main_luongthuongAction() throws IOException {
-        if (isEmployee()) {
+       /* if (isEmployee()) {
             showAccessDenied();
             return;
-        }
+        } */
         FXMLLoader loader = new FXMLLoader(App.class.getResource("luongthuong.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage) main_btluongthuong.getScene().getWindow();
@@ -100,7 +100,9 @@ public class First {
     public void setCurrentUser(NhanSu user) {
         this.currentUser = user;
         System.out.println("Người đăng nhập: " + user.getHoTen() + " - " + user.getChucVu());
-
+    }
+}
+    /*    
         // Nếu là nhân viên thường thì vô hiệu hóa các chức năng quản lý
         if (isEmployee()) {
             if (main_btnhansu != null) main_btnhansu.setDisable(true);
@@ -112,7 +114,6 @@ public class First {
             showAccessDenied();
         }
     }
-
     // Kiểm tra phân quyền người dùng
     private boolean isEmployee() {
         if (currentUser == null) return false;  // Nếu chưa có người dùng nào đăng nhập => mặc định không hạn chế
@@ -132,4 +133,4 @@ public class First {
         alert.setContentText("Chức năng này chỉ dành cho Quản lý / Trưởng phòng.");
         alert.showAndWait();
     }
-}
+    */

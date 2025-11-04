@@ -37,12 +37,12 @@ public class LoginController {
     private void handleLogin() {
         // Lấy dữ liệu người dùng nhập
         String maNV = txtMaNV.getText().trim();
-        String matKhau = txtMatKhau.getText().trim();
+        String matKhau = txtMatKhau.getText().trim(); //trim() xóa khoảng trắng đầu cuối
 
         // Kiểm tra xem người dùng có bỏ trống không
         if (maNV.isEmpty() || matKhau.isEmpty()) {
             showAlert("Thiếu thông tin", "Vui lòng nhập đầy đủ Mã NV và Mật khẩu.", Alert.AlertType.WARNING);
-            return;
+            return; // không chạy tiếp các bước đăng nhập.
         }
 
         // Tìm nhân viên theo mã trong danh sách hiện có

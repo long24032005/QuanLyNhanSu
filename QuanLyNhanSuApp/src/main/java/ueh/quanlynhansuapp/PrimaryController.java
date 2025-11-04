@@ -165,7 +165,8 @@ public class PrimaryController {
             if (!sdtPhong.isEmpty() && pb.getSdtPhong() != null &&
                 pb.getSdtPhong().trim().equals(sdtPhong)) {
                 canhbao.canhbao("Trùng số điện thoại", 
-                    "Số điện thoại \"" + sdtPhong + "\" đã được sử dụng ở phòng ban khác.");
+                    "Sốg email (nếu có)\n" +
+"            if (!em điện thoại \"" + sdtPhong + "\" đã được sử dụng ở phòng ban khác.");
                 return;
             }
             

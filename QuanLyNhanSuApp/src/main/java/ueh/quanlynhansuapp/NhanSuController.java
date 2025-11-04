@@ -64,21 +64,22 @@ public class NhanSuController {
     private final DataService dataService = DataService.getInstance();
     
     // Danh sách riêng cho ComboBox mã phòng ban
-    private final ObservableList<String> dsMaPhongForCombo = FXCollections.observableArrayList();
+    private final ObservableList<String> dsMaPhongForCombo = FXCollections.observableArrayList();  //Danh sách biết phát tín hiệu, nên ComboBox/TableView tự cập nhật
     
     // Map để lưu Tên Phòng Ban => Danh sách Chức Vụ
-    private final Map<String, List<String>> phongBanToChucVuMap = new HashMap<>();
+    private final Map<String, List<String>> phongBanToChucVuMap = new HashMap<>();  //Dùng khi chọn phòng ban thì lọc ra các chức vụ đúng của phòng đó
     // Map để lưu Chức Vụ => Tên Phòng Ban
-    private final Map<String, String> chucVuToPhongBanMap = new HashMap<>();
-    // Danh sách chứa tất cả các chức vụ
-    private final ObservableList<String> allChucVuList = FXCollections.observableArrayList();
+    private final Map<String, String> chucVuToPhongBanMap = new HashMap<>(); // Dùng khi chọn chức vụ thì tự set lại đúng phòng ban tương ứng
+    
+    // Danh sách chứa toàn bộ tên chức vụ để đổ vào ComboBox chức vụ
+    private final ObservableList<String> allChucVuList = FXCollections.observableArrayList(); // Dùng cho trường hợp ComboBox “chức vụ” hiển thị tất cả (khi chưa chọn phòng nào)
     
     // Ngăn các listener chạy khi không cần thiết
     private boolean dangCapNhatTuDong = false;
 
     @FXML
-    public void initialize() {
-        // Cài đặt các cột cho bảng nhân sự
+    public void initialize() {  
+        // Cài đặt các cột cho tableview nhân sự
         nhansu_colma.setCellValueFactory(new PropertyValueFactory<>("maNV"));
         nhansu_colten.setCellValueFactory(new PropertyValueFactory<>("hoTen"));
         nhansu_colgioitinh.setCellValueFactory(new PropertyValueFactory<>("gioiTinh"));
@@ -96,14 +97,14 @@ public class NhanSuController {
         nhansu_cbogioitinh.setItems(FXCollections.observableArrayList("Nam", "Nữ", "Khác"));
         
         // 1. Khởi tạo dữ liệu chức vụ
-        initializeChucVuData();
+        initializeChucVuData();  // Gọi đến hàm tự định nghĩa ở dưới (hàm để khởi tạo map chức vụ <=> phòng ban)
         
         // 2. Mặc định, ComboBox chức vụ hiển thị tất cả chức vụ
         nhansu_cbchucvu.setItems(allChucVuList);
         
         // Tải danh sách mã phòng ban vào ComboBox lần đầu
         nhansu_cbmaPB.setItems(dataService.getDsPhongBan());
-        nhansu_cbmaPB.setCellFactory(param -> new ListCell<PhongBan>() {
+        nhansu_cbmaPB.setCellFactory(param -> new ListCell<PhongBan>() {   // custom giao diện hiển thị từng dòng trong danh sách thả xuống, param chính là tên biến đại diện cho ListView<PhongBan>
             @Override
             protected void updateItem(PhongBan pb, boolean empty) {
                 super.updateItem(pb, empty);
@@ -114,7 +115,7 @@ public class NhanSuController {
                 }
             }
         });
-        nhansu_cbmaPB.setButtonCell(new ListCell<PhongBan>() {
+        nhansu_cbmaPB.setButtonCell(new ListCell<PhongBan>() {  //định nghĩa lại cell hiển thị khi combobox đã chọn 1 giá trị
             @Override
             protected void updateItem(PhongBan pb, boolean empty) {
                 super.updateItem(pb, empty);
@@ -231,10 +232,10 @@ public class NhanSuController {
         allChucVuList.clear();
         chucVuToPhongBanMap.clear();
         
-        for (Map.Entry<String, List<String>> entry : phongBanToChucVuMap.entrySet()) {
-            String tenPhong = entry.getKey();
-            for (String chucVu : entry.getValue()) {
-                chucVuToPhongBanMap.put(chucVu, tenPhong);
+        for (Map.Entry<String, List<String>> entry : phongBanToChucVuMap.entrySet()) { //duyệt qua từng cặp key:value (phòng, danh sách chức vụ)
+            String tenPhong = entry.getKey();    //lấy tên phòng ban hiện tại
+            for (String chucVu : entry.getValue()) {    //duyệt qua từng chức vụ trong danh sách đó
+                chucVuToPhongBanMap.put(chucVu, tenPhong);   //tạo map ngược
                 allChucVuList.add(chucVu);
             }
         }
@@ -335,8 +336,8 @@ public class NhanSuController {
         // Kiểm tra trùng chức vụ đặc biệt trong cùng phòng ban
         if (chucVu.toLowerCase().contains("trưởng phòng") || chucVu.toLowerCase().contains("phó phòng")) {
             // Lấy danh sách nhân sự hiện tại của phòng ban này
-            boolean daCoNguoiGiuChucVu = dataService.getDsNhanSu().stream()
-                .anyMatch(ns ->
+            boolean daCoNguoiGiuChucVu = dataService.getDsNhanSu().stream()  // Dùng stream để duyệt ds dữ liệu thay vì for
+                .anyMatch(ns ->  // Trả về true ngay lập tức nếu có người thỏa điều kiện
                     ns.getMaPhongBan().equalsIgnoreCase(maPhongBan)
                     && ns.getChucVu() != null
                     && ns.getChucVu().equalsIgnoreCase(chucVu)
@@ -422,7 +423,7 @@ public class NhanSuController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("suanhansu.fxml"));
             Parent root = loader.load();
             SuaNhanSu controller = loader.getController();
-            controller.setData(nsselected);
+            controller.setData(nsselected);   // Gọi hàm setData() trong SuaNhanSu.java để đưa thông tin nhân viên được chọn sang form con
 
             // Tạo cửa sổ mới thay vì chỉ đổi scene
             Stage stage = new Stage();
@@ -431,7 +432,7 @@ public class NhanSuController {
             stage.show();
 
             // Khi form sửa đóng => reload lại bảng nhân sự
-            stage.setOnHidden(e -> nhansu_tbnhansu.refresh());
+            stage.setOnHidden(e -> nhansu_tbnhansu.refresh());  // .setOnHidden() là listener, nó chạy khi Stage này bị đóng
 
         } catch (IOException e) {
             canhbao.canhbao("Lỗi giao diện", "Không thể mở form sửa nhân sự: " + e.getMessage());
@@ -461,11 +462,11 @@ public class NhanSuController {
     @FXML
     private void nhansu_xuatAction() {
         // Popup xác nhận
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, 
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,   // Tạo popup xác nhận với 2 nút: YES / NO
             "Bạn có muốn xuất thông tin toàn bộ nhân viên ra file Excel không?", 
             ButtonType.YES, ButtonType.NO);
         confirm.setTitle("Xác nhận xuất file");
-        confirm.showAndWait();
+        confirm.showAndWait();  //hiện popup và chờ người dùng bấm nút
 
         if (confirm.getResult() == ButtonType.NO) {
             return; // Quay lại nếu người dùng bấm Hủy
@@ -475,10 +476,10 @@ public class NhanSuController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Chọn nơi lưu file Excel");
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Excel File (*.xlsx)", "*.xlsx"));
-        fileChooser.setInitialFileName("ThongTinNhanSu.xlsx");
-        File file = fileChooser.showSaveDialog(new Stage());
-        if (file == null) return;
+            new FileChooser.ExtensionFilter("Excel File (*.xlsx)", "*.xlsx"));  // chỉ cho phép lưu file .xlsx
+        fileChooser.setInitialFileName("ThongTinNhanSu.xlsx");  //gợi ý tên mặc định
+        File file = fileChooser.showSaveDialog(new Stage()); // mở hộp thoại “Lưu file” (người dùng chọn thư mục), biến file chứa đường dẫn thực tế nơi ghi Excel
+        if (file == null) return; // Nếu người dùng bấm Hủy => file == null => dừng
 
         // Hiện progress bar
         ProgressIndicator progressIndicator = new ProgressIndicator();
@@ -488,10 +489,10 @@ public class NhanSuController {
         progressAlert.getDialogPane().setContent(progressIndicator);
         progressAlert.show();
 
-        // Tạo task chạy nền để xử lý việc export
+        // Tạo task chạy nền để xử lý việc export (Task là class đặc biệt dùng cho đa luồng)
         Task<Void> exportTask = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() throws Exception {  // Mọi thứ trong call() sẽ chạy ở luồng phụ, không làm đứng UI
                 exportNhanSuToExcel(file); // Gọi hàm ghi file Excel
                 return null;
             }
@@ -513,7 +514,7 @@ public class NhanSuController {
 
             if (success.getResult() == openBtn) {
                 try {
-                    java.awt.Desktop.getDesktop().open(file); // Trực tiếp mở file bằng Excel
+                    java.awt.Desktop.getDesktop().open(file); // Dùng API của hệ điều hành để mở trực tiếp file Excel vừa lưu
                 } catch (IOException ex) {
                     canhbao.canhbao("Lỗi", "Không thể mở file vừa tạo.");
                 }
@@ -526,32 +527,33 @@ public class NhanSuController {
             canhbao.canhbao("Lỗi", "Không thể xuất file Excel.\nChi tiết: " + exportTask.getException());
         });
 
+        
         // Chạy task trong một luồng riêng tránh treo UI
         Thread thread = new Thread(exportTask);
-        thread.setDaemon(true);
-        thread.start();
+        thread.setDaemon(true);  // luồng này tự kết thúc khi app đóng
+        thread.start();  // chạy call() ở nền
     }
 
     // Hàm hỗ trợ ghi danh sách nhân sự ra file Excel
     private void exportNhanSuToExcel(File file) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("NhanSu");
+        try (Workbook workbook = new XSSFWorkbook()) { // Dùng thư viện Apache POI
+            Sheet sheet = workbook.createSheet("NhanSu"); // một sheet trong file
             // Tạo hàng tiêu đề 
             Row header = sheet.createRow(0);
             String[] headers = {"Mã NV", "Họ tên", "Giới tính", "Ngày sinh", "CCCD", "Email", "SĐT", "Phòng ban", "Chức vụ"};
             for (int i = 0; i < headers.length; i++) {
-                header.createCell(i).setCellValue(headers[i]);
+                header.createCell(i).setCellValue(headers[i]); // gán nội dung ô
             }
 
             // Ghi dữ liệu từng nhân viên
             ObservableList<NhanSu> list = dataService.getDsNhanSu();
             int rowNum = 1;
             for (NhanSu ns : list) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(ns.getMaNV());
+                Row row = sheet.createRow(rowNum++); // rowNum tăng dần => mỗi vòng lặp tạo 1 dòng tiếp theo
+                row.createCell(0).setCellValue(ns.getMaNV());  // Mỗi createCell(i) tương ứng với 1 cột trong bảng Excel
                 row.createCell(1).setCellValue(ns.getHoTen());
                 row.createCell(2).setCellValue(ns.getGioiTinh());
-                row.createCell(3).setCellValue(ns.getNgaySinh().toString());
+                row.createCell(3).setCellValue(ns.getNgaySinh().toString());  // ns.getNgaySinh() là kiểu LocalDate, excel ko hiểu kiểu này => chuyển sang dạng ""2001-08-15""
                 row.createCell(4).setCellValue(ns.getCccd());
                 row.createCell(5).setCellValue(ns.getEmail());
                 row.createCell(6).setCellValue(ns.getSdt());
@@ -565,8 +567,8 @@ public class NhanSuController {
             }
 
             // Ghi dữ liệu ra file thật
-            try (FileOutputStream fos = new FileOutputStream(file)) {
-                workbook.write(fos);
+            try (FileOutputStream fos = new FileOutputStream(file)) {  // FileOutputStream => mở file Excel thật trên đĩa
+                workbook.write(fos); // workbook.write() => ghi toàn bộ dữ liệu vào file.
             }
         }
     }

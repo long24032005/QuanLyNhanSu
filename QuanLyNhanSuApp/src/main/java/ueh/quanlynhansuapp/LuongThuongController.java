@@ -111,7 +111,7 @@ public class LuongThuongController {
             });
 
             // Tự động tính tổng lương khi người dùng nhập thay đổi
-            ChangeListener<String> recalc = (o, a, b) -> capNhatTongLuong();
+            ChangeListener<String> recalc = (o, a, b) -> capNhatTongLuong();  //ChangeListener<String> theo dõi mỗi khi người dùng nhập hoặc xóa ký tự trong các ô tiền, mỗi khi giá trị thay đổi thì gọi capNhatTongLuong(). 
             luongthuong_txluongcoban.textProperty().addListener(recalc);
             luongthuong_txphucap.textProperty().addListener(recalc);
             luongthuong_txthuong.textProperty().addListener(recalc);
@@ -131,13 +131,13 @@ public class LuongThuongController {
         }
         
         // Tùy chỉnh DatePicker để chỉ chọn tháng/năm thay vì ngày cụ thể
-        luongthuong_datethangnam.setPromptText("MM/yyyy");
-        // Chuyển đổi hiển thị và parse
-        luongthuong_datethangnam.setConverter(new javafx.util.StringConverter<LocalDate>() {
-            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+        luongthuong_datethangnam.setPromptText("MM/yyyy");  //Khi datepicker chưa có giá trị => hiển thị chữ xám “MM/yyyy” 
+        // Chuyển đổi hiển thị và parse (chuyển đổi kiểu dữ liệu cho máy đọc được)
+        luongthuong_datethangnam.setConverter(new javafx.util.StringConverter<LocalDate>() {  //dùng lớp StringConverter để chuyển từ LocalDate sang string
+            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");  // giúp Java biết khi in ra hoặc đọc vào thì định dạng sẽ là “tháng/năm”
 
             @Override
-            public String toString(LocalDate date) {
+            public String toString(LocalDate date) {  // Nếu có ngày thì chuyển thành chuỗi “MM/yyyy”
                 if (date != null) {
                     return formatter.format(date);
                 } else {
@@ -149,7 +149,7 @@ public class LuongThuongController {
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
                     try {
-                        // Dùng ngày 1 cố định để parse
+                        // Dùng ngày 1 cố định để parse => Java có thể parse thành ngày 2025-03-01
                         return LocalDate.parse("01/" + string, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                     } catch (Exception e) {
                         return null;
@@ -166,10 +166,10 @@ public class LuongThuongController {
 
     // Căn trái cho các cột só
     private void alignLeft(TableColumn<LuongThuong, Double> col) {
-        col.setCellFactory(tc -> new TableCell<>() {
+        col.setCellFactory(tc -> new TableCell<>() {   // setCellFactory()cho phép tùy chỉnh giao diện của từng ô trong một cột của TableView
             @Override protected void updateItem(Double item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : doubleToPlain(item));
+                super.updateItem(item, empty); // item: giá trị thực của ô
+                setText(empty || item == null ? "" : doubleToPlain(item));  // ô trống, chưa có dl => "" ; có dữ liệu => doubleToPlain(item)
                 setStyle("-fx-alignment: CENTER-LEFT;");
             }
         });
@@ -182,9 +182,9 @@ public class LuongThuongController {
     }
 
     // Chuyển chuỗi nhập vào thành số double
-    private double parseMoney(String s) throws NumberFormatException {
-        if (s == null || s.isBlank()) return 0;
-        return Double.parseDouble(s.trim());
+    private double parseMoney(String s) throws NumberFormatException {  // tham số s là String mà người dùng nhập trong textfield
+        if (s == null || s.isBlank()) return 0;  
+        return Double.parseDouble(s.trim());  // parse chuỗi sang số thực double
     }
 
     // Tính lại tổng lương mỗi khi người dùng nhập thay đổi
@@ -195,7 +195,7 @@ public class LuongThuongController {
             double thuong = parseMoney(luongthuong_txthuong.getText());
             double khauTru = parseMoney(luongthuong_txkhautru.getText());
             double tong = luongCoBan + phuCap + thuong - khauTru;
-            if (tong < 0) tong = 0;
+            if (tong < 0) tong = 0; // nếu tổng nhỏ hơn 0 thì ép về 0 để tránh lương âm
             luongthuong_txtongluong.setText(doubleToPlain(tong));
         } catch (Exception ignored) {
             luongthuong_txtongluong.clear();
@@ -323,7 +323,7 @@ public class LuongThuongController {
 
             if (success) {
                 refreshTable();
-                canhbao.thongbao("Thành công 🎉", "Đã thêm lương thưởng cho nhân viên " + maNV);
+                canhbao.thongbao("Thành công", "Đã thêm lương thưởng cho nhân viên " + maNV);
                 clearInputFields();
             } else {
                 canhbao.canhbao("Không thành công", "Thêm thất bại. Kiểm tra dữ liệu và thử lại.");
@@ -374,7 +374,7 @@ public class LuongThuongController {
             stage.setTitle("Sửa lương thưởng");
             stage.setScene(new Scene(root));
             stage.show();
-            // Sau khi đóng cửa sổ sửa → tải lại bảng dữ liệu
+            // Sau khi đóng cửa sổ sửa => tải lại bảng dữ liệu
             stage.setOnHidden(e -> refreshTable());
         
         } catch (IOException e) {
